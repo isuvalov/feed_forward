@@ -1,0 +1,464 @@
+# Reading C:/Xilinx/questasim_6.6a/tcl/vsim/pref.tcl 
+# //  QuestaSim 6.6a Mar 19 2010 
+# //
+# //  Copyright 1991-2010 Mentor Graphics Corporation
+# //              All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND 
+# //  PROPRIETARY INFORMATION WHICH IS THE PROPERTY
+# //  OF MENTOR GRAPHICS CORPORATION OR ITS LICENSORS
+# //  AND IS SUBJECT TO LICENSE TERMS.
+# //
+do test.do
+# Modifying C:\Xilinx\questasim_6.6a\win32/../modelsim.ini
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_signed
+# -- Compiling package sine_lut_pkg
+# -- Compiling package body sine_lut_pkg
+# -- Loading package sine_lut_pkg
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer_tb
+# -- Compiling architecture dds_synthesizer_tb_arch of dds_synthesizer_tb
+# vsim -t ps -novopt work.dds_synthesizer_tb 
+# Loading std.standard
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.std_logic_arith(body)
+# Loading ieee.std_logic_unsigned(body)
+# Loading ieee.std_logic_signed(body)
+# Loading work.sine_lut_pkg(body)
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+# ** Error: Cannot open macro file: wave.do
+# Error in macro ./test.do line 12
+# Cannot open macro file: wave.do
+#     while executing
+# "do wave.do"
+restart -f; run 100 us
+add wave sim:/dds_synthesizer_tb/dds_synth/*
+write format wave -window .main_pane.wave.interior.cs.body.pw.wf D:/Projects/Nienshans/Feed_Forward/vhdl/cores/dds_synthesizer/mysim/wave.do
+restart -f; run 100 us
+vcom -novopt -work work dds_synthesizer_tb.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer_tb
+# -- Compiling architecture dds_synthesizer_tb_arch of dds_synthesizer_tb
+restart -f; run 100 us
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+vcom -novopt -work work dds_synthesizer.vhd_
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# ** Error: (vcom-7) Failed to open design unit file "dds_synthesizer.vhd_" in read mode.
+# No such file or directory. (errno = ENOENT)
+# C:/Xilinx/questasim_6.6a/win32/vcom failed.
+vcom -novopt -work work dds_synthesizer.vhd_
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# ** Error: (vcom-7) Failed to open design unit file "dds_synthesizer.vhd_" in read mode.
+# No such file or directory. (errno = ENOENT)
+# C:/Xilinx/questasim_6.6a/win32/vcom failed.
+vcom -novopt -work work dds_synthesizer.vhd_
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# ** Error: (vcom-7) Failed to open design unit file "dds_synthesizer.vhd_" in read mode.
+# No such file or directory. (errno = ENOENT)
+# C:/Xilinx/questasim_6.6a/win32/vcom failed.
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+# ** Error: dds_synthesizer.vhd(101): near "process": expecting "IF"
+# ** Error: dds_synthesizer.vhd(103): Illegal sequential statement.
+# ** Error: dds_synthesizer.vhd(128): near "dds_synthesizer_arch": expecting "PROCESS"
+# C:/Xilinx/questasim_6.6a/win32/vcom failed.
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+add wave -position anchor \
+{sim:/dds_synthesizer_tb/dds_synth/quadrant_2_or_4_w1 } 
+add wave -position anchor \
+{sim:/dds_synthesizer_tb/dds_synth/quadrant_2_or_4_w2 } 
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+# Warning in wave window restart: (vish-4014) No objects found matching '/dds_synthesizer_tb/dds_synth/quadrant_2_or_4_w1'. 
+# Warning in wave window restart: (vish-4014) No objects found matching '/dds_synthesizer_tb/dds_synth/quadrant_2_or_4_w2'. 
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+# ** Error: dds_synthesizer.vhd(132): (vcom-1136) Unknown identifier "quadrant_2_or_4_w2".
+# ** Error: dds_synthesizer.vhd(132): Bad expression in left operand of infix expression "and".
+# ** Error: dds_synthesizer.vhd(132): Type error resolving infix expression "and" as type std.standard.boolean.
+# ** Error: dds_synthesizer.vhd(144): VHDL Compiler exiting
+# C:/Xilinx/questasim_6.6a/win32/vcom failed.
+vcom -novopt -work work dds_synthesizer.vhd
+# QuestaSim vcom 6.6a Compiler 2010.03 Mar 19 2010
+# -- Loading package standard
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package std_logic_unsigned
+# -- Loading package std_logic_signed
+# -- Loading package sine_lut_pkg
+# -- Compiling package dds_synthesizer_pkg
+# -- Compiling package body dds_synthesizer_pkg
+# -- Loading package dds_synthesizer_pkg
+# -- Compiling entity dds_synthesizer
+# -- Compiling architecture dds_synthesizer_arch of dds_synthesizer
+restart -f; run 100 us
+# Loading work.dds_synthesizer_pkg(body)
+# Loading work.dds_synthesizer_tb(dds_synthesizer_tb_arch)
+# Loading work.dds_synthesizer(dds_synthesizer_arch)
+write format wave -window .main_pane.wave.interior.cs.body.pw.wf D:/Projects/Nienshans/Feed_Forward/vhdl/cores/dds_synthesizer/mysim/wave.do
