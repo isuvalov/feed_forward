@@ -35,7 +35,8 @@ signal p_rd:std_logic_vector(log2roundup(DELAY_LEN)-1 downto 0):=conv_std_logic_
 
 signal freq_value,freq_val_filt:std_logic_vector(NBITm1+log2roundup(PILOT_LEN*2) downto 0);
 --constant MUL_SCALE:std_logic_vector(11 downto 0):=conv_std_logic_vector(2564,12);
-constant MUL_SCALE:std_logic_vector(11 downto 0):=conv_std_logic_vector(45,12);
+--constant MUL_SCALE:std_logic_vector(11 downto 0):=conv_std_logic_vector(45,12);
+constant MUL_SCALE:std_logic_vector(11 downto 0):=conv_std_logic_vector(34,12);
 signal freq_val_filt_mult_1w,freq_val_filt_mult:std_logic_vector(freq_val_filt'Length+MUL_SCALE'Length-1+1 downto 0);
 
 signal freq_ce,freq_ce_f,freq_ce_f_1w,freq_ce_f_2w,good_values:std_logic;

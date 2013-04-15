@@ -48,6 +48,8 @@ use ieee.std_logic_1164.all;
 use IEEE.STD_LOGIC_arith.all;
 use IEEE.STD_LOGIC_unsigned.all;
 use work.sine_lut_pkg.all;
+library work;
+use work.feedf_consts_pack.all;
 
 entity dds_synthesizer_pipe is
   generic(
@@ -65,7 +67,7 @@ end dds_synthesizer_pipe;
 
 architecture dds_synthesizer_arch of dds_synthesizer_pipe is
 
-  signal ftw_accu,ftw_accu_w1               : std_logic_vector(ftw_width-1 downto 0);
+  signal ftw_accu,ftw_accu_w1               : std_logic_vector(ftw_width-1 downto 0):=(others=>'0');
   signal phase_w3,phase_w2,phase_w1,phase         : std_logic_vector(PHASE_WIDTH-1 downto 0);
   signal lut_in                 : std_logic_vector(PHASE_WIDTH-3 downto 0);
   signal lut_out                : std_logic_vector(AMPL_WIDTH-1 downto 0);
@@ -121,17 +123,17 @@ begin
   process (clk_i, rst_i)
   begin
     if rst_i = '1' then
-      ftw_accu <= (others => '0');
       phase  <= (others => '0');
       lut_out <= (others => '0');
       lut_out_delay <= (others => '0');
       lut_out_inv_delay <= (others => '0');
       quadrant_3_or_4_delay <= '0';
       quadrant_3_or_4_2delay <= '0';
+	  ftw_accu<=(others => '0');
 	  ftw_accu_w1<=(others => '0');
     elsif clk_i'event and clk_i = '1' then
   	  ftw_accu_w1<=ftw_accu;
-      ftw_accu <= ftw_accu + ftw_i;
+      ftw_accu <= ftw_accu + rats(ftw_i);
       phase    <= ftw_accu_w1(ftw_width-1 downto ftw_width-PHASE_WIDTH) + phase_i;
       if quadrant_2_or_4_w2 = '1' and phase_w2(PHASE_WIDTH - 3 downto 0) = conv_std_logic_vector (0, PHASE_WIDTH - 2) then
         lut_out <= conv_std_logic_vector(2**(AMPL_WIDTH - 1) - 1, AMPL_WIDTH);
