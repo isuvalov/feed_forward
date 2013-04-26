@@ -9,7 +9,16 @@ entity modem_rx_top is
     Port (clk: in std_logic;
 		  reset: in std_logic;
 		  sampleI: in std_logic_vector(11 downto 0);
-		  sampleQ: in std_logic_vector(11 downto 0);		  
+		  sampleQ: in std_logic_vector(11 downto 0);
+
+		  test_mode: in std_logic_vector(1 downto 0);
+				--# 1 - output after signal normalizing
+				--# 2 - output after rcc filter
+				--# 3 - output after correlation
+
+		  test_I: out std_logic_vector(15 downto 0);
+		  test_Q: out std_logic_vector(15 downto 0);
+			  
 		  dds_cos_o: out std_logic_vector(15 downto 0);
 		  dds_sin_o: out std_logic_vector(15 downto 0);
 		  pilot_start: out std_logic --# Этот импульс будет задержан на InterpolateRate*PILOT_LEN+5+Sqrt_Latency тактов
@@ -45,6 +54,10 @@ signal dds_cos,dds_sin:std_logic_vector(15 downto 0);
 signal s_pilot_start_norm,pilot_wr:std_logic;
 signal sampleI_norm,sampleQ_norm:std_logic_vector(15 downto 0);
 
+signal corrI_s: std_logic_vector(15 downto 0);
+signal corrQ_s: std_logic_vector(15 downto 0);
+
+
 begin
 
 rcc_up_filter_inst: entity work.rcc_up_filter_rx
@@ -70,6 +83,10 @@ pilot_finder_inst: entity work.pilot_finder
     Port map(clk=>clk,
 		  reset=>reset,
 		  sample_ce=>'1',
+
+		  corrI_o=>corrI_s,
+		  corrQ_o=>corrQ_s,
+
 		  sampleI=>sampleIfilt2,
 		  sampleQ=>sampleQfilt2,
 		  pilot_start=>s_pilot_start --# Этот импульс будет задержан на InterpolateRate*PILOT_LEN+3+Sqrt_Latency тактов
@@ -132,6 +149,23 @@ normalizer_inst:entity work.normalizer
 		out_ce=>open
 		);
 
+	process(clk) is
+	begin
+		if rising_edge(clk) then
+			case test_mode is
+			when "01" =>
+				test_I<=sampleI_norm;
+				test_Q<=sampleQ_norm;
+			when "10" =>
+				test_I<=sampleI_norm;
+				test_Q<=sampleQ_norm;
+			when "11" =>
+				test_I<=corrI_s;
+				test_Q<=corrQ_s;
+			when others=>
+			end case;
+		end if;
+	end process;
 
 
 freq_estimator_inst: entity work.freq_estimator

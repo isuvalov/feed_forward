@@ -9,6 +9,10 @@ entity pilot_finder is
     Port (clk: in std_logic;
 		  reset: in std_logic;
 		  sample_ce: in std_logic;
+			
+		  corrI_o: out std_logic_vector(15 downto 0);
+		  corrQ_o: out std_logic_vector(15 downto 0);
+
 		  sampleI: in std_logic_vector(15 downto 0);
 		  sampleQ: in std_logic_vector(15 downto 0);		  
 		  pilot_start: out std_logic --# Этот импульс будет задержан на InterpolateRate*PILOT_LEN+5+Sqrt_Latency тактов
@@ -62,6 +66,8 @@ pilot_corr_inst: entity work.pilot_correlator
 		o_sampleQ=>sampleQ_corr
 		);
 
+corrI_o<=sampleI_corr;
+corrQ_o<=sampleQ_corr;
 
 cor_test<=EXT(cor_filtered_mult(cor_filtered_mult'Length-1 downto 6),cor_test'Length);
 process (clk) is
@@ -81,7 +87,7 @@ begin
 
 
 		correlation_sqrt_w1<=correlation_sqrt;
-		correlation_sqrt2<=rats(correlation_sqrt)-rats(correlation_sqrt_w1);
+--		correlation_sqrt2<=rats(correlation_sqrt)-rats(correlation_sqrt_w1);
 
 		if reset='1' then
 			EXTREMUM_STM<=WAITING;

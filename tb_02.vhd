@@ -130,6 +130,15 @@ modem_rx_top_inst: entity work.modem_rx_top
 		  reset=>reset,
 		  sampleI=>sampleI_tx0(sampleI_tx'Length-1 downto sampleI_tx'Length-12),
 		  sampleQ=>sampleQ_tx0(sampleQ_tx'Length-1 downto sampleQ_tx'Length-12),
+
+		  test_mode=>"01",
+				--# 1 - output after signal normalizing
+				--# 2 - output after rcc filter
+				--# 3 - output after correlation
+
+		  test_I=>open,
+		  test_Q=>open,
+
 		  dds_cos_o=>open,
 		  dds_sin_o=>open,
 		  pilot_start=>pilot_start --# Этот импульс будет задержан на InterpolateRate*PILOT_LEN+5+Sqrt_Latency тактов
