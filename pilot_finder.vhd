@@ -66,8 +66,8 @@ pilot_corr_inst: entity work.pilot_correlator
 		o_sampleQ=>sampleQ_corr
 		);
 
-corrI_o<=sampleI_corr;
-corrQ_o<=sampleQ_corr;
+corrI_o<=cor_test;--sampleI_corr;
+corrQ_o<=correlation_sqrt;--sampleQ_corr;
 
 cor_test<=EXT(cor_filtered_mult(cor_filtered_mult'Length-1 downto 6),cor_test'Length);
 process (clk) is

@@ -71,7 +71,7 @@ signal adc_array_im,adc_array_re:std_logic_vector(15 downto 0);
 type Ttest_mem is array(0 to PILOT_LEN) of std_logic_vector(15 downto 0);
 signal test_mem_I,test_mem_Q:Ttest_mem;
 
-signal first_read:std_logic;
+signal first_read,s_pilot_ce:std_logic;
 
 begin
 
@@ -161,11 +161,12 @@ begin
 					bits<="10";
 				end if;
 				test_mux<='1';
-				pilot_ce<='1';
+				s_pilot_ce<='1';
 			else
 				test_mux<='0';
-				pilot_ce<='0';
-				bits<="01";--lfsr_reg(bits'Length-1 downto 0);
+				s_pilot_ce<='0';
+--				bits<="01";--lfsr_reg(bits'Length-1 downto 0);
+				bits<=lfsr_reg(bits'Length-1 downto 0);
 			end if;
 		else
 			test_mux<='0';
@@ -212,7 +213,7 @@ rcc_up_filter_inst: entity work.rcc_up_filter
 		o_sampleI=>s_sampleI_o,
 		o_sampleQ=>s_sampleQ_o
 		);
-
+pilot_ce<=s_pilot_ce;
 
 
 --sampleI_o<=SXT(cnt(3 downto 0),16);--,m_sampleI_o;
@@ -220,6 +221,9 @@ rcc_up_filter_inst: entity work.rcc_up_filter
 
 sampleI_o<=m_sampleI_o;
 sampleQ_o<=m_sampleQ_o;
+
+--sampleI_o<=m_sampleI_o when s_pilot_ce='1' else (others=>'0');
+--sampleQ_o<=m_sampleQ_o when s_pilot_ce='1' else (others=>'0');
 
 
 	

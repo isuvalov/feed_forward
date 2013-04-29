@@ -113,7 +113,8 @@ shift_dataflow_inst: entity work.shift_dataflow
 	port map(
 		clk =>clk,
 		reset =>reset,
-		offset =>conv_std_logic_vector(10000000,32),
+--		offset =>conv_std_logic_vector(10000000,32),
+		offset =>conv_std_logic_vector(00000000,32),
 		in_sampleI=>sampleI_tx,
 		in_sampleQ=>sampleQ_tx,
 		ce_in=>'1',
