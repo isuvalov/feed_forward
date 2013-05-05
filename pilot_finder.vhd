@@ -39,8 +39,8 @@ signal sampleI_sq,sampleQ_sq,sample_sq: std_logic_vector(31 downto 0);
 signal cor_test,cor_filtered,sampleI_corr,sampleQ_corr: std_logic_vector(15 downto 0);
 signal cor_filtered_ce,cor_sqrt_ce,sample_ce_w1: std_logic;
 
---constant MULT_POROG:std_logic_vector(6 downto 0):=conv_std_logic_vector(80,7); --# ÷ель умножить на 1.1 т.е. примерно *71/64
-constant MULT_POROG:std_logic_vector(6 downto 0):=conv_std_logic_vector(60,7); --# ÷ель умножить на 1.1 т.е. примерно *71/64
+constant MULT_POROG:std_logic_vector(6 downto 0):=conv_std_logic_vector(70,7); --# ÷ель умножить на 1.1 т.е. примерно *71/64
+--constant MULT_POROG:std_logic_vector(6 downto 0):=conv_std_logic_vector(60,7); --# ÷ель умножить на 1.1 т.е. примерно *71/64
 signal cor_filtered_mult:std_logic_vector(cor_filtered'Length+MULT_POROG'Length-1 downto 0);
 
 signal more_than_porog:std_logic;
@@ -69,7 +69,7 @@ pilot_corr_inst: entity work.pilot_correlator
 corrI_o<=cor_test;--sampleI_corr;
 corrQ_o<=correlation_sqrt;--sampleQ_corr;
 
-cor_test<=EXT(cor_filtered_mult(cor_filtered_mult'Length-1 downto 6),cor_test'Length);
+cor_test<=EXT(cor_filtered_mult(cor_filtered_mult'Length-2 downto 5),cor_test'Length);
 process (clk) is
 begin		
 	if rising_edge(clk) then
