@@ -32,15 +32,14 @@ signal sampleIfilt2,sampleQfilt2: std_logic_vector(15 downto 0);
 constant SQRT_LATENCY:natural:=16;
 constant FILTRCC_LATENCY:natural:=33/2+1-5;
 constant DELAY_LEN:natural:=InterpolateRate*PILOT_LEN+SQRT_LATENCY+FILTRCC_LATENCY;
+constant DDS_LATENCY:natural:=8;
+constant DELAY_AFTER_FREQESTIM:natural:=25413+DDS_LATENCY+1; --# Высчитывается по симуляции сигналом time_for_freqcalc_cnt_reg 
 
-signal sampleI_delay,sampleQ_delay:std_logic_vector(15 downto 0);
+
+signal sampleI_delay,sampleQ_delay:std_logic_vector(sampleIfilt'Length-1 downto 0);
+signal sampleI_delay_fe,sampleQ_delay_fe:std_logic_vector(sampleIfilt'Length-1 downto 0);
+signal sampleI_delay_fe_reg,sampleQ_delay_fe_reg:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal s_pilot_start:std_logic;
-
-type Tdelayline is array (0 to DELAY_LEN-1) of std_logic_vector(sampleIfilt'Length-1 downto 0);
-signal delaylineI,delaylineQ:Tdelayline:=(others=>(others=>'0'));
-
-signal p_wr:std_logic_vector(log2roundup(DELAY_LEN)-1 downto 0):=(others=>'0');
-signal p_rd:std_logic_vector(log2roundup(DELAY_LEN)-1 downto 0):=conv_std_logic_vector(DELAY_LEN-1,p_wr'Length);
 
 signal freq_value,freq_val_filt:std_logic_vector(NBITm1+log2roundup(PILOT_LEN*2) downto 0);
 --constant MUL_SCALE:std_logic_vector(11 downto 0):=conv_std_logic_vector(2564,12);
@@ -57,6 +56,10 @@ signal sampleI_norm,sampleQ_norm:std_logic_vector(15 downto 0);
 signal corrI_s: std_logic_vector(15 downto 0);
 signal corrQ_s: std_logic_vector(15 downto 0);
 
+signal time_for_freqcalc_ce:std_logic;
+signal time_for_freqcalc_cnt,time_for_freqcalc_cnt_reg:std_logic_vector(31 downto 0):=(others=>'0');
+
+signal sampleI_moveback,sampleQ_moveback:std_logic_vector(dds_cos'Length+sampleI_delay_fe_reg'Length-1 downto 0);
 
 begin
 
@@ -93,44 +96,23 @@ pilot_finder_inst: entity work.pilot_finder
 	);
 pilot_start<=s_pilot_start;
 
-process (clk) is
-begin		
-	if rising_edge(clk) then
-		if reset='1' then
-			p_wr<=(others=>'0');
---			p_rd<=conv_std_logic_vector(DELAY_LEN-1,p_rd'Length);
-			p_rd<=conv_std_logic_vector(1,p_rd'Length);
-		else
-			if unsigned(p_rd)<DELAY_LEN-1 then
-				p_rd<=p_rd+1;
-			else
-				p_rd<=(others=>'0');
-			end if;
-			if unsigned(p_wr)<DELAY_LEN-1 then
-				p_wr<=p_wr+1;
-			else
-				p_wr<=(others=>'0');
-			end if;
-		end if;
-	end if;
-end process;
+
+delayer_find: entity work.delayer
+	generic map(
+		DELAY_LEN=>DELAY_LEN
+	)
+	port map(
+		clk =>clk,
+		reset =>reset,
+
+		i_sampleI=>sampleIfilt2,
+		i_sampleQ=>sampleQfilt2,
+
+		o_sampleI=>sampleI_delay,
+		o_sampleQ=>sampleQ_delay
+		);
 
 
-process (clk) is
-begin		
-	if rising_edge(clk) then
-		delaylineI(conv_integer(p_wr))<=sampleIfilt2;
-		sampleI_delay<=delaylineI(conv_integer(p_rd));
-	end if;
-end process;
-
-process (clk) is
-begin		
-	if rising_edge(clk) then
-		delaylineQ(conv_integer(p_wr))<=sampleQfilt2;
-		sampleQ_delay<=delaylineQ(conv_integer(p_rd));
-	end if;
-end process;
 
 normalizer_inst:entity work.normalizer
 	port map(
@@ -222,12 +204,34 @@ bih_filter_integrator_inst: entity work.bih_filter_integrator_sign
 process (clk)
 begin
 	if rising_edge(clk) then
+        sampleI_delay_fe_reg<=sampleI_delay_fe;
+		sampleQ_delay_fe_reg<=sampleQ_delay_fe;
+		if s_pilot_start_norm='1' then
+			time_for_freqcalc_cnt<=(others=>'0');
+			time_for_freqcalc_ce<='1';
+		elsif time_for_freqcalc_ce='1' then
+			if freq_ce='1' then
+				time_for_freqcalc_cnt_reg<=time_for_freqcalc_cnt;
+				time_for_freqcalc_ce<='0';
+			else
+				time_for_freqcalc_cnt<=time_for_freqcalc_cnt+1;
+			end if;
+		end if;
+
 		freq_ce_f_1w<=freq_ce_f;
 		freq_ce_f_2w<=freq_ce_f_1w;
 		if freq_ce='1' then
 			freq_val_filt_mult<=signed(freq_value)*unsigned(MUL_SCALE);
 		end if;
 		freq_val_filt_mult_1w<=freq_val_filt_mult;
+
+		dds_cos_o<=dds_cos;
+		dds_sin_o<=dds_sin;
+
+
+		sampleI_moveback<=signed(sampleI_delay_fe_reg)*signed(dds_cos);
+		sampleQ_moveback<=signed(sampleQ_delay_fe_reg)*signed(dds_sin);
+
 	end if;
 end process;
 
@@ -258,8 +262,23 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
     ampl_o  =>dds_sin
     );
 
-dds_cos_o<=dds_cos;
-dds_sin_o<=dds_sin;
+
+
+delayer_de: entity work.delayer
+	generic map(
+		DELAY_LEN=>DELAY_AFTER_FREQESTIM
+	) 
+	port map(
+		clk =>clk,
+		reset =>reset,
+
+		i_sampleI=>sampleI_delay,
+		i_sampleQ=>sampleQ_delay,
+
+		o_sampleI=>sampleI_delay_fe,
+		o_sampleQ=>sampleQ_delay_fe
+		);
+
 
 end modem_rx_top;
 

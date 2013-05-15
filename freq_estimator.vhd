@@ -17,7 +17,7 @@ entity freq_estimator is
 		i_samplesI: in std_logic_vector(15 downto 0);
 		i_samplesQ: in std_logic_vector(15 downto 0);
 		freq_ce: out std_logic;
-		o_freq: out std_logic_vector(NBITm1+log2roundup(PILOT_LEN*2) downto 0)
+		o_freq: out std_logic_vector(NBITm1+log2roundup(PILOT_LEN*2) downto 0)  --# Это уже отрецательная частота
 		);
 end freq_estimator;
 
