@@ -7,6 +7,9 @@ use work.feedf_consts_pack.all;
 
 
 entity scalar_mult is
+	generic(
+		CONJ_PORT_B:integer:=0  --# Если 1 то bQ будет умножен на (-1)
+		);
 	port(
 		clk : in STD_LOGIC;
 		reset : in std_logic;
@@ -29,8 +32,14 @@ end scalar_mult;
 
 architecture scalar_mult of scalar_mult is
 
+constant SHIFTVAL:natural:=log2roundup(InterpolateRate*PILOT_LEN);
 
-signal sum_regI,sum_regQ:std_logic_vector(31 downto 0);
+--# (aI+jaQ) * (bI+jbQ) = (aI*bI-aQ*bQ) + (aI*bQ + aQ*bI)
+--# (aI+jaQ) * (bI-jbQ) = (aI*bI+aQ*bQ) + (aQ*bI - aI*bQ)
+signal sum_regI,sum_regQ,mul_regI,mul_regQ:std_logic_vector(31 downto 0);
+signal aIbI,aQbQ,aIbQ,aQbI:std_logic_vector(31 downto 0);
+signal aIbI_m_aQbQ,aIbQ_p_aQbI,aIbI_p_aQbQ,aQbI_m_aIbQ:std_logic_vector(31 downto 0);
+signal ce_w1,ce_w2,ce_w3,ce_w4: std_logic;
 
 begin
 
@@ -38,15 +47,50 @@ begin
 process (clk)
 begin		
 	if rising_edge(clk) then
-		if reset='1' then
+		ce_w1<=ce;
+		ce_w2<=ce_w1;
+	    ce_w3<=ce_w2;
+		ce_w4<=ce_w3;
+
+		aIbI<=signed(aI)*signed(bI);
+		aQbQ<=signed(aQ)*signed(bQ);
+		aIbQ<=signed(aI)*signed(bQ);
+		aQbI<=signed(aQ)*signed(bI);
+		
+		aIbI_m_aQbQ<=SXT(aIbI(31 downto 1+SHIFTVAL),32) - SXT(aQbQ(31 downto 1+SHIFTVAL),32);
+		aIbQ_p_aQbI<=SXT(aIbQ(31 downto 1+SHIFTVAL),32) + SXT(aQbI(31 downto 1+SHIFTVAL),32);
+
+		aIbI_p_aQbQ<=SXT(aIbI(31 downto 1+SHIFTVAL),32) + SXT(aQbQ(31 downto 1+SHIFTVAL),32);
+		aQbI_m_aIbQ<=SXT(aQbI(31 downto 1+SHIFTVAL),32) - SXT(aIbQ(31 downto 1+SHIFTVAL),32);
+
+		if CONJ_PORT_B=0 then
+			mul_regI<=aIbI_m_aQbQ;		
+			mul_regQ<=aIbQ_p_aQbI;
+		else --# CONJ_PORT_B
+			mul_regI<=aIbI_p_aQbQ;		
+			mul_regQ<=aQbI_m_aIbQ;
+		end if; --#CONJ_PORT_B	
+
+		if ce_w3='0' then
 			sum_regI<=(others=>'0');
 			sum_regQ<=(others=>'0');
-		else --#reset
-			
-		end if; --#reset
+			if ce_w4='1' then
+				sumI_o<=sum_regI;
+				sumQ_o<=sum_regQ;
+			end if;
+		else
+			sum_regI<=sum_regI+mul_regI;
+			sum_regQ<=sum_regQ+mul_regQ;
+		end if;	
+
+		if ce_w3='1' and ce_w2='0' then
+			sum_ce<='1';
+		else
+			sum_ce<='0';
+		end if;
+
 	end if;	--clk
 end process;
-		 
 
 	
 end scalar_mult;

@@ -63,6 +63,7 @@ signal pilotU_I,pilotU_Q:std_logic_vector(15 downto 0);
 signal start_pilotU_have:std_logic;
 signal start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0);
 
+signal scalar_sumI,scalar_sumQ:std_logic_vector(31 downto 0);
 
 begin
 
@@ -311,6 +312,28 @@ pilot_upper_inst: entity work.pilot_upper
 		sampleI_o=>pilotU_I,
 		sampleQ_o=>pilotU_Q
 		);
+
+scalar_mult_inst: entity work.scalar_mult
+	generic map(
+		CONJ_PORT_B=>1  --# Если 1 то bQ будет умножен на (-1)
+		)
+	port map(
+		clk =>clk,
+		reset =>reset,
+
+		ce=>'1',
+
+		aI=>sampleI_moveback,
+		aQ=>sampleQ_moveback,
+
+		bI=>pilotU_I,
+		bQ=>pilotU_Q,
+
+		sum_ce=>open,
+		sumI_o=>scalar_sumI,
+		sumQ_o=>scalar_sumQ
+		);
+
 
 
 end modem_rx_top;
