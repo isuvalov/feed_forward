@@ -34,7 +34,7 @@ constant FILTRCC_LATENCY:natural:=33/2+1-5;
 constant DELAY_LEN:natural:=InterpolateRate*PILOT_LEN+SQRT_LATENCY+FILTRCC_LATENCY;
 constant DDS_LATENCY:natural:=8;
 constant DELAY_AFTER_FREQESTIM:natural:=25413+DDS_LATENCY+1; --# Высчитывается по симуляции сигналом time_for_freqcalc_cnt_reg 
-
+constant PILOTUP_START_DELAY:natural:=9+3; --# Время которое надо для того чтоб генератор интерполированного пилота начал выдавать отсчеты
 
 signal sampleI_delay,sampleQ_delay:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal sampleI_delay_fe,sampleQ_delay_fe:std_logic_vector(sampleIfilt'Length-1 downto 0);
@@ -42,15 +42,13 @@ signal sampleI_delay_fe_reg,sampleQ_delay_fe_reg:std_logic_vector(sampleIfilt'Le
 signal s_pilot_start:std_logic;
 
 signal freq_value,freq_val_filt:std_logic_vector(NBITm1+log2roundup(PILOT_LEN*2) downto 0);
---constant MUL_SCALE:std_logic_vector(11 downto 0):=conv_std_logic_vector(2564,12);
---constant MUL_SCALE:std_logic_vector(11 downto 0):=conv_std_logic_vector(45,12);
 constant MUL_SCALE:std_logic_vector(11 downto 0):=conv_std_logic_vector(34,12);
 signal freq_val_filt_mult_1w,freq_val_filt_mult:std_logic_vector(freq_val_filt'Length+MUL_SCALE'Length-1+1 downto 0);
 
 signal freq_ce,freq_ce_f,freq_ce_f_1w,freq_ce_f_2w,good_values:std_logic;
 signal dds_cos,dds_sin:std_logic_vector(15 downto 0);
 
-signal s_pilot_start_norm,pilot_wr:std_logic;
+signal s_pilot_start_norm,pilot_wr,start_pilotU:std_logic;
 signal sampleI_norm,sampleQ_norm:std_logic_vector(15 downto 0);
 
 signal corrI_s: std_logic_vector(15 downto 0);
@@ -60,6 +58,11 @@ signal time_for_freqcalc_ce:std_logic;
 signal time_for_freqcalc_cnt,time_for_freqcalc_cnt_reg:std_logic_vector(31 downto 0):=(others=>'0');
 
 signal sampleI_moveback,sampleQ_moveback:std_logic_vector(dds_cos'Length+sampleI_delay_fe_reg'Length-1 downto 0);
+signal pilotU_I,pilotU_Q:std_logic_vector(15 downto 0);
+
+signal start_pilotU_have:std_logic;
+signal start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0);
+
 
 begin
 
@@ -232,6 +235,25 @@ begin
 		sampleI_moveback<=signed(sampleI_delay_fe_reg)*signed(dds_cos);
 		sampleQ_moveback<=signed(sampleQ_delay_fe_reg)*signed(dds_sin);
 
+		if s_pilot_start='1' then
+			start_delayer_cnt<=conv_std_logic_vector(DELAY_AFTER_FREQESTIM-PILOTUP_START_DELAY,start_delayer_cnt'Length);		
+			start_pilotU<='0';
+			start_pilotU_have<='0';
+		else
+			if unsigned(start_delayer_cnt)>0 then
+				start_delayer_cnt<=start_delayer_cnt-1;
+				start_pilotU<='0';
+			else
+				if start_pilotU_have='0' then
+					start_pilotU<='1';
+					start_pilotU_have<='1';
+				else
+					start_pilotU<='0';
+				end if;
+			end if;
+		end if;
+
+
 	end if;
 end process;
 
@@ -277,6 +299,17 @@ delayer_de: entity work.delayer
 
 		o_sampleI=>sampleI_delay_fe,
 		o_sampleQ=>sampleQ_delay_fe
+		);
+
+
+
+pilot_upper_inst: entity work.pilot_upper
+	port map(
+		clk =>clk,
+		reset =>start_pilotU,
+
+		sampleI_o=>pilotU_I,
+		sampleQ_o=>pilotU_Q
 		);
 
 

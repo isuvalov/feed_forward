@@ -5,6 +5,7 @@ use IEEE.std_logic_unsigned.all;
 
 
 --# выходные значения в два раза меньше т.е. можно не брать самый старший бит
+--# latency=9
 entity rcc_up_filter is
 	generic (
 		LEN:natural:=2

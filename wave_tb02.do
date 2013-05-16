@@ -13,7 +13,7 @@ add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/time_for_freqcalc_ce
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/time_for_freqcalc_cnt
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/time_for_freqcalc_cnt_reg
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {10803878 ps} 0}
+WaveRestoreCursors {{Cursor 1} {535364000 ps} 0}
 configure wave -namecolwidth 425
 configure wave -valuecolwidth 87
 configure wave -justifyvalue left
@@ -28,4 +28,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {102954600 ps}
+WaveRestoreZoom {0 ps} {1050 us}
