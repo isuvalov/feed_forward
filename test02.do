@@ -40,4 +40,4 @@ vcom -novopt -work work tb_02.vhd
 vsim -novopt -t ps work.tb
 
 
-do wave_tb02.do
+#do wave_tb02.do

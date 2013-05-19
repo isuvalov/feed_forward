@@ -63,7 +63,7 @@ END gen_lfsr;
 
 
 
-
+signal pilot_ce_test_event,pilot_ce_test,pilot_ce_test_1w:std_logic;
 signal clk,clk125,clk125_div2,clk125_div4:std_logic:='0';
 signal reset:std_logic:='1'; 
 signal cnt_rd:std_logic_vector(64 downto 0):=(others=>'0');
@@ -90,6 +90,12 @@ end process;
 process (clk) is
 begin
 	if rising_edge(clk) then
+		pilot_ce_test_1w<=pilot_ce_test;
+		if pilot_ce_test='1' and pilot_ce_test_1w='0' then
+			pilot_ce_test_event<='1';
+		else
+			pilot_ce_test_event<='0';
+		end if;
 	end if;
 end process;
 
@@ -104,7 +110,7 @@ test_tx_inst: entity work.generate_test_tx
 		clk =>clk,
 		reset =>reset,
 
-		pilot_ce => open,
+		pilot_ce => pilot_ce_test,
 
 		sampleI_o=>sampleI_tx,
 		sampleQ_o=>sampleQ_tx
@@ -115,6 +121,7 @@ test_tx_inst: entity work.generate_test_tx
 shift_dataflow_inst: entity work.shift_dataflow
 	port map(
 		clk =>clk,
+--		reset =>pilot_ce_test_event,
 		reset =>reset,
 --		offset =>conv_std_logic_vector(10000000,32),
 		offset =>conv_std_logic_vector(01000000,32),
@@ -131,12 +138,16 @@ sampleI_tx0<=rats(SXT(sampleI_tx_sh(sampleI_tx'Length-1 downto 1),sampleQ_tx0'Le
 sampleQ_tx0<=rats(SXT(sampleQ_tx_sh(sampleI_tx'Length-1 downto 1),sampleQ_tx0'Length));
 
 modem_rx_top_inst: entity work.modem_rx_top
+	generic map(
+		SIMULATION=>1
+	)
     port map(clk=>clk,
 		  reset=>reset,
 		  sampleI=>sampleI_tx0(sampleI_tx'Length-1 downto sampleI_tx'Length-12),
 		  sampleQ=>sampleQ_tx0(sampleQ_tx'Length-1 downto sampleQ_tx'Length-12),
 
 		  test_mode=>"01",
+				--# 0 - output phase calculation
 				--# 1 - output after signal normalizing
 				--# 2 - output after rcc filter
 				--# 3 - output after correlation

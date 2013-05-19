@@ -23,7 +23,7 @@ architecture pilot_upper of pilot_upper is
 
 constant FILTER_DELAY:integer:=9;
 
-signal o_interp_ce,o_interp_ce_w1,o_interp_ce_w2,sm_qam_ce:std_logic;
+signal o_interp_ce,o_interp_ce_w1,o_interp_ce_w2,sm_qam_ce,test_val:std_logic;
 signal cnt_interp:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);	
 signal cnt:std_logic_vector(log2roundup(PILOT_LEN)-1 downto 0);
 signal mod_samplesI,mod_samplesQ:std_logic_vector(1 downto 0);
@@ -75,20 +75,26 @@ begin
 			end if;
 	        o_interp_ce_w1<=o_interp_ce;
 			o_interp_ce_w2<=o_interp_ce_w1;
-		end if; --#reset
-
 
 		if o_interp_ce='1' then
-			if unsigned(cnt)<PILOT_LEN then
+--			if unsigned(cnt)<PILOT_LEN then
+				test_val<=PILOT((PILOT_LEN-1)-conv_integer(cnt(log2roundup(PILOT_LEN)-1 downto 0)));
+--				test_val<=cnt(0);--tPILOT(conv_integer(cnt));
 				if PILOT((PILOT_LEN-1)-conv_integer(cnt(log2roundup(PILOT_LEN)-1 downto 0)))='1' then --# set or 0 or 2
+--				if PILOT(conv_integer(cnt(log2roundup(PILOT_LEN)-1 downto 0)))='1' then --# set or 0 or 2
 					bits<="00";
 				else
 					bits<="10";
 				end if;
-			else
-				bits<="01";--lfsr_reg(bits'Length-1 downto 0);
-			end if;
+--			else
+--				bits<="01";--lfsr_reg(bits'Length-1 downto 0);
+--			end if;
 		end if;
+
+
+		end if; --#reset
+
+
 	end if;	--clk
 end process;
 		 
@@ -118,5 +124,7 @@ rcc_up_filter_inst: entity work.rcc_up_filter
 		o_sampleQ=>s_sampleQ_o
 		);
 
+sampleQ_o<=s_sampleQ_o;
+sampleI_o<=s_sampleI_o;
 	
 end pilot_upper;

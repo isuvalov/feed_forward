@@ -6,6 +6,9 @@ library work;
 use work.feedf_consts_pack.all;
 
 entity modem_rx_top is
+	generic (
+		SIMULATION:integer:=0
+	);
     Port (clk: in std_logic;
 		  reset: in std_logic;
 		  sampleI: in std_logic_vector(11 downto 0);
@@ -66,14 +69,21 @@ signal start_pilotU_have:std_logic;
 signal start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0);
 
 signal scalar_sumI,scalar_sumQ:std_logic_vector(31 downto 0);
-signal pilot_valid:std_logic;
+signal scalar_sum_ce,pilot_valid:std_logic;
+
 
 begin
 
 sampleIE<=SXT(sampleI,sampleIE'Length);
 sampleQE<=SXT(sampleQ,sampleQE'Length);
 
-remove_zero_inst: entity work.remove_zero
+zero_remove02: if SIMULATION=1 generate
+	sampleI_zero<=sampleIE;
+	sampleQ_zero<=sampleQE;
+end generate; --#SIMULATION=1
+
+zero_remove01: if SIMULATION/=1 generate
+	remove_zero_inst: entity work.remove_zero
 	generic map(
 		WIDTH=>sampleIE'Length
 	)
@@ -88,18 +98,18 @@ remove_zero_inst: entity work.remove_zero
 		filtered_Q =>sampleQ_zero,
 		ce_out =>open
 	);
-
+end generate; --#SIMULATION/=1
 
 
 rcc_up_filter_inst: entity work.rcc_up_filter_rx
 	generic map(
-		LEN=>sampleIE'Length
+		LEN=>sampleI'Length
 	)
 	port map(
 		clk =>clk,
 		reset =>reset,
-		i_samplesI=>sampleI_zero,
-		i_samplesQ=>sampleQ_zero,
+		i_samplesI=>sampleI_zero(sampleI'Length-1 downto 0),
+		i_samplesQ=>sampleQ_zero(sampleI'Length-1 downto 0),
 		o_sampleI=>sampleIfilt,
 		o_sampleQ=>sampleQfilt
 		);
@@ -163,6 +173,11 @@ normalizer_inst:entity work.normalizer
 	begin
 		if rising_edge(clk) then
 			case test_mode is
+			when "00" =>
+				if scalar_sum_ce='1' then
+					test_I<=scalar_sumI(scalar_sumI'Length-1 downto scalar_sumI'Length-test_I'Length);
+					test_Q<=scalar_sumQ(scalar_sumI'Length-1 downto scalar_sumI'Length-test_I'Length);
+				end if;
 			when "01" =>
 				test_I<=sampleI_norm;
 				test_Q<=sampleQ_norm;
@@ -262,7 +277,7 @@ begin
 		sampleQ_moveback<=signed(sampleQ_delay_fe_reg)*signed(dds_sin);
 
 		if s_pilot_start='1' then
-			start_delayer_cnt<=conv_std_logic_vector(DELAY_AFTER_FREQESTIM-PILOTUP_START_DELAY,start_delayer_cnt'Length);		
+			start_delayer_cnt<=conv_std_logic_vector(DELAY_AFTER_FREQESTIM-PILOTUP_START_DELAY-18,start_delayer_cnt'Length);		
 			start_pilotU<='0';
 			start_pilotU_have<='0';
 		else
@@ -355,7 +370,7 @@ scalar_mult_inst: entity work.scalar_mult
 		bI=>pilotU_I,
 		bQ=>pilotU_Q,
 
-		sum_ce=>open,
+		sum_ce=>scalar_sum_ce,
 		sumI_o=>scalar_sumI,
 		sumQ_o=>scalar_sumQ
 		);
