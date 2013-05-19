@@ -58,7 +58,7 @@ end process;
 		 
 
 
-dds_I_inst:entity work.dds_synthesizer
+dds_I_inst:entity work.dds_synthesizer_pipe --dds_synthesizer
   generic map(
     ftw_width =>32
     )
@@ -71,7 +71,7 @@ dds_I_inst:entity work.dds_synthesizer
     ampl_o  =>dds_cos
     );
 
-dds_Q_inst:entity work.dds_synthesizer
+dds_Q_inst:entity work.dds_synthesizer_pipe --dds_synthesizer
   generic map(
     ftw_width =>32
     )

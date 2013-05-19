@@ -27,6 +27,8 @@ entity modem_rx_top is
 end modem_rx_top;
 architecture modem_rx_top of modem_rx_top is
 
+signal sampleIE,sampleQE,sampleI_zero,sampleQ_zero: std_logic_vector(15 downto 0);
+
 signal sampleIfilt,sampleQfilt: std_logic_vector(15 downto 0);
 signal sampleIfilt2,sampleQfilt2: std_logic_vector(15 downto 0);
 constant SQRT_LATENCY:natural:=16;
@@ -64,18 +66,40 @@ signal start_pilotU_have:std_logic;
 signal start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0);
 
 signal scalar_sumI,scalar_sumQ:std_logic_vector(31 downto 0);
+signal pilot_valid:std_logic;
 
 begin
 
-rcc_up_filter_inst: entity work.rcc_up_filter_rx
+sampleIE<=SXT(sampleI,sampleIE'Length);
+sampleQE<=SXT(sampleQ,sampleQE'Length);
+
+remove_zero_inst: entity work.remove_zero
 	generic map(
-		LEN=>sampleI'Length
+		WIDTH=>sampleIE'Length
 	)
 	port map(
 		clk =>clk,
 		reset =>reset,
-		i_samplesI=>sampleI,
-		i_samplesQ=>sampleQ,
+		ce => '1',
+		sampleI =>sampleIE,
+		sampleQ =>sampleQE,
+
+		filtered_I =>sampleI_zero,
+		filtered_Q =>sampleQ_zero,
+		ce_out =>open
+	);
+
+
+
+rcc_up_filter_inst: entity work.rcc_up_filter_rx
+	generic map(
+		LEN=>sampleIE'Length
+	)
+	port map(
+		clk =>clk,
+		reset =>reset,
+		i_samplesI=>sampleI_zero,
+		i_samplesQ=>sampleQ_zero,
 		o_sampleI=>sampleIfilt,
 		o_sampleQ=>sampleQfilt
 		);
@@ -178,6 +202,7 @@ bih_filter_integrator_inst: entity work.bih_filter_integrator_sign
 	)
 	port map(
 		clk =>clk,
+		reset=>reset,
 		
 		ce =>freq_ce,
 		sample =>freq_value, --# this is signed value!!!
@@ -309,6 +334,7 @@ pilot_upper_inst: entity work.pilot_upper
 		clk =>clk,
 		reset =>start_pilotU,
 
+		pilot_valid=>pilot_valid,
 		sampleI_o=>pilotU_I,
 		sampleQ_o=>pilotU_Q
 		);
@@ -321,10 +347,10 @@ scalar_mult_inst: entity work.scalar_mult
 		clk =>clk,
 		reset =>reset,
 
-		ce=>'1',
+		ce=>pilot_valid,
 
-		aI=>sampleI_moveback,
-		aQ=>sampleQ_moveback,
+		aI=>sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16),
+		aQ=>sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16),
 
 		bI=>pilotU_I,
 		bQ=>pilotU_Q,

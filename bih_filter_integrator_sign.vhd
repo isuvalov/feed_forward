@@ -11,7 +11,7 @@ entity bih_filter_integrator_sign is
 	);
 	port(
 		clk : in std_logic;
-		
+		reset: in std_logic;
 		ce : in std_logic;
 		sample : in std_logic_vector(WIDTH-1 downto 0); --# this is unsigned value!!!
 
@@ -49,23 +49,26 @@ begin
 process (clk) is
 begin
 	if rising_edge(clk) then
---		if reset='1' then
---			acum<=(others=>'0');
---			ce_w1<='0';
---			ce_w2<=ce_w1;
---			ce_out<='0';
---			acum_w1<=(others=>'0');
---		else
+		if reset='1' then
+			acum<=(others=>'0');
+			ce_w1<='0';
+			ce_w2<='0';
+			ce_w3<='0';
+			ce_out<='0';
+			acum_p<=(others=>'0');
+			acum0<=(others=>'0');
+			acum_w1<=(others=>'0');
+		else
 			
 			ce_w1<=ce;
 			ce_w2<=ce_w1;
 			ce_w3<=ce_w2;
-			if ce='1' then
+--			if ce='1' then
 				acum0<=SXT(acum(acum'Length-1 downto ALPHA_NUM),acum0'Length);
 				acum_w1<=acum;
 				sample_w1<=sample;
-			end if;
-			if ce_w1='1' then
+--			end if;
+--			if ce_w1='1' then
 				acum_p<=signed(acum_w1)-signed(acum0);
 				sample_w2<=sample_w1;
 				if signed(sample_w2)>0 then
@@ -73,18 +76,18 @@ begin
 				else
 					sign_val<='0';
 				end if;
-			end if;
-			if ce_w2='1' then
+--			end if;
+--			if ce_w2='1' then
 	--			if sign_val='1' then
 					acum<=signed(acum_p)+signed(sample_w2);
 	--			else
 	--			    acum<=signed(acum_p)-signed(sample_w2);
 	--			end if;
-			end if;
+--			end if;
 
 			filtered<=acum(filtered'Length-1+SCALE_FACTOR+log2roundup(ALPHA_NUM)-1 downto SCALE_FACTOR+log2roundup(ALPHA_NUM)-1);
 			ce_out<=ce_w3;
---		end if; --# reset
+		end if; --# reset
 	end if;
 end process;
 

@@ -2,6 +2,8 @@ LIBRARY ieee;
 use IEEE.STD_LOGIC_1164.all;
 use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
+library work;
+use work.feedf_consts_pack.all;
 
 entity tb is
 end tb;
@@ -70,6 +72,7 @@ signal cnt_wr:std_logic_vector(64 downto 0):=(others=>'0');
 signal tx_cnt:integer:=0;
 
 signal sampleI_tx,sampleQ_tx:std_logic_vector(15 downto 0);
+signal sampleI_tx_sh,sampleQ_tx_sh:std_logic_vector(15 downto 0);
 signal sampleI_tx0,sampleQ_tx0:std_logic_vector(15 downto 0);
 signal pilot_start:std_logic;
 signal sampleI_tx2,sampleQ_tx2:std_logic_vector(15 downto 0);
@@ -120,12 +123,12 @@ shift_dataflow_inst: entity work.shift_dataflow
 		in_sampleQ=>sampleQ_tx,
 		ce_in=>'1',
 
-		out_sampleI=>sampleQ_tx0,
-		out_sampleQ=>sampleI_tx0,
+		out_sampleI=>sampleQ_tx_sh,
+		out_sampleQ=>sampleI_tx_sh,
 		ce_out=>open
 		);
---sampleI_tx0<=sampleI_tx;
---sampleQ_tx0<=sampleQ_tx;
+sampleI_tx0<=rats(SXT(sampleI_tx_sh(sampleI_tx'Length-1 downto 1),sampleQ_tx0'Length));
+sampleQ_tx0<=rats(SXT(sampleQ_tx_sh(sampleI_tx'Length-1 downto 1),sampleQ_tx0'Length));
 
 modem_rx_top_inst: entity work.modem_rx_top
     port map(clk=>clk,

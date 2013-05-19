@@ -28,6 +28,10 @@ vcom -novopt -work work pilot_finder.vhd
 vcom -novopt -work work freq_estimator.vhd 
 vcom -novopt -work work get_max_values.vhd
 vcom -novopt -work work normalizer.vhd 
+vcom delayer.vhd 
+vcom pilot_upper.vhd 
+vcom scalar_mult.vhd
+vcom remove_zero.vhd 
 vcom -novopt -work work modem_rx_top.vhd 
 
 vcom -novopt -work work shift_dataflow.vhd 

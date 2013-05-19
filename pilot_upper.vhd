@@ -11,6 +11,7 @@ entity pilot_upper is
 		clk : in STD_LOGIC;
 		reset : in std_logic;
 
+		pilot_valid: out std_logic;
 		sampleI_o: out std_logic_vector(15 downto 0);
 		sampleQ_o: out std_logic_vector(15 downto 0)
 		);
@@ -20,6 +21,8 @@ end pilot_upper;
 
 architecture pilot_upper of pilot_upper is
 
+constant FILTER_DELAY:integer:=9;
+
 signal o_interp_ce,o_interp_ce_w1,o_interp_ce_w2,sm_qam_ce:std_logic;
 signal cnt_interp:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);	
 signal cnt:std_logic_vector(log2roundup(PILOT_LEN)-1 downto 0);
@@ -27,6 +30,8 @@ signal mod_samplesI,mod_samplesQ:std_logic_vector(1 downto 0);
 signal bits:std_logic_vector(1 downto 0);
 signal s_sampleI_o,s_sampleQ_o:std_logic_vector(sampleI_o'Length-1 downto 0);
 
+signal cnt_delay:std_logic_vector(3 downto 0);
+signal cnt_pilot:std_logic_vector(log2roundup(PILOT_LEN*InterpolateRate) downto 0);
 
 begin
 
@@ -47,7 +52,22 @@ begin
 			cnt<=(others=>'0');
 			o_interp_ce_w1<='0';
 			o_interp_ce_w2<='0';
+			pilot_valid<='0';
+			cnt_delay<=conv_std_logic_vector(FILTER_DELAY-1,cnt_delay'Length);
 		else --#reset
+			if unsigned(cnt_delay)>0 then
+				pilot_valid<='0';
+				cnt_delay<=cnt_delay-1;
+				cnt_pilot<=conv_std_logic_vector(InterpolateRate*PILOT_LEN,cnt_pilot'Length);
+			else
+				if unsigned(cnt_pilot)>0 then
+					cnt_pilot<=cnt_pilot-1;
+					pilot_valid<='1';
+				else
+					pilot_valid<='0';
+				end if;
+			end if;
+
 			if o_interp_ce='1' then
 				if unsigned(cnt)<PILOT_LEN-1 then
 					cnt<=cnt+1;
