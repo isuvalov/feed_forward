@@ -47,12 +47,15 @@ add wave -noupdate /tb/modem_rx_top_inst/pilot_finder_inst/time_out1
 add wave -noupdate /tb/modem_rx_top_inst/pilot_finder_inst/extremum_stm
 add wave -noupdate -divider {New Divider}
 add wave -noupdate /tb/modem_rx_top_inst/delayer_de/p_rd
-add wave -noupdate /tb/modem_rx_top_inst/delayer_de/p_wr
+add wave -noupdate /tb/modem_rx_top_inst/s_pilot_start
+add wave -noupdate /tb/modem_rx_top_inst/start_delayer_cnt
+add wave -noupdate /tb/modem_rx_top_inst/start_pilotu
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/delayer_de/p_wr
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/scalar_mult_inst/clk
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/scalar_mult_inst/reset
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/scalar_mult_inst/ce
-add wave -noupdate -format Analog-Step -height 40 -max 9000.0 -min -9000.0 -radix decimal /tb/modem_rx_top_inst/scalar_mult_inst/ai
-add wave -noupdate -format Analog-Step -height 40 -max 9000.0 -min -9000.0 -radix decimal /tb/modem_rx_top_inst/scalar_mult_inst/aq
+add wave -noupdate -format Analog-Step -height 80 -max 9000.0 -min -9000.0 -radix decimal /tb/modem_rx_top_inst/scalar_mult_inst/ai
+add wave -noupdate -format Analog-Step -height 80 -max 9000.0 -min -9000.0 -radix decimal /tb/modem_rx_top_inst/scalar_mult_inst/aq
 add wave -noupdate -format Analog-Step -height 40 -max 9000.0 -min -9000.0 -radix decimal -subitemconfig {/tb/modem_rx_top_inst/scalar_mult_inst/bi(15) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(14) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(13) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(12) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(11) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(10) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(9) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(8) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(7) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(6) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(5) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(4) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(3) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(2) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(1) {-radix unsigned} /tb/modem_rx_top_inst/scalar_mult_inst/bi(0) {-radix unsigned}} /tb/modem_rx_top_inst/scalar_mult_inst/bi
 add wave -noupdate -format Analog-Step -height 40 -max 9000.0 -min -9000.0 -radix decimal /tb/modem_rx_top_inst/scalar_mult_inst/bq
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/scalar_mult_inst/sum_ce
@@ -80,22 +83,52 @@ add wave -noupdate /tb/modem_rx_top_inst/pilot_upper_inst/reset
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/pilot_valid
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/samplei_o
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/sampleq_o
+add wave -noupdate /tb/modem_rx_top_inst/pilot_upper_inst/test_val
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/o_interp_ce
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/o_interp_ce_w1
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/o_interp_ce_w2
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/sm_qam_ce
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/cnt_interp
-add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/cnt
+add wave -noupdate -radix unsigned -subitemconfig {/tb/modem_rx_top_inst/pilot_upper_inst/cnt(5) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(4) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(3) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(2) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(1) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(0) {-height 15 -radix unsigned}} -expand -subitemconfig {/tb/modem_rx_top_inst/pilot_upper_inst/cnt(5) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(4) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(3) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(2) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(1) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(0) {-height 15 -radix unsigned}} /tb/modem_rx_top_inst/pilot_upper_inst/cnt
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/mod_samplesi
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/mod_samplesq
-add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/bits
+add wave -noupdate -radix binary /tb/modem_rx_top_inst/pilot_upper_inst/bits
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/s_samplei_o
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/s_sampleq_o
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/cnt_delay
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/cnt_pilot
+add wave -noupdate /tb/modem_rx_top_inst/pilot_upper_inst/qam4_mapper_inst/clk
+add wave -noupdate /tb/modem_rx_top_inst/pilot_upper_inst/qam4_mapper_inst/reset
+add wave -noupdate /tb/modem_rx_top_inst/pilot_upper_inst/qam4_mapper_inst/i_bits
+add wave -noupdate /tb/modem_rx_top_inst/pilot_upper_inst/qam4_mapper_inst/i_ce
+add wave -noupdate /tb/modem_rx_top_inst/pilot_upper_inst/qam4_mapper_inst/o_samplesi
+add wave -noupdate /tb/modem_rx_top_inst/pilot_upper_inst/qam4_mapper_inst/o_samplesq
+add wave -noupdate /tb/modem_rx_top_inst/pilot_upper_inst/qam4_mapper_inst/o_ce
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/clk
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/reset
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/i_samplesi
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/i_samplesq
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/o_samplei
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/o_sampleq
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/muls_i
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/muls_q
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/delaylinei
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/delaylineq
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/sumsi_1
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/sumsq_1
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/sumsi_2
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/sumsq_2
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/sumsi_3
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/sumsq_3
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/sumsi_4
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/sumsq_4
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/sumsi_5
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/sumsq_5
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/s_o_samplei
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/s_o_sampleq
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {34075747 ps} 0}
-configure wave -namecolwidth 356
+WaveRestoreCursors {{Cursor 1} {993980000 ps} 0}
+configure wave -namecolwidth 377
 configure wave -valuecolwidth 87
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
@@ -109,4 +142,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {126382200 ps}
+WaveRestoreZoom {986189342 ps} {999484318 ps}
