@@ -209,22 +209,23 @@ freq_estimator_inst: entity work.freq_estimator
 --# то умножить надо на 2**31/(4607023/(5.5))=2563.729346 так как надо 
 --# помнить что freq_value знаковое 
 
-bih_filter_integrator_inst: entity work.bih_filter_integrator_sign
+bih_filter_integrator_inst: entity work.bih_filter_freq
 	generic map(
-		ALPHA_NUM=>6,  --# коэффициент интегрирования, чем он больше тем большую историю храним
-		SCALE_FACTOR=>3,  --# маштаб - чем он больше тем меньше значение на выходе
+		ALPHA_NUM=>12,  --# коэффициент интегрирования, чем он больше тем большую историю храним
+		SCALE_FACTOR=>9,  --# маштаб - чем он больше тем меньше значение на выходе
 		WIDTH=>freq_value'Length
 	)
 	port map(
 		clk =>clk,
 		reset=>reset,
-		
 		ce =>freq_ce,
-		sample =>freq_value, --# this is signed value!!!
-  
+		sample =>freq_value,
+
 		filtered =>freq_val_filt,
 		ce_out =>freq_ce_f
 	);
+
+
 
 --small_lf_fir_inst: entity work.small_lf_fir
 --	generic map(
@@ -264,8 +265,8 @@ begin
 
 		freq_ce_f_1w<=freq_ce_f;
 		freq_ce_f_2w<=freq_ce_f_1w;
-		if freq_ce='1' then
-			freq_val_filt_mult<=signed(freq_value)*unsigned(MUL_SCALE);
+		if freq_ce_f='1' then
+			freq_val_filt_mult<=signed(freq_val_filt)*unsigned(MUL_SCALE);
 		end if;
 		freq_val_filt_mult_1w<=freq_val_filt_mult;
 
