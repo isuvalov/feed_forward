@@ -124,7 +124,7 @@ shift_dataflow_inst: entity work.shift_dataflow
 --		reset =>pilot_ce_test_event,
 		reset =>reset,
 --		offset =>conv_std_logic_vector(10000000,32),
-		offset =>conv_std_logic_vector(01000000,32),
+		offset =>conv_std_logic_vector(00001000,32),
 --		offset =>conv_std_logic_vector(00000000,32),
 		in_sampleI=>sampleI_tx,
 		in_sampleQ=>sampleQ_tx,
