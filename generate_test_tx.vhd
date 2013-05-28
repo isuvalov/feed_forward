@@ -62,7 +62,7 @@ signal lfsr_reg:std_logic_vector(31 downto 0):=x"21322132";
 signal mod_samplesI,mod_samplesQ:std_logic_vector(1 downto 0);
 
 --signal cnt:std_logic_vector(11 downto 0);
-signal cnt,cnt_1w:std_logic_vector(12 downto 0);
+signal cnt,cnt_1w:std_logic_vector(log2roundup(PERIOD_OF_PILOT)-1 downto 0);
 signal qw_rd_1w,qw_rd,test_mux:std_logic;
 signal s_sampleI_o,s_sampleQ_o:std_logic_vector(sampleI_o'Length-1 downto 0);
 signal m_sampleI_o,m_sampleQ_o:std_logic_vector(sampleI_o'Length-1 downto 0);
@@ -146,7 +146,11 @@ begin
 			first_read<='1';
 		else
 			if o_interp_ce='1' then
-				cnt<=cnt+1;
+				if unsigned(cnt)<PERIOD_OF_PILOT-1 then
+					cnt<=cnt+1;
+				else
+					cnt<=(others=>'0');
+				end if;
 			end if;
 			if cnt=PILOT_LEN then
 				first_read<='0';

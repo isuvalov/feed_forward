@@ -9,7 +9,7 @@ constant InterpolateRate:natural:=4;
 constant Ndiv:natural:=0; --# Количество бит которые отсекаются еще до сложения в аккомуляторе
 constant NBIT:natural:=17; --# Разрядность матиматики в алгоритме расчета частотной расстройки
 constant NBITm1:natural:=NBIT-1;
-constant PERIOD_OF_PILOT:natural:=8192;
+constant PERIOD_OF_PILOT:natural:=100;
 
 --# '1' it is +1, '0' it is -1
 constant PILOT:std_logic_vector(0 to PILOT_LEN-1):="1100111001001001000010001100001010000001101011000100000100000001";
