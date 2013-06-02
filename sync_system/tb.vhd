@@ -85,9 +85,11 @@ port map(
  clk=>clkq,
  period	=>		conv_std_logic_vector(PILOT_PERIOD,32),
  fd =>			conv_std_logic_vector(125e6,32),
- freqoffset=>	conv_std_logic_vector(0000,32),
- error_val=>	conv_std_logic_vector(0,32),
+-- freqoffset=>	conv_std_logic_vector(0000,32),
+ freqoffset=>	conv_std_logic_vector(1e6,32),
+ error_val=>	conv_std_logic_vector(4,32),
  p_loss=>		conv_std_logic_vector(65535/3,32),
+-- p_loss=>		conv_std_logic_vector(0,32),
  start_delay=>	conv_std_logic_vector(0000,32),
  ce=>'1',
  strob=>strob
@@ -115,6 +117,23 @@ begin
 		end if;
 	end if;
 end process;
+
+pilotsync_inst: entity work.pilot_sync_every_time
+	generic map(
+		DELAY_AFTER_FREQESTIM=>PILOT_PERIOD/3,
+		DELAY_LEN=>PILOT_PERIOD
+	) 
+	port map(
+		clk =>clkq,
+		reset =>reset,
+
+		realpilot_event =>strob,
+		
+		
+		start_pilotU =>open,
+        sync_find =>open
+		);
+
 
 
 end tb;

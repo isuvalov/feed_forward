@@ -27,9 +27,9 @@ end pilot_sync_every_time;
 architecture pilot_sync_every_time of pilot_sync_every_time is
 
 
-constant CATCH_NUM_UP:natural:=3;
-constant CATCH_NUM_DOWN:natural:=1;
-constant MAX_CATCH_NUM:natural:=6;
+constant CATCH_NUM_UP:natural:=3*2;
+constant CATCH_NUM_DOWN:natural:=1*2;
+constant MAX_CATCH_NUM:natural:=6*4;
 
 constant PILOTUP_START_DELAY:natural:=9+3; --# Время которое надо для того чтоб генератор интерполированного пилота начал выдавать отсчеты
 
@@ -80,7 +80,7 @@ begin
 
 ----------------------------------
 			if realpilot_event='1' then
-				 main_cnt<=conv_std_logic_vector(PILOT_PERIOD/2,main_cnt'Length);
+				 main_cnt<=conv_std_logic_vector(PILOT_PERIOD/2+InterpolateRate,main_cnt'Length);
 				 main_cnt_prev<=main_cnt;
 			else     --# realpilot_event
 			    if unsigned(main_cnt)<(PILOT_PERIOD-1) then
@@ -91,11 +91,10 @@ begin
 			end if;  --# realpilot_event
 			
 			if realpilot_event='1' then
-				if main_cnt(main_cnt'Length-1 downto INTERP_CUT)=main_cnt_prev(main_cnt'Length-1 downto INTERP_CUT) then
+				if main_cnt(main_cnt'Length-1 downto 1+INTERP_CUT)=main_cnt_prev(main_cnt'Length-1 downto 1+INTERP_CUT) then
 					if unsigned(loss_cnt)<MAX_CATCH_NUM then
 						loss_cnt<=loss_cnt+1;
 					end if;
-					main_cnt_best<=main_cnt_prev;
 				else
 					if unsigned(loss_cnt)>0 then
 						loss_cnt<=loss_cnt-1;
@@ -116,7 +115,7 @@ begin
     			s_sync_find<='0';
 				if unsigned(loss_cnt)>=CATCH_NUM_UP then
 					stm<=CATCH;
-					
+					main_cnt_best<=main_cnt_prev;					
 --				elsif unsigned(loss_cnt)<=CATCH_NUM_DOWN then
 				end if;
 			when CATCH=>
@@ -166,7 +165,7 @@ process (clk) is
 begin		
 	if rising_edge(clk) then
 		if m_realpilot_event='1' then
-			m_start_delayer_cnt<=conv_std_logic_vector(DELAY_AFTER_FREQESTIM-PILOTUP_START_DELAY-18,m_start_delayer_cnt'Length);		
+			m_start_delayer_cnt<=conv_std_logic_vector(DELAY_AFTER_FREQESTIM-PILOTUP_START_DELAY-18-1,m_start_delayer_cnt'Length);		
 			m_start_pilotU<='0';
 			m_start_pilotU_have<='0';
 		else
