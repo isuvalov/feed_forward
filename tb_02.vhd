@@ -155,6 +155,8 @@ modem_rx_top_inst: entity work.modem_rx_top
 		  test_I=>open,
 		  test_Q=>open,
 
+		  sync_find=>open,
+
 		  dds_cos_o=>open,
 		  dds_sin_o=>open,
 		  pilot_start=>pilot_start --# Этот импульс будет задержан на InterpolateRate*PILOT_LEN+5+Sqrt_Latency тактов

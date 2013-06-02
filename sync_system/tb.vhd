@@ -120,7 +120,8 @@ end process;
 
 pilotsync_inst: entity work.pilot_sync_every_time
 	generic map(
-		DELAY_AFTER_FREQESTIM=>PILOT_PERIOD/2,
+		SIMULATION=>0,
+		DELAY_AFTER_FREQESTIM=>PILOT_PERIOD/3,
 		DELAY_LEN=>PILOT_PERIOD
 	) 
 	port map(

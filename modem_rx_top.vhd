@@ -21,7 +21,8 @@ entity modem_rx_top is
 
 		  test_I: out std_logic_vector(15 downto 0);
 		  test_Q: out std_logic_vector(15 downto 0);
-			  
+		
+		  sync_find: out std_logic;
 		  dds_cos_o: out std_logic_vector(15 downto 0);
 		  dds_sin_o: out std_logic_vector(15 downto 0);
 		  pilot_start: out std_logic --# Этот импульс будет задержан на InterpolateRate*PILOT_LEN+5+Sqrt_Latency тактов
@@ -277,27 +278,25 @@ begin
 		sampleI_moveback<=signed(sampleI_delay_fe_reg)*signed(dds_cos);
 		sampleQ_moveback<=signed(sampleQ_delay_fe_reg)*signed(dds_sin);
 
-		if s_pilot_start='1' then
-			start_delayer_cnt<=conv_std_logic_vector(DELAY_AFTER_FREQESTIM-PILOTUP_START_DELAY-18,start_delayer_cnt'Length);		
-			start_pilotU<='0';
-			start_pilotU_have<='0';
-		else
-			if unsigned(start_delayer_cnt)>0 then
-				start_delayer_cnt<=start_delayer_cnt-1;
-				start_pilotU<='0';
-			else
-				if start_pilotU_have='0' then
-					start_pilotU<='1';
-					start_pilotU_have<='1';
-				else
-					start_pilotU<='0';
-				end if;
-			end if;
-		end if;
-
-
 	end if;
 end process;
+
+pilotsync_inst: entity work.pilot_sync_every_time
+	generic map(
+		SIMULATION=>1,
+		DELAY_AFTER_FREQESTIM=>DELAY_AFTER_FREQESTIM,
+		DELAY_LEN=>PILOT_PERIOD*InterpolateRate
+	) 
+	port map(
+		clk =>clk,
+		reset =>reset,
+
+		realpilot_event =>s_pilot_start,
+		
+		
+		start_pilotU =>start_pilotU,
+        sync_find =>sync_find
+		);
 
 
 dds_I_inst:entity work.dds_synthesizer_pipe
