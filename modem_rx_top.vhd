@@ -21,6 +21,7 @@ entity modem_rx_top is
 
 		  test_I: out std_logic_vector(15 downto 0);
 		  test_Q: out std_logic_vector(15 downto 0);
+		  test_inner_pilot_pos: out std_logic;
 		
 		  sync_find: out std_logic;
 		  dds_cos_o: out std_logic_vector(15 downto 0);
@@ -277,6 +278,8 @@ begin
 
 		sampleI_moveback<=signed(sampleI_delay_fe_reg)*signed(dds_cos);
 		sampleQ_moveback<=signed(sampleQ_delay_fe_reg)*signed(dds_sin);
+
+        test_inner_pilot_pos<=start_pilotU;
 
 	end if;
 end process;

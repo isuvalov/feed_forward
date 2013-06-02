@@ -154,6 +154,7 @@ modem_rx_top_inst: entity work.modem_rx_top
 
 		  test_I=>open,
 		  test_Q=>open,
+		  test_inner_pilot_pos=>open,
 
 		  sync_find=>open,
 
