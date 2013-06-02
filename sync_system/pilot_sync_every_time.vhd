@@ -26,7 +26,7 @@ end pilot_sync_every_time;
 
 architecture pilot_sync_every_time of pilot_sync_every_time is
 
-
+constant CNT_FILTER:natural:=4; --# Must be power of 2!!!
 constant CATCH_NUM_UP:natural:=3*2;
 constant CATCH_NUM_DOWN:natural:=1*2;
 constant MAX_CATCH_NUM:natural:=6*4;
@@ -44,7 +44,13 @@ signal loss_cnt:std_logic_vector(log2roundup(MAX_CATCH_NUM)-1 downto 0);
 type Tstm is (WAITING,CATCH);
 signal stm:Tstm; 
 
+
+type Tmain_cnt_prev_a is array(CNT_FILTER-1 downto 0) of std_logic_vector(log2roundup(PILOT_PERIOD+InterpolateRate)-1 downto 0);
+signal main_cnt_prev_a:Tmain_cnt_prev_a;
+
+
 signal main_cnt_best,main_cnt_prev,main_cnt:std_logic_vector(log2roundup(PILOT_PERIOD+InterpolateRate)-1 downto 0);
+signal main_cnt_prev_sum:std_logic_vector(main_cnt_prev'Length-1+log2roundup(CNT_FILTER) downto 0);
 signal s_sync_find,one_p:std_logic;
 
 signal g_start_pilotU_have,g_start_pilotU:std_logic;
@@ -58,9 +64,21 @@ signal m_realpilot_event,good_come:std_logic;
 
 begin
 
-		 
+	
 
+process (clk) is 
+begin		
+	if rising_edge(clk) then
+		if m_start_pilotU='1' then
+--			good_come<='1';
+		else
+--			if 
+		end if;			
+	end if;
+end process;
+	
 process (clk) is
+variable v_main_cnt_prev_sum:std_logic_vector(main_cnt_prev_sum'Length-1 downto 0);
 begin		
 	if rising_edge(clk) then
 		if reset='1' then
@@ -102,7 +120,7 @@ begin
 				end if;
 				good_come<='1'; --# указывает начало времени когда будем ожидать пришествие импульса
 			else	 --# realpilot_event
-			    if unsigned(main_cnt)>=(PILOT_PERIOD/2+PILOT_PERIOD/4) then
+			    if unsigned(main_cnt(main_cnt'Length-2 downto 0))<=(PILOT_PERIOD/4) then
 					good_come<='0'; --# теперь будем придумывать импульс сами
 				end if; --# main_cnt
 			end if;  --# realpilot_event
@@ -115,15 +133,30 @@ begin
     			s_sync_find<='0';
 				if unsigned(loss_cnt)>=CATCH_NUM_UP then
 					stm<=CATCH;
-					main_cnt_best<=main_cnt_prev;					
---				elsif unsigned(loss_cnt)<=CATCH_NUM_DOWN then
+--					main_cnt_best<=main_cnt_prev;					
+--					for i in 0 to main_cnt_prev_a'Length-1 loop
+--						main_cnt_prev_a(i)<=EXT(main_cnt_prev,main_cnt_prev_a(0)'Length);
+--					end loop;
+--					main_cnt_prev_sum<=main_cnt_prev&EXT("0",log2roundup(CNT_FILTER));
 				end if;
+
+				if realpilot_event='1' then
+				 	main_cnt_prev_a(0)<=main_cnt_prev;	
+					v_main_cnt_prev_sum:=EXT(main_cnt_prev_a(0),v_main_cnt_prev_sum'Length);
+					for i in 1 to main_cnt_prev_a'Length-1 loop
+						main_cnt_prev_a(i)<=main_cnt_prev_a(i-1);
+						v_main_cnt_prev_sum:=v_main_cnt_prev_sum+main_cnt_prev_a(i);
+					end loop;
+					main_cnt_prev_sum<=v_main_cnt_prev_sum;
+					main_cnt_best<=main_cnt_prev_sum(main_cnt_prev_sum'Length-1 downto log2roundup(CNT_FILTER));					
+				end if;
+
+
 			when CATCH=>
 				s_sync_find<='1';
 				if unsigned(loss_cnt)<=CATCH_NUM_DOWN then
 					stm<=WAITING;
 				end if;			
-
 					
 
 			when others=>
