@@ -25,6 +25,23 @@ end normalizer;
 architecture complex_normalizer of complex_normalizer is
 
 
+component sqrt32to16_altera
+	PORT
+	(
+		aclr		: IN STD_LOGIC ;
+		clk		: IN STD_LOGIC ;
+		ena		: IN STD_LOGIC ;
+		radical		: IN STD_LOGIC_VECTOR (31 DOWNTO 0);
+		q		: OUT STD_LOGIC_VECTOR (15 DOWNTO 0);
+		remainder		: OUT STD_LOGIC_VECTOR (16 DOWNTO 0)
+	);
+end component;
+
+constant SQRT_LATENCY:natural:=16;
+
+signal i_sq,q_sq,iq_sq:std_logic_vector(i_samplesI'Length*2-1 downto 0);
+signal i_ce_1w,i_ce_2w:std_logic;
+
 begin
 
 
@@ -43,8 +60,8 @@ serial_divide_uu_inst: entity work.serial_divide_uu
     port map(   clk_i      =>clk,
             clk_en_i   =>'1',
             rst_i      =>reset,
-            divide_i   =>max_ce,
-            dividend_i =>dividend,
+            divide_i   =>i_ce_2w,
+            dividend_i =>iq_sq,
             divisor_i  =>divisor,
             quotient_o =>quotient,
             done_o     =>done_o
@@ -53,6 +70,16 @@ serial_divide_uu_inst: entity work.serial_divide_uu
 process (clk) is
 begin		
 	if rising_edge(clk) then
+		i_ce_1w<=i_ce;
+		i_ce_2w<=i_ce_1w;
+		if i_ce='1' then
+			i_sq<=signed(i_samplesI)*signed(i_samplesI);
+			q_sq<=signed(i_samplesQ)*signed(i_samplesQ);
+		end if;
+		if i_ce_1w='1' then
+			iq_sq<=i_sq+q_sq;
+		end if;
+
 	end if;
 end process;
 
