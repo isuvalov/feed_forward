@@ -73,6 +73,10 @@ signal start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 d
 signal scalar_sumI,scalar_sumQ:std_logic_vector(31 downto 0);
 signal scalar_sum_ce,pilot_valid:std_logic;
 
+signal start_rotate_I,start_rotate_Q:std_logic_vector(15 downto 0);
+signal start_rotate_ce:std_logic;
+
+
 
 begin
 
@@ -380,6 +384,18 @@ scalar_mult_inst: entity work.scalar_mult
 
 
 
+complex_normalizer_inst: entity work.complex_normalizer
+	port map(
+		clk =>clk,
+		reset =>reset,
+		i_ce =>scalar_sum_ce,
+		i_samplesI =>scalar_sumI,
+		i_samplesQ =>scalar_sumQ,
+
+		o_samplesI=>start_rotate_I,
+		o_samplesQ=>start_rotate_Q,
+		out_ce=>=>start_rotate_ce
+		);
 
 
 end modem_rx_top;

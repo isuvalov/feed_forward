@@ -34,6 +34,7 @@ vcom pilot_upper.vhd
 vcom scalar_mult.vhd
 vcom remove_zero.vhd
 vcom pilot_sync_every_time.vhd 
+vcom complex_normalizer.vhd
 vcom modem_rx_top.vhd 
 
 vcom shift_dataflow.vhd 
