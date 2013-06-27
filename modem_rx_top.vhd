@@ -42,6 +42,7 @@ constant DELAY_LEN:natural:=InterpolateRate*PILOT_LEN+SQRT_LATENCY+FILTRCC_LATEN
 constant DDS_LATENCY:natural:=8;
 constant DELAY_AFTER_FREQESTIM:natural:=25413+DDS_LATENCY+1; --# ¬ысчитываетс€ по симул€ции сигналом time_for_freqcalc_cnt_reg 
 constant PILOTUP_START_DELAY:natural:=9+3; --# ¬рем€ которое надо дл€ того чтоб генератор интерполированного пилота начал выдавать отсчеты
+constant DELAY_COMPLEX_NORMALIZER:natural:=51; 
 
 signal sampleI_delay,sampleQ_delay:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal sampleI_delay_fe,sampleQ_delay_fe:std_logic_vector(sampleIfilt'Length-1 downto 0);
@@ -76,7 +77,7 @@ signal scalar_sum_ce,pilot_valid:std_logic;
 signal start_rotate_I,start_rotate_Q:std_logic_vector(15 downto 0);
 signal start_rotate_ce:std_logic;
 
-
+signal sampleI_to_demod,sampleQ_to_demod:std_logic_vector(15 downto 0);
 
 begin
 
@@ -385,17 +386,37 @@ scalar_mult_inst: entity work.scalar_mult
 
 
 complex_normalizer_inst: entity work.complex_normalizer
+	generic map(
+		CONJUGATION=>'0' --# сопр€жение числа по выходу, если '1' - то сопр€гать
+	)
 	port map(
 		clk =>clk,
 		reset =>reset,
 		i_ce =>scalar_sum_ce,
-		i_samplesI =>scalar_sumI,
-		i_samplesQ =>scalar_sumQ,
+		i_samplesI =>scalar_sumI(scalar_sumI'Length-1 downto scalar_sumI'Length-16),
+		i_samplesQ =>scalar_sumQ(scalar_sumQ'Length-1 downto scalar_sumQ'Length-16),
 
 		o_samplesI=>start_rotate_I,
 		o_samplesQ=>start_rotate_Q,
-		out_ce=>=>start_rotate_ce
+		out_ce=>start_rotate_ce
 		);
+
+
+delay_before_d: entity work.delayer
+	generic map(
+		DELAY_LEN=>DELAY_COMPLEX_NORMALIZER --# еще добавить задержку от скал€рного произведени€
+	) 
+	port map(
+		clk =>clk,
+		reset =>reset,
+
+		i_sampleI=>sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16),
+		i_sampleQ=>sampleQ_moveback(sampleQ_moveback'Length-1 downto sampleQ_moveback'Length-16),
+
+		o_sampleI=>sampleI_to_demod,
+		o_sampleQ=>sampleQ_to_demod
+		);
+
 
 
 end modem_rx_top;

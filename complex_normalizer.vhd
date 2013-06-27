@@ -7,10 +7,13 @@ use work.feedf_consts_pack.all;
 
 
 entity complex_normalizer is
+	generic (
+		CONJUGATION:std_logic:='1' --# сопряжение числа по выходу, если '1' - то сопрягать
+	);
 	port(
 		clk : in STD_LOGIC;
 		reset : in std_logic;
-		i_ce : in std_logic;		
+		i_ce : in std_logic; --# этот строб не должен поступать чаще 16+32+3=51 такта		
 		i_samplesI: in std_logic_vector(15 downto 0);
 		i_samplesQ: in std_logic_vector(15 downto 0);
 
@@ -37,17 +40,19 @@ component sqrt32to16_altera
 	);
 end component;
 
-constant NORM_CONST:std_logic_vector(15 downto 0):=conv_std_logic_vector(16384,16);
+constant NORM_CONST:std_logic_vector(15 downto 0):=conv_std_logic_vector(32767,16);
+constant NORM_CONST_INV:std_logic_vector(15 downto 0):=conv_std_logic_vector(-32767,16);
 constant SQRT_LATENCY:natural:=16;
 
 signal i_sq,q_sq,iq_sq:std_logic_vector(i_samplesI'Length*2-1 downto 0);
 signal i_ce_1w,i_ce_2w:std_logic;
 
+signal samplesI_reg,samplesQ_reg:std_logic_vector(i_samplesI'Length-1 downto 0);
 signal divisor_I,divisor_Q,iq_sq_rootM:std_logic_vector(31 downto 0);
 signal iq_sq_root:std_logic_vector(15 downto 0);
 signal quotient_Q,quotient_I:std_logic_vector(31 downto 0);
 
-signal start_div,done_div:std_logic;
+signal start_div,done_div,sign_save_I,sign_save_Q,done_div_1w:std_logic;
 signal delay_cnt:std_logic_vector(log2roundup(SQRT_LATENCY) downto 0);
 
 
@@ -105,11 +110,25 @@ begin
 		if i_ce='1' then
 			i_sq<=signed(i_samplesI)*signed(i_samplesI);
 			q_sq<=signed(i_samplesQ)*signed(i_samplesQ);
-			divisor_I<=signed(i_samplesI)*signed(NORM_CONST);
+			samplesI_reg<=i_samplesI;
+			samplesQ_reg<=i_samplesQ;
+			
 			divisor_Q<=signed(i_samplesQ)*signed(NORM_CONST);
+			sign_save_I<=i_samplesI(i_samplesI'Length-1);
+			sign_save_Q<=i_samplesI(i_samplesQ'Length-1);
 		end if;
 		if i_ce_1w='1' then
 			iq_sq<=i_sq+q_sq;
+			if sign_save_I='1' then
+				divisor_I<=signed(samplesI_reg)*signed(NORM_CONST_INV);
+			else
+				divisor_I<=signed(samplesI_reg)*signed(NORM_CONST);
+			end if;
+			if sign_save_Q='1' then
+				divisor_Q<=signed(samplesQ_reg)*signed(NORM_CONST_INV);
+			else
+				divisor_Q<=signed(samplesQ_reg)*signed(NORM_CONST);
+			end if;
 		end if;
 
 
@@ -131,9 +150,20 @@ begin
 			end if;
 		end if;
 
-		out_ce<=done_div;
-        o_samplesI<=quotient_I(15 downto 0);
-		o_samplesQ<=quotient_Q(15 downto 0);
+		done_div_1w<=done_div;
+		out_ce<=not(done_div_1w) and done_div;
+		if sign_save_I='1' then
+	        o_samplesI<=0-quotient_I(15 downto 0);
+		else
+			o_samplesI<=quotient_I(15 downto 0);
+		end if;
+
+		if sign_save_Q=(not CONJUGATION) then
+	        o_samplesQ<=0-quotient_Q(15 downto 0);
+		else
+			o_samplesQ<=quotient_Q(15 downto 0);
+		end if;
+
 	end if;
 end process;
 
