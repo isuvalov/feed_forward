@@ -12,7 +12,7 @@ entity complex_mult is
 	);
 	port(
 		clk : in STD_LOGIC;
-		i_ce : in std_logic; --# этот строб не должен поступать чаще 16+32+3=51 такта		
+		i_ce : in std_logic;
 		A_I: in std_logic_vector(15 downto 0);
 		B_Q: in std_logic_vector(15 downto 0);
 

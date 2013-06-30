@@ -45,7 +45,7 @@ complex_mult_inst: entity work.complex_mult
 	);
 	port(
 		clk =>clk,
-		i_ce =>rotate_it_ce, --# этот строб не должен поступать чаще 16+32+3=51 такта		
+		i_ce =>rotate_it_ce,
 		A_I =>A_I,
 		B_Q =>B_Q,
 
@@ -63,8 +63,25 @@ complex_mult_inst: entity work.complex_mult
 process (clk) is
 begin		
 	if rising_edge(clk) then
-		if reset='1' then
+        A_I<=i_sampleI;
+		B_Q<=i_sampleQ;
+		
+
+		if reset='1' or stop_demod='1' then
+			stm<=WAITING;
 		else
+			case stm is
+			when WAITING=>
+				if start_demod='1' then
+					rotate_it_ce<='1';
+				else
+					rotate_it_ce<='0';
+				end if;
+				C_I<=start_rotateI;
+				D_Q<=start_rotateQ;
+			when STARTING=>
+			when others=>
+			end case;
 		end if;
 	end if;
 end process;
