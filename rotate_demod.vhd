@@ -28,14 +28,17 @@ end rotate_demod;
 
 architecture rotate_demod of rotate_demod is
 
-signal rotate_it_ce:std_logic;
+signal rotate_it_ce,demod_it_ce:std_logic;
 signal A_I: std_logic_vector(15 downto 0);
 signal B_Q: std_logic_vector(15 downto 0);
 signal C_I: std_logic_vector(15 downto 0);
 signal D_Q: std_logic_vector(15 downto 0);
 
+signal demod_it_I,demod_it_Q: std_logic_vector(15 downto 0);
 type Tstm is (WAITING,STARTING,ROTATING);
 signal stm:Tstm;
+
+signal pre_demod_bits:std_logic_vector(1 downto 0);
 
 begin
 
@@ -59,6 +62,18 @@ complex_mult_inst: entity work.complex_mult
 		);
 
 
+qam4_demod_inst:entity work.qam4_demod
+	port map(
+		clk =>clk,
+		i_ce =>demod_it_ce,
+		i_samplesI=>demod_it_I,
+		i_samplesQ=>demod_it_Q,
+
+		o_value =>pre_demod_bits,
+		out_ce=>open
+		);
+
+
 
 process (clk) is
 begin		
@@ -69,6 +84,8 @@ begin
 
 		if reset='1' or stop_demod='1' then
 			stm<=WAITING;
+			demod_it_ce<='0';
+			rotate_it_ce<='0';
 		else
 			case stm is
 			when WAITING=>
