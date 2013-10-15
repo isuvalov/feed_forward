@@ -35,12 +35,23 @@ vcom scalar_mult.vhd
 vcom remove_zero.vhd
 vcom pilot_sync_every_time.vhd 
 vcom complex_normalizer.vhd
+
+vlog pam_demodulation/cordic_v/cordic.v
+vcom pam_demodulation/cordic_v/cordic_wrapper.vhd 
+vcom pam_demodulation/short_lf_filter.vhd
+#vlog pam_demodulation/table_phaseerrors.v
+vlog pam_demodulation/table_sim/use_phaseerrors.v
+vcom pam_demodulation/table_phaseerrors_sim.vhd
+vcom pam_demodulation/pam_demod.vhd
+vcom pam_demodulation/short_lf_filter_ver2.vhd
+vcom pam_demodulation/itertive_demod.vhd
+
 vcom modem_rx_top.vhd 
 
 vcom shift_dataflow.vhd 
 vcom tb_02.vhd
 
-vsim -novopt -t ps work.tb
+vsim -novopt -t ps work.tb -pli pam_demodulation/table_sim/phaseerrors_pli.dll
 
 
-do wave_tb02.do
+do wave.do
