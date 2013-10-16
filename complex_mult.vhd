@@ -52,7 +52,7 @@ begin
 			BC<=signed(B_Q)*signed(C_I);
 			BD<=signed(B_Q)*signed(D_Q);
 		end if;
-		if ce_1w='1' then
+--		if ce_1w='1' then
 			if CONJUGATION='0' then
 				ACmBD<=SXT(AC(AC'Length-1 downto AC'Length-16),17)-SXT(BD(BD'Length-1 downto BD'Length-16),17);
 				ADpBC<=SXT(AD(AD'Length-1 downto AD'Length-16),17)+SXT(BC(BC'Length-1 downto BC'Length-16),17);
@@ -60,9 +60,9 @@ begin
 				ACpBD<=SXT(AC(AC'Length-1 downto AC'Length-16),17)+SXT(BD(BD'Length-1 downto BD'Length-16),17);
 				BCmAD<=SXT(BC(BC'Length-1 downto BC'Length-16),17)-SXT(AD(AD'Length-1 downto AD'Length-16),17);
 			end if;
-		end if;
+--		end if;
 
-		if ce_2w='1' then
+--		if ce_2w='1' then
 			if CONJUGATION='0' then
 				o_I<=ACmBD(ACmBD'Length-1 downto ACmBD'Length-o_I'Length);
 				o_Q<=ADpBC(ACmBD'Length-1 downto ACmBD'Length-o_I'Length);
@@ -70,7 +70,7 @@ begin
 				o_I<=ACpBD(ACmBD'Length-1 downto ACmBD'Length-o_I'Length);
 				o_Q<=BCmAD(ACmBD'Length-1 downto ACmBD'Length-o_I'Length);
 			end if;
-		end if;
+--		end if;
         out_ce<=ce_2w;
 	end if;
 end process;

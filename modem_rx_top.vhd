@@ -42,7 +42,7 @@ constant DELAY_LEN:natural:=InterpolateRate*PILOT_LEN+SQRT_LATENCY+FILTRCC_LATEN
 constant DDS_LATENCY:natural:=8;
 constant DELAY_AFTER_FREQESTIM:natural:=25413+DDS_LATENCY+1; --# Высчитывается по симуляции сигналом time_for_freqcalc_cnt_reg 
 constant PILOTUP_START_DELAY:natural:=9+3; --# Время которое надо для того чтоб генератор интерполированного пилота начал выдавать отсчеты
-constant DELAY_COMPLEX_NORMALIZER:natural:=51; 
+constant DELAY_COMPLEX_NORMALIZER:natural:=51+2; 
 
 signal sampleI_delay,sampleQ_delay:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal sampleI_delay_fe,sampleQ_delay_fe:std_logic_vector(sampleIfilt'Length-1 downto 0);
@@ -65,19 +65,24 @@ signal corrQ_s: std_logic_vector(15 downto 0);
 signal time_for_freqcalc_ce:std_logic;
 signal time_for_freqcalc_cnt,time_for_freqcalc_cnt_reg:std_logic_vector(31 downto 0):=(others=>'0');
 
-signal sampleI_moveback,sampleQ_moveback:std_logic_vector(dds_cos'Length+sampleI_delay_fe_reg'Length-1 downto 0);
+--signal sampleI_moveback,sampleQ_moveback:std_logic_vector(dds_cos'Length+sampleI_delay_fe_reg'Length-1 downto 0);
+signal sampleI_moveback,sampleQ_moveback:std_logic_vector(15 downto 0);
 signal pilotU_I,pilotU_Q:std_logic_vector(15 downto 0);
 
 signal start_pilotU_have:std_logic;
 signal start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0);
 
 signal scalar_sumI,scalar_sumQ:std_logic_vector(31 downto 0);
-signal scalar_sum_ce,pilot_valid:std_logic;
+signal scalar_sum_ce,pilot_valid,pilot_valid_1w,pilot_valid_2w:std_logic;
 
 signal start_rotate_I,start_rotate_Q:std_logic_vector(15 downto 0);
 signal start_rotate_ce:std_logic;
 
 signal sampleI_to_demod,sampleQ_to_demod:std_logic_vector(15 downto 0);
+signal cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0):=(others=>'0');
+signal sampleQ_moveback_ce,down_ce:std_logic;
+
+signal start_rotate_ce_3w,start_rotate_ce_2w,start_rotate_ce_1w:std_logic;
 
 begin
 
@@ -281,13 +286,56 @@ begin
 		dds_sin_o<=dds_sin;
 
 
-		sampleI_moveback<=signed(sampleI_delay_fe_reg)*signed(dds_cos);
-		sampleQ_moveback<=signed(sampleQ_delay_fe_reg)*signed(dds_sin);
+--		sampleI_moveback<=signed(sampleI_delay_fe_reg)*signed(dds_cos);
+--		sampleQ_moveback<=signed(sampleQ_delay_fe_reg)*signed(dds_sin);
 
         test_inner_pilot_pos<=start_pilotU;
 
+		start_rotate_ce_1w<=start_rotate_ce;
+		start_rotate_ce_2w<=start_rotate_ce_1w;
+		start_rotate_ce_3w<=start_rotate_ce_2w;
+
+        if start_rotate_ce='1' then
+--			cnt<=conv_std_logic_vector(InterpolateRate-2,cnt'Length);
+			cnt<=conv_std_logic_vector(0,cnt'Length);
+			down_ce<='1';
+		else
+			if unsigned(cnt)<InterpolateRate-1 then
+				cnt<=cnt+1;
+				down_ce<='0';
+			else
+				cnt<=(others=>'0');
+				down_ce<='1';
+			end if;
+		end if;
+        pilot_valid_1w<=pilot_valid;
+		pilot_valid_2w<=pilot_valid_1w;
+
 	end if;
 end process;
+
+
+moveB: entity work.complex_mult
+	generic map(
+		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
+	)
+	port map(
+		clk =>clk,
+		i_ce =>down_ce,
+		A_I =>sampleI_delay_fe_reg(sampleI_delay_fe_reg'Length-1 downto sampleI_delay_fe_reg'Length-16),
+		B_Q =>sampleQ_delay_fe_reg(sampleQ_delay_fe_reg'Length-1 downto sampleQ_delay_fe_reg'Length-16),
+
+		C_I =>dds_cos,
+		D_Q =>dds_sin,
+
+		o_I =>sampleI_moveback,
+		o_Q =>sampleQ_moveback,
+		out_ce =>sampleQ_moveback_ce
+		);
+
+
+
+
 
 pilotsync_inst: entity work.pilot_sync_every_time
 	generic map(
@@ -370,7 +418,7 @@ scalar_mult_inst: entity work.scalar_mult
 		clk =>clk,
 		reset =>reset,
 
-		ce=>pilot_valid,
+		ce=>pilot_valid_2w,--pilot_valid,
 
 		aI=>sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16),
 		aQ=>sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16),
@@ -415,6 +463,23 @@ delay_before_d: entity work.delayer
 
 		o_sampleI=>sampleI_to_demod,
 		o_sampleQ=>sampleQ_to_demod
+		);
+
+
+itertive_demod_inst: entity work.itertive_demod
+	port map(
+		clk =>clk,
+		reset =>reset,
+		after_pilot_start =>start_rotate_ce_1w,--# он должен быть над первым i_ce
+		i_ce =>down_ce,--sampleQ_moveback_ce,
+		i_samplesI =>sampleI_to_demod,
+		i_samplesQ =>sampleQ_to_demod,
+
+		i_init_phaseI=>start_rotate_I,
+		i_init_phaseQ=>start_rotate_Q,
+
+		o_samples_phase=>open,
+		out_ce=>open
 		);
 
 

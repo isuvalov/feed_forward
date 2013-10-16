@@ -154,8 +154,15 @@ add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/m_start_
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/m_start_delayer_cnt
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/m_realpilot_event
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/good_come
+add wave -noupdate -divider {New Divider}
+add wave -noupdate /tb/modem_rx_top_inst/start_rotate_ce
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/start_rotate_i
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/start_rotate_q
+add wave -noupdate /tb/modem_rx_top_inst/pilot_valid
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/cnt
+add wave -noupdate /tb/modem_rx_top_inst/down_ce
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {748232438 ps} 0}
+WaveRestoreCursors {{Cursor 1} {2567771854 ps} 0}
 configure wave -namecolwidth 377
 configure wave -valuecolwidth 87
 configure wave -justifyvalue left
@@ -170,4 +177,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {1059378600 ps}
+WaveRestoreZoom {2567600683 ps} {2568026379 ps}
