@@ -30,7 +30,7 @@ end itertive_demod;
 
 architecture itertive_demod of itertive_demod is
 
-constant DEBUG:integer:=1;
+constant DEBUG:integer:=0;
 constant SHFT:natural:=11;
 constant FI_POROG_PHASE:integer:=201; --# =Fi_porog*256
 
@@ -183,6 +183,7 @@ begin
 --		if new_after_pilot_start='1' then
 --			assert new_after_pilot_start='1' report "Work have began!" severity note;
 --		end if;
+		if DEBUG=1 then
 		if d_i_ce='1' then
 			TX_LOC:=sTX_LOC;
 			STD.TEXTIO.write(TX_LOC,int_to_string(conv_integer(signed(phase_demod_acum_p_errE)))&"  " );
@@ -227,7 +228,7 @@ begin
 --			STD.TEXTIO.write(OUTPUT, TX_LOC);
 			sTX_LOC:=TX_LOC;
 		end if;
-
+		end if; --#DEBUG
 
 		if ce_3w='1' then
 			sample_phase_reg<=sample_phase(sample_phase'Length-1 downto 0);
