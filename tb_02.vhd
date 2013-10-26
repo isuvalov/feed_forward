@@ -156,6 +156,11 @@ modem_rx_top_inst: entity work.modem_rx_top
 		  test_Q=>open,
 		  test_inner_pilot_pos=>open,
 
+
+		  demod_phase =>open,
+		  demod_phase_ce =>open,
+
+
 		  sync_find=>open,
 
 		  dds_cos_o=>open,

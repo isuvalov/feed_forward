@@ -37,12 +37,12 @@ signal delay_line,delay_line_c:Tdelay_line:=(others=>(others=>'0'));
 type Tmuls_array is array(0 to IN_ONETICK-1) of std_logic_vector(2*delay_line(0)'Length-1 downto 0);
 signal muls_array:Tmuls_array;
 
-signal sums,sums_fin:std_logic_vector(MUL_CUT+log2roundup(TAPS)-1 downto 0);
+signal sums,sums_fin:std_logic_vector(MUL_CUT+log2roundup(TAPS)-1 downto 0):=(others=>'0');
 type Tsums_array is array(0 to IN_ONETICK-1) of std_logic_vector(sums'Length-1 downto 0);
 signal sums_array:Tsums_array;
 signal ce_1w,ce_2w,ce_3w:std_logic;
 
-signal cnt:std_logic_vector(1 downto 0);
+signal cnt:std_logic_vector(1 downto 0):=(others=>'0');
 
 begin
 
@@ -106,9 +106,7 @@ begin
 	end if;
 end process;
 		o_phase<=SXT(sums_fin(sums_fin'Length-1 downto sums_fin'Length-o_phase'Length+2),o_phase'Length);
-
---               o_phase<=sums_fin(sums_fin'Length-1-6 downto sums_fin'Length-o_phase'Length-6)&"000";
---o_phase<=SXT(sums_fin(sums_fin'Length-1 downto sums_fin'Length-o_phase'Length+2),o_phase'Length);
+--        o_phase<=conv_std_logic_vector(0,o_phase'Length);
 
 
 

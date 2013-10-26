@@ -72,6 +72,7 @@ type Ttest_mem is array(0 to PILOT_LEN) of std_logic_vector(15 downto 0);
 signal test_mem_I,test_mem_Q:Ttest_mem;
 
 signal first_read,s_pilot_ce:std_logic;
+signal duplicate_iq:std_logic;
 
 begin
 
@@ -166,7 +167,9 @@ begin
 				end if;
 				test_mux<='1';
 				s_pilot_ce<='1';
+				duplicate_iq<='1';
 			else
+				duplicate_iq<='0';
 				test_mux<='0';
 				s_pilot_ce<='0';
 --				bits<="01";--lfsr_reg(bits'Length-1 downto 0);
@@ -198,6 +201,7 @@ qam4_mapper_inst:entity work.qam4_mapper
 		clk =>clk,
 		reset =>reset,
 		i_bits =>bits,
+		i_duplicate_iq => duplicate_iq,
 		i_ce => o_interp_ce_w1,
 		
 		o_samplesI=>mod_samplesI,

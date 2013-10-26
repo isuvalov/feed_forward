@@ -201,7 +201,8 @@ module rotator (
   );
   
 `ifdef GENERATE_LOOP
-  parameter integer iteration = 0;
+//  parameter integer iteration = 0;
+  parameter unsigned[`ITERATION_BITS-1:0] iteration = 0;
   parameter signed [`THETA_BITS:0] tangle = 0;
 `endif
   reg signed [`XY_BITS:0] x_1=0;
@@ -386,7 +387,7 @@ always @ (posedge clk or posedge rst)
 
 `ifdef GENERATE_LOOP
 genvar i;
-generate for(i=0;i<`ITERATIONS-1;i=i+1) begin
+generate for(i=0;i<`ITERATIONS-1;i=i+1) begin  : rotator_i
   rotator U (clk,rst,x[i],y[i],z[i],x[i+1],y[i+1],z[i+1]);
   defparam U.iteration = i;
   defparam U.tangle = tanangle(i);

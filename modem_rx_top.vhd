@@ -23,6 +23,9 @@ entity modem_rx_top is
 		  test_Q: out std_logic_vector(15 downto 0);
 		  test_inner_pilot_pos: out std_logic;
 		
+		  demod_phase :out std_logic_vector(15 downto 0);
+		  demod_phase_ce : out std_logic;
+
 		  sync_find: out std_logic;
 		  dds_cos_o: out std_logic_vector(15 downto 0);
 		  dds_sin_o: out std_logic_vector(15 downto 0);
@@ -83,6 +86,10 @@ signal cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0):=(others=>'
 signal sampleQ_moveback_ce,down_ce:std_logic;
 
 signal start_rotate_ce_3w,start_rotate_ce_2w,start_rotate_ce_1w:std_logic;
+
+signal s_demod_phase :std_logic_vector(15 downto 0);
+signal s_demod_phase_ce : std_logic;
+
 
 begin
 
@@ -478,11 +485,17 @@ itertive_demod_inst: entity work.itertive_demod
 		i_init_phaseI=>start_rotate_I,
 		i_init_phaseQ=>start_rotate_Q,
 
-		o_samples_phase=>open,
-		out_ce=>open
+		o_samples_phase=>s_demod_phase,
+		out_ce=>s_demod_phase_ce
 		);
 
-
+process(clk) is
+begin
+	if rising_edge(clk) then
+		demod_phase<=s_demod_phase;
+		demod_phase_ce<=s_demod_phase_ce;
+	end if;
+end process;
 
 end modem_rx_top;
 
