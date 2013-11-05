@@ -2,6 +2,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
+library work;
+use work.feedf_consts_pack.all;
 
 
 --# выходные значения в два раза меньше т.е. можно не брать самый старший бит
@@ -31,6 +33,7 @@ constant SH5:integer:=1;
 
 type Tcoefs is array(0 to 32) of integer;
 constant coefs:Tcoefs:=(50, 0, -70, -109, -71, 40, 161, 198, 89, -138, -356, -386, -102, 489, 1216, 1815, 2047, 1815, 1216, 489, -102, -386, -356, -138, 89, 198, 161, 40, -71, -109, -70, 0, 50);
+constant coefs_test:Tcoefs:=(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2047, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 constant MULTSIZE:natural:=Nbit_FILT_COSINE+i_samplesI'Length;
 
@@ -70,8 +73,13 @@ begin
 		end loop;
 
 		for i in 0 to 32 loop
-			muls_I(i)<=signed(conv_std_logic_vector(coefs(i),Nbit_FILT_COSINE))*signed(delaylineI(i));
-			muls_Q(i)<=signed(conv_std_logic_vector(coefs(i),Nbit_FILT_COSINE))*signed(delaylineQ(i));
+			if GLOBAL_DEBUG=1 then
+				muls_I(i)<=signed(conv_std_logic_vector(coefs_test(i),Nbit_FILT_COSINE))*signed(delaylineI(i));
+				muls_Q(i)<=signed(conv_std_logic_vector(coefs_test(i),Nbit_FILT_COSINE))*signed(delaylineQ(i));
+			else
+				muls_I(i)<=signed(conv_std_logic_vector(coefs(i),Nbit_FILT_COSINE))*signed(delaylineI(i));
+				muls_Q(i)<=signed(conv_std_logic_vector(coefs(i),Nbit_FILT_COSINE))*signed(delaylineQ(i));
+			end if;
 		end loop;
 		
 		for i in 0 to 15 loop
@@ -113,8 +121,15 @@ begin
 		s_o_sampleI<=SXT(sumsI_5(0)(15-SH5 downto 1-SH5),16)+SXT(sumsI_5(1)(15 downto 1-SH5),16);
 		s_o_sampleQ<=SXT(sumsQ_5(0)(15-SH5 downto 1-SH5),16)+SXT(sumsQ_5(1)(15 downto 1-SH5),16);
 
-		o_sampleI<=s_o_sampleI;
-		o_sampleQ<=s_o_sampleQ;
+        if GLOBAL_DEBUG=1 then
+			o_sampleI<=SXT(s_o_sampleI(s_o_sampleI'Length-1-4 downto 0),o_sampleI'Length);
+			o_sampleQ<=SXT(s_o_sampleQ(s_o_sampleI'Length-1-4 downto 0),o_sampleI'Length);
+		else
+			o_sampleI<=s_o_sampleI;
+			o_sampleQ<=s_o_sampleQ;
+		end if;
+
+
 	end if;	--clk
 end process;
 		 

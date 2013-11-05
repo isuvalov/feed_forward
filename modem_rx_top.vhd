@@ -4,6 +4,7 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 library work;
 use work.feedf_consts_pack.all;
+use work.assert_pack.all;
 
 entity modem_rx_top is
 	generic (
@@ -58,6 +59,7 @@ signal freq_val_filt_mult_1w,freq_val_filt_mult:std_logic_vector(freq_val_filt'L
 
 signal freq_ce,freq_ce_f,freq_ce_f_1w,freq_ce_f_2w,good_values:std_logic;
 signal dds_cos,dds_sin:std_logic_vector(15 downto 0);
+signal dds_cos_d,dds_sin_d:std_logic_vector(15 downto 0);
 
 signal s_pilot_start_norm,pilot_wr,start_pilotU:std_logic;
 signal sampleI_norm,sampleQ_norm:std_logic_vector(15 downto 0);
@@ -76,7 +78,7 @@ signal start_pilotU_have:std_logic;
 signal start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0);
 
 signal scalar_sumI,scalar_sumQ:std_logic_vector(31 downto 0);
-signal scalar_sum_ce,pilot_valid,pilot_valid_1w,pilot_valid_2w:std_logic;
+signal scalar_sum_ce,pilot_valid,pilot_valid_1w,pilot_valid_2w,pilot_valid_3w:std_logic;
 
 signal start_rotate_I,start_rotate_Q:std_logic_vector(15 downto 0);
 signal start_rotate_ce:std_logic;
@@ -89,9 +91,12 @@ signal start_rotate_ce_3w,start_rotate_ce_2w,start_rotate_ce_1w:std_logic;
 
 signal s_demod_phase :std_logic_vector(15 downto 0);
 signal s_demod_phase_ce : std_logic;
+signal s_sync_find,print_event: std_logic;
 
 
 begin
+
+sync_find<=s_sync_find;
 
 sampleIE<=SXT(sampleI,sampleIE'Length);
 sampleQE<=SXT(sampleQ,sampleQE'Length);
@@ -288,6 +293,14 @@ begin
 			freq_val_filt_mult<=signed(freq_val_filt)*unsigned(MUL_SCALE);
 		end if;
 		freq_val_filt_mult_1w<=freq_val_filt_mult;
+		
+		if GLOBAL_DEBUG=1 then
+			dds_cos_d<=x"7FFF";
+			dds_sin_d<=(others=>'0');
+		else
+			dds_cos_d<=dds_cos;
+			dds_sin_d<=dds_sin;
+		end if;
 
 		dds_cos_o<=dds_cos;
 		dds_sin_o<=dds_sin;
@@ -317,6 +330,16 @@ begin
 		end if;
         pilot_valid_1w<=pilot_valid;
 		pilot_valid_2w<=pilot_valid_1w;
+		pilot_valid_3w<=pilot_valid_2w;
+
+
+		if pilot_valid_2w='1' and pilot_valid_3w='0' and s_sync_find='1' then
+			print_event<='1';
+			print(GLOBAL_DEBUG,"On scalar_mult.vhd pilot first value is ("&int_to_string(conv_integer(signed(sampleI_moveback)))&
+				","&int_to_string(conv_integer(signed(sampleQ_moveback)))&")");
+		else
+			print_event<='0';
+		end if;
 
 	end if;
 end process;
@@ -332,8 +355,8 @@ moveB: entity work.complex_mult
 		A_I =>sampleI_delay_fe_reg(sampleI_delay_fe_reg'Length-1 downto sampleI_delay_fe_reg'Length-16),
 		B_Q =>sampleQ_delay_fe_reg(sampleQ_delay_fe_reg'Length-1 downto sampleQ_delay_fe_reg'Length-16),
 
-		C_I =>dds_cos,
-		D_Q =>dds_sin,
+		C_I =>dds_cos_d,
+		D_Q =>dds_sin_d,
 
 		o_I =>sampleI_moveback,
 		o_Q =>sampleQ_moveback,
@@ -358,7 +381,7 @@ pilotsync_inst: entity work.pilot_sync_every_time
 		
 		
 		start_pilotU =>start_pilotU,
-        sync_find =>sync_find
+        sync_find =>s_sync_find
 		);
 
 

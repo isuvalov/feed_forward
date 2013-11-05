@@ -71,7 +71,8 @@ signal adc_array_im,adc_array_re:std_logic_vector(15 downto 0);
 type Ttest_mem is array(0 to PILOT_LEN) of std_logic_vector(15 downto 0);
 signal test_mem_I,test_mem_Q:Ttest_mem;
 
-signal first_read,s_pilot_ce:std_logic;
+signal first_read,s_pilot_ce,s_pilot_ce_1w,s_pilot_ce_2w:std_logic;
+signal s_pilot_ce_a:std_logic_vector(9-1 downto 0);
 signal duplicate_iq:std_logic;
 
 begin
@@ -105,6 +106,9 @@ begin
 	if rising_edge(clk) then
 		qw_rd_1w<=qw_rd;
 		cnt_1w<=cnt;
+		s_pilot_ce_1w<=s_pilot_ce;
+		s_pilot_ce_2w<=s_pilot_ce_1w;
+		s_pilot_ce_a<=s_pilot_ce_a(s_pilot_ce_a'Length-2 downto 0)&s_pilot_ce_2w;
 		if first_read='1' then
 			if qw_rd_1w='1' then
     	    	test_mem_I(conv_integer(cnt_1w))<=adc_array_re;
@@ -209,7 +213,7 @@ qam4_mapper_inst:entity work.qam4_mapper
 		o_ce=>sm_qam_ce
 		);
 
-rcc_up_filter_inst: entity work.rcc_up_filter
+rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 10 тактов
 	generic map(
 		LEN=>mod_samplesI'Length
 	)
@@ -221,7 +225,7 @@ rcc_up_filter_inst: entity work.rcc_up_filter
 		o_sampleI=>s_sampleI_o,
 		o_sampleQ=>s_sampleQ_o
 		);
-pilot_ce<=s_pilot_ce;
+pilot_ce<=s_pilot_ce_a(s_pilot_ce_a'Length-1);
 
 
 --sampleI_o<=SXT(cnt(3 downto 0),16);--,m_sampleI_o;

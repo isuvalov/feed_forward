@@ -4,6 +4,7 @@ use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
 library work;
 use work.feedf_consts_pack.all;
+use work.assert_pack.all;
 
 entity tb is
 end tb;
@@ -92,6 +93,7 @@ begin
 	if rising_edge(clk) then
 		pilot_ce_test_1w<=pilot_ce_test;
 		if pilot_ce_test='1' and pilot_ce_test_1w='0' then
+			print(GLOBAL_DEBUG,"Pilot first value is ("&int_to_string(conv_integer(signed(sampleI_tx)))&","&int_to_string(conv_integer(signed(sampleQ_tx)))&")");
 			pilot_ce_test_event<='1';
 		else
 			pilot_ce_test_event<='0';
@@ -124,8 +126,8 @@ shift_dataflow_inst: entity work.shift_dataflow
 --		reset =>pilot_ce_test_event,
 		reset =>reset,
 --		offset =>conv_std_logic_vector(10000000,32),
-		offset =>conv_std_logic_vector(00001000,32),
---		offset =>conv_std_logic_vector(00000000,32),
+--		offset =>conv_std_logic_vector(00001000,32),
+		offset =>conv_std_logic_vector(00000000,32),
 		in_sampleI=>sampleI_tx,
 		in_sampleQ=>sampleQ_tx,
 		ce_in=>'1',

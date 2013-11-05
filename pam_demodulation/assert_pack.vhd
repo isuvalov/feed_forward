@@ -2,9 +2,13 @@ library ieee;
 use IEEE.std_logic_1164.all;
 use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
+USE STD.TEXTIO.ALL;
+USE IEEE.STD_LOGIC_TEXTIO.ALL;
+
 PACKAGE assert_pack IS
 
 
+  procedure print(DEBUG:integer; str: string);  --# print string
   function to_string(sv: Std_Logic_Vector) return string;  --# Return HEX number in string
   function get_int_length(x : integer; radix : positive range 2 to 36 := 10) return integer;
   function  int_to_string( x : integer; radix : positive range 2 to 36 := 10) return string;
@@ -18,6 +22,18 @@ use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
 
 package body assert_pack is
+
+	file OUTPUT: TEXT open WRITE_MODE is "STD_OUTPUT";
+
+    procedure print(DEBUG:integer; str: string) is
+	VARIABLE TX_LOC : LINE;	
+	begin
+		if DEBUG=1 then
+			STD.TEXTIO.write(TX_LOC,str);
+            STD.TEXTIO.writeline(OUTPUT, TX_LOC); 
+		end if;
+	end procedure;
+
 
     function to_string(sv: Std_Logic_Vector) return string is
       use Std.TextIO.all;

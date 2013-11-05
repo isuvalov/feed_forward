@@ -2,6 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
+library work;
+use work.feedf_consts_pack.all;
+
+--# Задержка на три такта
 
 entity shift_dataflow is
 	port(
@@ -22,7 +26,7 @@ end shift_dataflow;
 
 architecture shift_dataflow of shift_dataflow is
 	
-signal dds_cos,dds_sin:std_logic_vector(15 downto 0);
+signal dds_cos,dds_sin,in_sampleI_1w,in_sampleQ_1w:std_logic_vector(15 downto 0);
 
 signal Icos,Qcos,Qsin,Isin:std_logic_vector(31 downto 0);
 
@@ -39,16 +43,22 @@ begin
 			s_out_sampleI<=(others=>'0');
 			s_out_sampleQ<=(others=>'0');
 		else --#reset
-
-            s_out_sampleI<=Icos-Qsin;
-			s_out_sampleQ<=Isin+Qcos;
+			if GLOBAL_DEBUG=1 then
+				s_out_sampleI<=in_sampleI_1w&x"0000";
+				s_out_sampleQ<=in_sampleQ_1w&x"0000";
+			else
+        	    s_out_sampleI<=Icos-Qsin;
+				s_out_sampleQ<=Isin+Qcos;
+			end if;
 		end if; --#reset
-		Icos<=signed(in_sampleI)*signed(dds_cos);
-		Qsin<=signed(in_sampleQ)*signed(dds_sin);
+			Icos<=signed(in_sampleI)*signed(dds_cos);
+			Qsin<=signed(in_sampleQ)*signed(dds_sin);
 
-		Isin<=signed(in_sampleI)*signed(dds_sin);
-		Qcos<=signed(in_sampleQ)*signed(dds_cos);
+			Isin<=signed(in_sampleI)*signed(dds_sin);
+			Qcos<=signed(in_sampleQ)*signed(dds_cos);
 
+        in_sampleI_1w<=in_sampleI;
+		in_sampleQ_1w<=in_sampleQ;
 		ce_in_w1<=ce_in;
 		ce_out<=ce_in_w1;
 		out_sampleI<=s_out_sampleI(31 downto 16);
