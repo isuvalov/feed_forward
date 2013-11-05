@@ -415,7 +415,8 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
 
 delayer_de: entity work.delayer
 	generic map(
-		DELAY_LEN=>DELAY_AFTER_FREQESTIM
+--		DELAY_LEN=>DELAY_AFTER_FREQESTIM
+		DELAY_LEN=>DELAY_AFTER_FREQESTIM-20
 	) 
 	port map(
 		clk =>clk,
