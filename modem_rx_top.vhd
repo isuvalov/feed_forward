@@ -93,6 +93,8 @@ signal s_demod_phase :std_logic_vector(15 downto 0);
 signal s_demod_phase_ce : std_logic;
 signal s_sync_find,print_event: std_logic;
 
+signal bit_value_rx_ce:std_logic;
+signal bit_value_rx:std_logic_vector(1 downto 0);
 
 begin
 
@@ -520,6 +522,17 @@ begin
 		demod_phase_ce<=s_demod_phase_ce;
 	end if;
 end process;
+
+pam_demod_by_phase_i: entity work.pam_demod_by_phase
+	port map(
+		clk =>clk,
+		i_ce =>s_demod_phase_ce
+		i_phase =>s_demod_phase(9 downto 0),
+
+		bit_value=>bit_value_rx,
+		out_ce=>bit_value_rx_ce
+		);
+
 
 end modem_rx_top;
 
