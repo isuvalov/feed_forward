@@ -526,7 +526,7 @@ end process;
 pam_demod_by_phase_i: entity work.pam_demod_by_phase
 	port map(
 		clk =>clk,
-		i_ce =>s_demod_phase_ce
+		i_ce =>s_demod_phase_ce,
 		i_phase =>s_demod_phase(9 downto 0),
 
 		bit_value=>bit_value_rx,

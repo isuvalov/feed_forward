@@ -57,7 +57,7 @@ signal cnt_interp:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);
 
 signal o_interp_ce,o_interp_ce_w2,o_interp_ce_w1,sm_qam_ce:std_logic;
 signal bits:std_logic_vector(1 downto 0);
-signal lfsr_reg:std_logic_vector(31 downto 0):=x"21322132";
+signal lfsr_reg,bits_cnt:std_logic_vector(31 downto 0):=x"21322132";
 
 signal mod_samplesI,mod_samplesQ:std_logic_vector(1 downto 0);
 
@@ -177,7 +177,9 @@ begin
 				test_mux<='0';
 				s_pilot_ce<='0';
 --				bits<="01";--lfsr_reg(bits'Length-1 downto 0);
-				bits<=lfsr_reg(bits'Length-1 downto 0);
+--				bits<=lfsr_reg(bits'Length-1 downto 0);
+				bits<=bits_cnt(1 downto 0);
+				bits_cnt<=bits_cnt+1;
 			end if;
 		else
 			test_mux<='0';
