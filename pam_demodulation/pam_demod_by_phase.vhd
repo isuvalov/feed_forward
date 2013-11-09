@@ -29,24 +29,31 @@ architecture pam_demod_by_phase of pam_demod_by_phase is
 
 constant  MAX_VAL:integer:=402; --# 2**8*pi/2
 
+signal test:std_logic;
+
 begin
 
 process (clk) is
 begin		
 	if rising_edge(clk) then
 		if i_ce='1' then
-			if signed(i_phase)>-MAX_VAL/4 and signed(i_phase)<MAX_VAL/4 then
+			if signed(i_phase)>-(MAX_VAL/4) and signed(i_phase)<(MAX_VAL/4) then
 				bit_value<="00";
-			elsif signed(i_phase)>=MAX_VAL/4 and signed(i_phase)<3*(MAX_VAL/4) then
+				test<='0';
+			elsif signed(i_phase)>=(MAX_VAL/4) and signed(i_phase)<(3*(MAX_VAL/4)) then
 				bit_value<="01";
-			elsif signed(i_phase)<=-3*(MAX_VAL/4) and signed(i_phase)>=3*(MAX_VAL/4) then
-				bit_value<="10";
-			elsif signed(i_phase)>-3*(MAX_VAL/4) and signed(i_phase)<=-MAX_VAL/4 then
+				test<='1';
+			elsif signed(i_phase)<=-(3*(MAX_VAL/4)) or signed(i_phase)>=3*(MAX_VAL/4) then
 				bit_value<="11";
+				test<='0';
+			elsif signed(i_phase)>-3*(MAX_VAL/4) and signed(i_phase)<=-MAX_VAL/4 then
+				bit_value<="10";
+				test<='0';
 			end if;
 			out_ce<='1';
 		else
 			out_ce<='0';
+			test<='0';
 		end if; --#i_Ce
 	end if;
 end process;
