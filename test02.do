@@ -43,6 +43,7 @@ vlog pam_demodulation/table_phaseerrors.v
 vcom pam_demodulation/pam_demod.vhd
 vcom pam_demodulation/short_lf_filter_ver2.vhd
 vcom pam_demodulation/itertive_demod.vhd
+vcom pam_demodulation/pam_demod_by_phase.vhd
 
 vcom modem_rx_top.vhd 
 

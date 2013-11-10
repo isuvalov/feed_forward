@@ -44,10 +44,10 @@ begin
 				bit_value<="01";
 				test<='1';
 			elsif signed(i_phase)<=-(3*(MAX_VAL/4)) or signed(i_phase)>=3*(MAX_VAL/4) then
-				bit_value<="11";
+				bit_value<="10";
 				test<='0';
 			elsif signed(i_phase)>-3*(MAX_VAL/4) and signed(i_phase)<=-MAX_VAL/4 then
-				bit_value<="10";
+				bit_value<="11";
 				test<='0';
 			end if;
 			out_ce<='1';

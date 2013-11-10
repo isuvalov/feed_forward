@@ -41,8 +41,8 @@ end signed_abs;
 --# like in TX part
 type Tcomplex is array (0 to 1) of integer;
 type Tmem is array(0 to 3) of Tcomplex;
-constant mem:Tmem:=((1,1),(-1,1),(-1,-1),(1,-1));
-
+constant mem:Tmem:=((1,0),(0,1),(-1,0),(0,-1));
+-- new: constant mem:Tmem:=((1,0),(0,1),(-1,0),(0,-1));
 
 signal i_more_q,sign_i,sign_q:std_logic;
 signal signs:std_logic_vector(2 downto 0);

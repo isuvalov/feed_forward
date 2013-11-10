@@ -89,8 +89,8 @@ signal sampleQ_moveback_ce,down_ce:std_logic;
 
 signal start_rotate_ce_3w,start_rotate_ce_2w,start_rotate_ce_1w:std_logic;
 
-signal s_demod_phase :std_logic_vector(15 downto 0);
-signal s_demod_phase_ce : std_logic;
+signal s_demod_phase_minus,s_demod_phase :std_logic_vector(15 downto 0);
+signal s_demod_phase_ce,s_demod_phase_ce_1w : std_logic;
 signal s_sync_find,print_event: std_logic;
 
 signal bit_value_rx_ce:std_logic;
@@ -466,37 +466,39 @@ scalar_mult_inst: entity work.scalar_mult
 
 
 
-complex_normalizer_inst: entity work.complex_normalizer
-	generic map(
-		CONJUGATION=>'0' --# сопряжение числа по выходу, если '1' - то сопрягать
-	)
-	port map(
-		clk =>clk,
-		reset =>reset,
-		i_ce =>scalar_sum_ce,
-		i_samplesI =>scalar_sumI(scalar_sumI'Length-1 downto scalar_sumI'Length-16),
-		i_samplesQ =>scalar_sumQ(scalar_sumQ'Length-1 downto scalar_sumQ'Length-16),
+--complex_normalizer_inst: entity work.complex_normalizer
+--	generic map(
+--		CONJUGATION=>'0' --# сопряжение числа по выходу, если '1' - то сопрягать
+--	)
+--	port map(
+--		clk =>clk,
+--		reset =>reset,
+--		i_ce =>scalar_sum_ce,
+--		i_samplesI =>scalar_sumI(scalar_sumI'Length-1 downto scalar_sumI'Length-16),
+--		i_samplesQ =>scalar_sumQ(scalar_sumQ'Length-1 downto scalar_sumQ'Length-16),
+--  
+--		o_samplesI=>start_rotate_I,
+--		o_samplesQ=>start_rotate_Q,
+--		out_ce=>start_rotate_ce
+--		);
+start_rotate_I<=scalar_sumI(scalar_sumI'Length-1-4 downto scalar_sumI'Length-16-4);
+start_rotate_Q<=scalar_sumQ(scalar_sumQ'Length-1-4 downto scalar_sumQ'Length-16-4);
+start_rotate_ce<=scalar_sum_ce;
 
-		o_samplesI=>start_rotate_I,
-		o_samplesQ=>start_rotate_Q,
-		out_ce=>start_rotate_ce
-		);
-
-
-delay_before_d: entity work.delayer
-	generic map(
-		DELAY_LEN=>DELAY_COMPLEX_NORMALIZER --# еще добавить задержку от скалярного произведения
-	) 
-	port map(
-		clk =>clk,
-		reset =>reset,
-
-		i_sampleI=>sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16),
-		i_sampleQ=>sampleQ_moveback(sampleQ_moveback'Length-1 downto sampleQ_moveback'Length-16),
-
-		o_sampleI=>sampleI_to_demod,
-		o_sampleQ=>sampleQ_to_demod
-		);
+--delay_before_d: entity work.delayer
+--	generic map(
+--		DELAY_LEN=>DELAY_COMPLEX_NORMALIZER --# еще добавить задержку от скалярного произведения
+--	) 
+--	port map(
+--		clk =>clk,
+--		reset =>reset,
+--  
+--		i_sampleI=>sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16),
+--		i_sampleQ=>sampleQ_moveback(sampleQ_moveback'Length-1 downto sampleQ_moveback'Length-16),
+--  
+--		o_sampleI=>sampleI_to_demod,
+--		o_sampleQ=>sampleQ_to_demod
+--		);
 
 
 itertive_demod_inst: entity work.itertive_demod
@@ -520,14 +522,23 @@ begin
 	if rising_edge(clk) then
 		demod_phase<=s_demod_phase;
 		demod_phase_ce<=s_demod_phase_ce;
+
+
+		if s_demod_phase_ce='1' then
+			s_demod_phase_minus<=0-s_demod_phase;
+		end if;
+        s_demod_phase_ce_1w<=s_demod_phase_ce;
+
+		sampleI_to_demod<=sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
+        sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
 	end if;
 end process;
 
 pam_demod_by_phase_i: entity work.pam_demod_by_phase
 	port map(
 		clk =>clk,
-		i_ce =>s_demod_phase_ce,
-		i_phase =>s_demod_phase(9 downto 0),
+		i_ce =>s_demod_phase_ce_1w,
+		i_phase =>s_demod_phase_minus (9 downto 0),
 
 		bit_value=>bit_value_rx,
 		out_ce=>bit_value_rx_ce

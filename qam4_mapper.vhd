@@ -25,6 +25,8 @@ type Tcomplex is array (0 to 1) of integer;
 type Tmem is array(0 to 3) of Tcomplex;
 
 --constant mem:Tmem:=((1,1),(-1,1),(-1,-1),(1,-1));
+--constant mem:Tmem:=((1,0),(0,1),(-1,0),(0,-1));
+--constant mem:Tmem:=((1,0),(-1,0),(0,1),(0,-1));
 constant mem:Tmem:=((1,0),(0,1),(-1,0),(0,-1));
 
 
