@@ -78,7 +78,7 @@ begin
 			when INSERT_PILOT=>
 				if unsigned(cnt)<PILOT_LEN-1 then
 				else
-					stm<=PREAMBULE01;
+					stm<=INSERT_DATA;--PREAMBULE01;
 				end if;
 				if PILOT((PILOT_LEN-1)-conv_integer(cnt(log2roundup(PILOT_LEN)-1 downto 0)))='1' then --# set or 0 or 2
 					bits<="00";
@@ -108,6 +108,7 @@ begin
 				rd_o<='0';
 			when INSERT_DATA=>
 				s_pilot_ce<='0';
+				duplicate_iq<='0';
 				rd_o<='1';
                 bits<=bits_i;
 				if cnt=PILOT_PERIOD-1 then
@@ -159,8 +160,8 @@ rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 10 тактов
 		);
 pilot_ce<=s_pilot_ce_a(s_pilot_ce_a'Length-1);
 
-sampleI_o<=m_sampleI_o;
-sampleQ_o<=m_sampleQ_o;
+sampleI_o<=s_sampleI_o(s_sampleI_o'Length-1-1 downto 0)&"0";
+sampleQ_o<=s_sampleQ_o(s_sampleQ_o'Length-1-1 downto 0)&"0";
 
 	
 end wrapper_tx_stream;

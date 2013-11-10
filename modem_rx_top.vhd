@@ -27,6 +27,9 @@ entity modem_rx_top is
 		  demod_phase :out std_logic_vector(15 downto 0);
 		  demod_phase_ce : out std_logic;
 
+		  bit_value_ce: out std_logic;
+		  bit_value: out std_logic_vector(1 downto 0);
+
 		  sync_find: out std_logic;
 		  dds_cos_o: out std_logic_vector(15 downto 0);
 		  dds_sin_o: out std_logic_vector(15 downto 0);
@@ -531,6 +534,10 @@ begin
 
 		sampleI_to_demod<=sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
         sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
+	
+		bit_value_ce<=bit_value_rx_ce;
+        bit_value<=bit_value_rx;
+
 	end if;
 end process;
 

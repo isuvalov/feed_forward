@@ -18,8 +18,8 @@ add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/time_for_freqcalc_ce
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/time_for_freqcalc_cnt
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/time_for_freqcalc_cnt_reg
 add wave -noupdate -divider {New Divider}
-add wave -noupdate -format Analog-Step -height 74 -max 300.0 -min -300.0 -radix decimal /tb/modem_rx_top_inst/samplei_to_demod
-add wave -noupdate -format Analog-Step -height 74 -max 300.0 -min -300.0 -radix decimal /tb/modem_rx_top_inst/sampleq_to_demod
+add wave -noupdate -max 300.0 -min -300.0 -radix decimal /tb/modem_rx_top_inst/samplei_to_demod
+add wave -noupdate -max 300.0 -min -300.0 -radix decimal /tb/modem_rx_top_inst/sampleq_to_demod
 add wave -noupdate /tb/modem_rx_top_inst/start_rotate_ce_1w
 add wave -noupdate -divider {New Divider}
 add wave -noupdate /tb/modem_rx_top_inst/print_event
@@ -248,7 +248,7 @@ add wave -noupdate -radix decimal /tb/modem_rx_top_inst/start_rotate_ce
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/samplei_moveback
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/sampleq_moveback
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {744076000 ps} 0}
+WaveRestoreCursors {{Cursor 1} {1037186479 ps} 0}
 configure wave -namecolwidth 466
 configure wave -valuecolwidth 87
 configure wave -justifyvalue left
@@ -263,4 +263,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {828781937 ps} {829512530 ps}
+WaveRestoreZoom {0 ps} {1635366600 ps}

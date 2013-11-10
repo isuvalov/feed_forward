@@ -17,6 +17,7 @@ vcom rcc_up_filter.vhd
 vcom rcc_up_filter_rx.vhd 
 vcom ce_manager.vhd 
 vcom generate_test_tx.vhd 
+vcom wrapper_tx_stream.vhd
 
 vcom complex_mult.vhd
 vcom bih_filter_integrator.vhd 
@@ -47,8 +48,13 @@ vcom pam_demodulation/pam_demod_by_phase.vhd
 
 vcom modem_rx_top.vhd 
 
+
+vcom lfsr/LFSRgenerator.vhd
+vcom lfsr/testLFSR.vhd 
+
 vcom shift_dataflow.vhd 
-vcom tb_02.vhd
+#vcom tb_02.vhd
+vcom tb_03.vhd
 
 vsim -novopt -t ps work.tb
 
