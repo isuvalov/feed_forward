@@ -211,7 +211,7 @@ begin
 		else
 			if unsigned(m_start_delayer_cnt)>0 then
 				m_start_delayer_cnt<=m_start_delayer_cnt-1;
-				m_start_pilotU<='0';
+				m_start_pilotU<='0';				
 			else
 				if m_start_pilotU_have='0' then
 					m_start_pilotU<='1';
@@ -225,7 +225,7 @@ begin
 end process;
 
 
-start_pilotU<=m_start_pilotU when good_come='0' and stm=CATCH else g_start_pilotU;
+start_pilotU<=m_start_pilotU when good_come='0' and stm=CATCH and m_start_pilotU_have='0' else g_start_pilotU;
 
 sync_find<=s_sync_find;
 	

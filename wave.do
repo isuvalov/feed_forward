@@ -1,10 +1,10 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
+add wave -noupdate /tb/error
 add wave -noupdate -color Coral -itemcolor Coral /tb/modem_rx_top_inst/sync_find
 add wave -noupdate -color Coral -itemcolor Coral -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/loss_cnt
 add wave -noupdate /tb/pilot_ce_test
 add wave -noupdate /tb/pilot_ce_test_1w
-add wave -noupdate /tb/test_tx_inst/pilot_ce
 add wave -noupdate /tb/modem_rx_top_inst/clk
 add wave -noupdate /tb/modem_rx_top_inst/freq_ce
 add wave -noupdate /tb/pilot_start
@@ -18,8 +18,8 @@ add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/time_for_freqcalc_ce
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/time_for_freqcalc_cnt
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/time_for_freqcalc_cnt_reg
 add wave -noupdate -divider {New Divider}
-add wave -noupdate -max 300.0 -min -300.0 -radix decimal /tb/modem_rx_top_inst/samplei_to_demod
-add wave -noupdate -max 300.0 -min -300.0 -radix decimal /tb/modem_rx_top_inst/sampleq_to_demod
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/samplei_to_demod
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/sampleq_to_demod
 add wave -noupdate /tb/modem_rx_top_inst/start_rotate_ce_1w
 add wave -noupdate -divider {New Divider}
 add wave -noupdate /tb/modem_rx_top_inst/print_event
@@ -240,15 +240,22 @@ add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase
 add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/bit_value
 add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/out_ce
 add wave -noupdate -divider {New Divider}
-add wave -noupdate /tb/test_tx_inst/bits
-add wave -noupdate /tb/test_tx_inst/bits_cnt
 add wave -noupdate -radix decimal -subitemconfig {/tb/modem_rx_top_inst/start_rotate_i(15) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(14) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(13) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(12) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(11) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(10) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(9) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(8) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(7) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(6) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(5) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(4) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(3) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(2) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(1) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(0) {-radix decimal}} /tb/modem_rx_top_inst/start_rotate_i
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/start_rotate_q
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/start_rotate_ce
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/samplei_moveback
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/sampleq_moveback
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/freq_val_filt
+add wave -noupdate -radix decimal -subitemconfig {/tb/modem_rx_top_inst/freq_val_filt_mult(36) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(35) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(34) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(33) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(32) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(31) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(30) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(29) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(28) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(27) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(26) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(25) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(24) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(23) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(22) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(21) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(20) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(19) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(18) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(17) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(16) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(15) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(14) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(13) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(12) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(11) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(10) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(9) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(8) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(7) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(6) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(5) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(4) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(3) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(2) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(1) {-radix decimal} /tb/modem_rx_top_inst/freq_val_filt_mult(0) {-radix decimal}} /tb/modem_rx_top_inst/freq_val_filt_mult
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/start_rotate_i
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/start_rotate_q
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phasei
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phaseq
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/init_phase
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/init_phase_mul
+add wave -noupdate /tb/error
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {1037186479 ps} 0}
+WaveRestoreCursors {{Cursor 1} {321700000 ps} 0}
 configure wave -namecolwidth 466
 configure wave -valuecolwidth 87
 configure wave -justifyvalue left
@@ -263,4 +270,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {1635366600 ps}
+WaveRestoreZoom {0 ps} {830260200 ps}

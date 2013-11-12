@@ -299,7 +299,7 @@ begin
 		end if;
 		freq_val_filt_mult_1w<=freq_val_filt_mult;
 		
-		if GLOBAL_DEBUG=1 then
+		if GLOBAL_DEBUG/=1 then
 			dds_cos_d<=x"7FFF";
 			dds_sin_d<=(others=>'0');
 		else
@@ -533,13 +533,17 @@ begin
         s_demod_phase_ce_1w<=s_demod_phase_ce;
 
 		sampleI_to_demod<=sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
-        sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
+    	sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
 	
 		bit_value_ce<=bit_value_rx_ce;
         bit_value<=bit_value_rx;
 
 	end if;
 end process;
+
+--		sampleI_to_demod<=sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
+--        sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
+
 
 pam_demod_by_phase_i: entity work.pam_demod_by_phase
 	port map(

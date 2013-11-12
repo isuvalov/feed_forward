@@ -94,6 +94,9 @@ signal d_i_ce,d_ce_1w,d_ce_2w,d_ce_3w,d_ce_correct_perr:std_logic;
 signal test_sample_cnt:integer:=0;
 signal s_phase_demod_acum_new_pi:std_logic_vector(phase_demod_acum_new_pi'Length-1 downto 0);
 
+signal dcnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0):=(others=>'0');
+signal down_ce:std_logic;
+
 constant TO_PI:std_logic_vector(19 downto 0):=x"145F3";
 constant POROGMUL:std_logic_vector(19 downto 0):=conv_std_logic_vector(FI_POROG_PHASE*1,10)&"0000000000"; 
 
@@ -154,7 +157,8 @@ init_phase_mul<=signed(init_phase)*signed(conv_std_logic_vector(10474,15));
 
 ce_correct<=i_ce;
 
-d_i_ce<=ce_1w;
+--d_i_ce<=ce_1w;   --# WAS
+d_i_ce<=down_ce;
 
 s_phase_demod_acum_new_pi<=(phase_demod_acum_new)*(x"145F3"); --signed(conv_std_logic_vector(823550,20)); =floor((1/pi)*2^18)
 
@@ -171,6 +175,23 @@ VARIABLE TX_LOC : LINE;
 VARIABLE TX_LOC2 : LINE;	
 begin
 	if rising_edge(clk) then
+
+
+        if after_pilot_start='1' then
+			dcnt<=conv_std_logic_vector(0,dcnt'Length);
+			down_ce<='1';
+		else
+			if unsigned(dcnt)<InterpolateRate-1 then
+				dcnt<=dcnt+1;
+				down_ce<='0';
+			else
+				dcnt<=(others=>'0');
+				down_ce<='1';
+			end if;
+		end if;
+
+
+
 		ce_1w<=i_ce;
 		ce_2w<=ce_1w;
 		ce_3w<=ce_2w;
@@ -347,7 +368,7 @@ begin
 				phase_demod_acum_demod<=SXT(val_engle,phase_demod_acum_demod'Length); --# make phase for demodulation
 			end if;
 		end if;
-   --#  TO-DO -- разрядность выхода! ведь val_engle - всего 9 бит, велечену  проверить phase_delta_short
+
 		o_samples_phase<=phase_demod_acum_demod(o_samples_phase'Length-1 downto 0);
 		out_ce<=d_ce_1w;--d_ce_3w;
 
