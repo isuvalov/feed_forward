@@ -240,6 +240,8 @@ add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase
 add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/bit_value
 add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/out_ce
 add wave -noupdate -divider {New Divider}
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/after_pilot_start
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_ce
 add wave -noupdate -radix decimal -subitemconfig {/tb/modem_rx_top_inst/start_rotate_i(15) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(14) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(13) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(12) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(11) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(10) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(9) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(8) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(7) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(6) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(5) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(4) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(3) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(2) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(1) {-radix decimal} /tb/modem_rx_top_inst/start_rotate_i(0) {-radix decimal}} /tb/modem_rx_top_inst/start_rotate_i
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/start_rotate_q
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/start_rotate_ce
@@ -254,8 +256,72 @@ add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_in
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/init_phase
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/init_phase_mul
 add wave -noupdate /tb/error
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/dcnt
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/down_ce
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_i_ce
+add wave -noupdate -divider {New Divider}
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/clk
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/reset
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/after_pilot_start
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_ce
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesi
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesq
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phasei
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phaseq
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/out_ce
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/init_phase
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_phase
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/init_add_phase
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_add_phase
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_phase_ok
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_init_ok
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_phase_reg
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/samples_phase_mul
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/init_phase_mul
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_phase_short
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acummod
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phi_error
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/val_engle_reg
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/val_engle
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/filt_acum
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_delta
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_new
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_demod
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_new_pi
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_delta_short
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_int0
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_start
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_p_err
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_p_err_1w
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_p_erre
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_start_shift
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_start_div_mod
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_add_phase_a
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/init_add_phase_a
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/new_after_pilot_start_a
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/new_after_pilot_start_2w
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/new_after_pilot_start_1w
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/new_after_pilot_start
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/ce_1w
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/ce_2w
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/ce_3w
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/ce_correct
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/cccc
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/samplesi_reg
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/samplesq_reg
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_i_ce
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_ce_1w
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_ce_2w
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_ce_3w
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_ce_correct_perr
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/test_sample_cnt
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/s_phase_demod_acum_new_pi
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/dcnt
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/down_ce
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {321700000 ps} 0}
+WaveRestoreCursors {{Cursor 1} {287218074 ps} 0}
 configure wave -namecolwidth 466
 configure wave -valuecolwidth 87
 configure wave -justifyvalue left
@@ -270,4 +336,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {830260200 ps}
+WaveRestoreZoom {43795050 ps} {656596050 ps}

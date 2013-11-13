@@ -96,6 +96,7 @@ signal s_phase_demod_acum_new_pi:std_logic_vector(phase_demod_acum_new_pi'Length
 
 signal dcnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0):=(others=>'0');
 signal down_ce:std_logic;
+signal whole_dcnt:std_logic_vector(log2roundup(PILOT_PERIOD)-1 downto 0);
 
 constant TO_PI:std_logic_vector(19 downto 0):=x"145F3";
 constant POROGMUL:std_logic_vector(19 downto 0):=conv_std_logic_vector(FI_POROG_PHASE*1,10)&"0000000000"; 
@@ -179,14 +180,20 @@ begin
 
         if after_pilot_start='1' then
 			dcnt<=conv_std_logic_vector(0,dcnt'Length);
+			whole_dcnt<=conv_std_logic_vector(PILOT_PERIOD-PILOT_LEN*InterpolateRate-1,whole_dcnt'Length);
 			down_ce<='1';
-		else
+		else			
 			if unsigned(dcnt)<InterpolateRate-1 then
 				dcnt<=dcnt+1;
 				down_ce<='0';
 			else
 				dcnt<=(others=>'0');
-				down_ce<='1';
+				if unsigned(whole_dcnt)>0 then
+					down_ce<='1';
+					whole_dcnt<=whole_dcnt-1;
+				else
+					down_ce<='0';
+				end if;
 			end if;
 		end if;
 
