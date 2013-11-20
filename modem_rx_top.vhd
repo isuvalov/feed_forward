@@ -316,7 +316,7 @@ begin
 
         test_inner_pilot_pos<=start_pilotU;
 
-		start_rotate_ce_1w<=start_rotate_ce;
+		start_rotate_ce_1w<=start_rotate_ce and s_sync_find;
 		start_rotate_ce_2w<=start_rotate_ce_1w;
 		start_rotate_ce_3w<=start_rotate_ce_2w;
 
@@ -509,12 +509,14 @@ itertive_demod_inst: entity work.itertive_demod
 		clk =>clk,
 		reset =>reset,
 		after_pilot_start =>start_rotate_ce_1w,--# он должен быть над первым i_ce
+--		after_pilot_start =>start_rotate_ce,--# он должен быть над первым i_ce
 		i_ce =>down_ce,--sampleQ_moveback_ce,
 		i_samplesI =>sampleI_to_demod,
 		i_samplesQ =>sampleQ_to_demod,
 
 		i_init_phaseI=>start_rotate_I,
 		i_init_phaseQ=>start_rotate_Q,
+
 
 		o_samples_phase=>s_demod_phase,
 		out_ce=>s_demod_phase_ce

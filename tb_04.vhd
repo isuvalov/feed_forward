@@ -110,83 +110,15 @@ begin
 end process;
 
 
-process (clk) is
-begin
-	if rising_edge(clk) then
-		bit_value_rx_ce_1w<=bit_value_rx_ce;
-		ce_all<=bit_value_rx_ce or bit_value_rx_ce_1w;
-		if bit_value_rx_ce='1' then
-			datain_lfsr<=bit_value_rx(0);
-		elsif bit_value_rx_ce_1w='1' then
-			datain_lfsr<=bit_value_rx(1);
-		end if;
+modem_tx_top_i: entity work.modem_tx_top
+    Port map(clk=>clk,
+		  reset=>reset,
 
+		  pilot_ce_test=>open,
 
-		if rd_req='1' then
-			bits_gen<=bits_gen+1;
-		end if;
-	end if;
-end process;
-
-
-LFSRgenerator_i: entity work.LFSRgenerator
-	Generic map(
-	NumberOfOutputBits=>2
-	)
-	 port map(
-		 clk =>clk,
-		 ce =>rd_req,
-		 reset =>reset,
---		 LFSR_Mask =>x"8000000D",
-		 LFSR_Mask =>x"00000009",
-		 LFSR_Word =>open --bits_gen
-	     );
-
-
-testLFSR_i:entity work.testLFSR
-	 port map(
-	 	 clk =>clk,
-	 	 ce=>ce_all,
---		 LFSR_Mask =>x"8000000D",
-		 LFSR_Mask =>x"00000009",
-		 datain =>datain_lfsr,
-		 error =>error
-	     );
-
-wrapper_tx_stream_i: entity work.wrapper_tx_stream
-	port map(
-		clk =>clk,
-		reset =>reset,
-
-		rd_o=>rd_req,
-		bits_i=>bits_gen, --# биты должны поступать с latency=0
-
-		pilot_ce=>pilot_ce_test,
-		sampleI_o=>sampleI_tx,
-		sampleQ_o=>sampleQ_tx
-		);
-
-
-
-
-shift_dataflow_inst: entity work.shift_dataflow
-	port map(
-		clk =>clk,
---		reset =>pilot_ce_test_event,
-		reset =>reset,
---		offset =>conv_std_logic_vector(10000000,32),
---		offset =>conv_std_logic_vector(00001000,32),
-		offset =>conv_std_logic_vector(00000000,32),
-		in_sampleI=>sampleI_tx,
-		in_sampleQ=>sampleQ_tx,
-		ce_in=>'1',
-
-		out_sampleI=>sampleQ_tx_sh,
-		out_sampleQ=>sampleI_tx_sh,
-		ce_out=>open
-		);
-sampleI_tx0<=rats(SXT(sampleI_tx_sh(sampleI_tx'Length-1 downto 1),sampleQ_tx0'Length));
-sampleQ_tx0<=rats(SXT(sampleQ_tx_sh(sampleI_tx'Length-1 downto 1),sampleQ_tx0'Length));
+		  sampleI_tx_o=>sampleI_tx0,
+		  sampleQ_tx_o=>sampleQ_tx0
+	);
 
 modem_rx_top_inst: entity work.modem_rx_top
 	generic map(

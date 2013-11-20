@@ -1,6 +1,6 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
-add wave -noupdate /tb/error
+add wave -noupdate /tb/testlfsr_i/error
 add wave -noupdate -color Coral -itemcolor Coral /tb/modem_rx_top_inst/sync_find
 add wave -noupdate -color Coral -itemcolor Coral -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/loss_cnt
 add wave -noupdate /tb/pilot_ce_test
@@ -103,7 +103,7 @@ add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/o_inter
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/o_interp_ce_w2
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/sm_qam_ce
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/cnt_interp
-add wave -noupdate -radix unsigned -subitemconfig {/tb/modem_rx_top_inst/pilot_upper_inst/cnt(5) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(4) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(3) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(2) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(1) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(0) {-height 15 -radix unsigned}} -expand -subitemconfig {/tb/modem_rx_top_inst/pilot_upper_inst/cnt(5) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(4) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(3) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(2) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(1) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(0) {-height 15 -radix unsigned}} /tb/modem_rx_top_inst/pilot_upper_inst/cnt
+add wave -noupdate -radix unsigned -subitemconfig {/tb/modem_rx_top_inst/pilot_upper_inst/cnt(5) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(4) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(3) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(2) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(1) {-height 15 -radix unsigned} /tb/modem_rx_top_inst/pilot_upper_inst/cnt(0) {-height 15 -radix unsigned}} /tb/modem_rx_top_inst/pilot_upper_inst/cnt
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/mod_samplesi
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/pilot_upper_inst/mod_samplesq
 add wave -noupdate -radix binary /tb/modem_rx_top_inst/pilot_upper_inst/bits
@@ -255,15 +255,15 @@ add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_in
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phaseq
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/init_phase
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/init_phase_mul
-add wave -noupdate /tb/error
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/dcnt
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/down_ce
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_i_ce
 add wave -noupdate -divider {New Divider}
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/clk
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/reset
+add wave -noupdate -format Analog-Step -height 50 -max 500.0 -min -500.0 -radix decimal /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/new_after_pilot_start
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/after_pilot_start
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_ce
+add wave -noupdate -format Analog-Step -height 50 -max 3000.0 -min -3000.0 -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesi
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesi
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesq
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phasei
@@ -300,6 +300,7 @@ add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_st
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_start_div_mod
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_add_phase_a
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/init_add_phase_a
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_ce_1w
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/new_after_pilot_start_a
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/new_after_pilot_start_2w
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/new_after_pilot_start_1w
@@ -318,10 +319,11 @@ add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_ce_3w
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_ce_correct_perr
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/test_sample_cnt
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/s_phase_demod_acum_new_pi
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/dcnt
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/down_ce
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/after_pilot_start
+add wave -noupdate -format Analog-Step -height 50 -max 33000.0 -min -33000.0 -radix decimal /tb/modem_rx_top_inst/dds_cos_d
+add wave -noupdate -format Analog-Step -height 50 -max 33000.0 -min -33000.0 -radix decimal /tb/modem_rx_top_inst/dds_sin_d
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {287218074 ps} 0}
+WaveRestoreCursors {{Cursor 1} {356284000 ps} 0}
 configure wave -namecolwidth 466
 configure wave -valuecolwidth 87
 configure wave -justifyvalue left
@@ -336,4 +338,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {43795050 ps} {656596050 ps}
+WaveRestoreZoom {0 ps} {1390842600 ps}

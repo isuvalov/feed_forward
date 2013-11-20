@@ -47,6 +47,7 @@ signal test_mem_I,test_mem_Q:Ttest_mem;
 signal first_read,s_pilot_ce,s_pilot_ce_1w,s_pilot_ce_2w:std_logic;
 signal s_pilot_ce_a:std_logic_vector(9-1 downto 0);
 signal duplicate_iq:std_logic;
+signal delay_cnt:std_logic_vector(3 downto 0);
 
 type Tstm is (INSERT_PILOT,PREAMBULE01,PREAMBULE02,PREAMBULE03,INSERT_DATA);
 signal stm:Tstm;
@@ -88,22 +89,27 @@ begin
 				s_pilot_ce<='1';
 				duplicate_iq<='1';
 				rd_o<='0';
+				delay_cnt<=(others=>'1');
 			when PREAMBULE01=>
 				s_pilot_ce<='0';
 				duplicate_iq<='0';
                 bits<="00";
-				stm<=PREAMBULE02;
+				if unsigned(delay_cnt)>0 then
+					delay_cnt<=delay_cnt-1;
+				else
+					stm<=INSERT_DATA;--PREAMBULE02;
+				end if;
 				rd_o<='0';
 			when PREAMBULE02=>
 				s_pilot_ce<='0';
 				duplicate_iq<='0';
-                bits<="00";
+                bits<="11";
 				stm<=PREAMBULE03;
 				rd_o<='0';
 			when PREAMBULE03=>
 				s_pilot_ce<='0';
 				duplicate_iq<='0';
-                bits<="00";
+                bits<="11";
 				stm<=INSERT_DATA;
 				rd_o<='0';
 			when INSERT_DATA=>
@@ -160,8 +166,9 @@ rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 10 тактов
 		);
 pilot_ce<=s_pilot_ce_a(s_pilot_ce_a'Length-1);
 
-sampleI_o<=s_sampleI_o(s_sampleI_o'Length-1-1 downto 0)&"0";
-sampleQ_o<=s_sampleQ_o(s_sampleQ_o'Length-1-1 downto 0)&"0";
+sampleI_o<=s_sampleI_o(s_sampleI_o'Length-1-2 downto 0)&"00";
+sampleQ_o<=s_sampleQ_o(s_sampleQ_o'Length-1-2 downto 0)&"00";
+
 
 	
 end wrapper_tx_stream;

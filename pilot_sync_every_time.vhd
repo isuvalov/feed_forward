@@ -57,7 +57,7 @@ signal s_sync_find,one_p:std_logic;
 signal g_start_pilotU_have,g_start_pilotU:std_logic;
 signal g_start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0);
 
-signal m_start_pilotU_have,m_start_pilotU:std_logic;
+signal m_start_pilotU_have_1w,m_start_pilotU_have,m_start_pilotU:std_logic;
 signal m_start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0);
 
 signal m_realpilot_event,good_come:std_logic;
@@ -204,6 +204,7 @@ end process;
 process (clk) is
 begin		
 	if rising_edge(clk) then
+		m_start_pilotU_have_1w<=m_start_pilotU_have;
 		if m_realpilot_event='1' then
 			m_start_delayer_cnt<=conv_std_logic_vector(DELAY_AFTER_FREQESTIM-PILOTUP_START_DELAY-18-1,m_start_delayer_cnt'Length);		
 			m_start_pilotU<='0';
@@ -225,7 +226,7 @@ begin
 end process;
 
 
-start_pilotU<=m_start_pilotU when good_come='0' and stm=CATCH and m_start_pilotU_have='0' else g_start_pilotU;
+start_pilotU<=m_start_pilotU when good_come='0' and stm=CATCH and m_start_pilotU_have_1w='0' else g_start_pilotU;
 
 sync_find<=s_sync_find;
 	
