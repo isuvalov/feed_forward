@@ -51,9 +51,10 @@ vcom modem_rx_top.vhd
 
 vcom lfsr/LFSRgenerator.vhd
 vcom lfsr/testLFSR.vhd 
-
 vcom shift_dataflow.vhd 
-vcom tb_02.vhd
+vcom modem_tx_top.vhd 
+
+vcom tb_04.vhd
 #vcom tb_03.vhd
 
 vsim -novopt -t ps work.tb

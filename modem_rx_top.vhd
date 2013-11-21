@@ -87,6 +87,7 @@ signal start_rotate_I,start_rotate_Q:std_logic_vector(15 downto 0);
 signal start_rotate_ce:std_logic;
 
 signal sampleI_to_demod,sampleQ_to_demod:std_logic_vector(15 downto 0);
+signal sampleI_to_demod_1w,sampleQ_to_demod_1w:std_logic_vector(15 downto 0);
 signal cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0):=(others=>'0');
 signal sampleQ_moveback_ce,down_ce:std_logic;
 
@@ -320,6 +321,10 @@ begin
 		start_rotate_ce_2w<=start_rotate_ce_1w;
 		start_rotate_ce_3w<=start_rotate_ce_2w;
 
+		sampleI_to_demod_1w<=sampleI_to_demod;
+		sampleQ_to_demod_1w<=sampleQ_to_demod;
+
+
         if start_rotate_ce='1' then
 --			cnt<=conv_std_logic_vector(InterpolateRate-2,cnt'Length);
 			cnt<=conv_std_logic_vector(0,cnt'Length);
@@ -356,7 +361,7 @@ moveB: entity work.complex_mult
 	)
 	port map(
 		clk =>clk,
-		i_ce =>down_ce,
+		i_ce =>'1',--down_ce,
 		A_I =>sampleI_delay_fe_reg(sampleI_delay_fe_reg'Length-1 downto sampleI_delay_fe_reg'Length-16),
 		B_Q =>sampleQ_delay_fe_reg(sampleQ_delay_fe_reg'Length-1 downto sampleQ_delay_fe_reg'Length-16),
 
@@ -374,7 +379,7 @@ moveB: entity work.complex_mult
 
 pilotsync_inst: entity work.pilot_sync_every_time
 	generic map(
-		SIMULATION=>1,
+		SIMULATION=>SIMULATION,
 		DELAY_AFTER_FREQESTIM=>DELAY_AFTER_FREQESTIM,
 		DELAY_LEN=>PILOT_PERIOD*InterpolateRate
 	) 
@@ -511,8 +516,8 @@ itertive_demod_inst: entity work.itertive_demod
 		after_pilot_start =>start_rotate_ce_1w,--# он должен быть над первым i_ce
 --		after_pilot_start =>start_rotate_ce,--# он должен быть над первым i_ce
 		i_ce =>down_ce,--sampleQ_moveback_ce,
-		i_samplesI =>sampleI_to_demod,
-		i_samplesQ =>sampleQ_to_demod,
+		i_samplesI =>sampleI_to_demod_1w,
+		i_samplesQ =>sampleQ_to_demod_1w,
 
 		i_init_phaseI=>start_rotate_I,
 		i_init_phaseQ=>start_rotate_Q,
@@ -530,7 +535,7 @@ begin
 
 
 		if s_demod_phase_ce='1' then
-			s_demod_phase_minus<=0-s_demod_phase;
+			s_demod_phase_minus<=s_demod_phase;
 		end if;
         s_demod_phase_ce_1w<=s_demod_phase_ce;
 

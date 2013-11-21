@@ -82,7 +82,7 @@ signal rd_req:std_logic;
 signal bits_gen:std_logic_vector(1 downto 0):=(others=>'0');
 
 
-signal bit_value_rx_ce,bit_value_rx_ce_1w,error,ce_all,datain_lfsr:std_logic;
+signal bit_value_rx_ce,bit_value_rx_ce_1w,ce_all,error:std_logic;
 signal bit_value_rx:std_logic_vector(1 downto 0);
 
 
@@ -111,6 +111,9 @@ end process;
 
 
 modem_tx_top_i: entity work.modem_tx_top
+	generic map(
+			USE_LFSR=>0
+	)
     Port map(clk=>clk,
 		  reset=>reset,
 
@@ -152,6 +155,19 @@ modem_rx_top_inst: entity work.modem_rx_top
 		  dds_sin_o=>open,
 		  pilot_start=>pilot_start --# Этот импульс будет задержан на InterpolateRate*PILOT_LEN+5+Sqrt_Latency тактов
 	);
+
+
+testLFSR_i:entity work.testLFSR
+	Generic map(
+	NumberOfInputputBits=>2
+	)
+	 port map(
+	 	 clk =>clk,
+	 	 ce=>bit_value_rx_ce,
+		 LFSR_Mask =>x"8000000D",
+		 datain =>bit_value_rx,
+		 error =>error
+	     );
 
 
 end tb;

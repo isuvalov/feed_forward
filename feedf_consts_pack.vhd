@@ -16,6 +16,7 @@ constant NBITm1:natural:=NBIT-1;
 --# '1' it is +1, '0' it is -1
 constant PILOT:std_logic_vector(0 to PILOT_LEN-1):="1100111001001001000010001100001010000001101011000100000100000001";
 constant PILOT_PERIOD:natural:=8192;
+--constant PILOT_PERIOD:natural:=30000;
 
 
 type TsmoofWindow is array(0 to (PILOT_LEN*InterpolateRate/2)-2) of integer;

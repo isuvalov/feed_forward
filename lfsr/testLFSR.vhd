@@ -4,11 +4,14 @@ use ieee.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
 
 entity testLFSR is
+	Generic (
+	NumberOfInputputBits: natural :=10
+	);	
 	 port(
 	 	 clk : in STD_LOGIC;
 	 	 ce: in std_logic;
 		 LFSR_Mask : in STD_LOGIC_VECTOR(31 downto 0);
-		 datain : in STD_LOGIC;
+		 datain : in STD_LOGIC_VECTOR(NumberOfInputputBits-1 downto 0);
 		 error : out STD_LOGIC
 	     );
 end testLFSR;
@@ -16,15 +19,6 @@ end testLFSR;
 
 
 architecture testLFSR of testLFSR is
-
-function fliplr(A:std_logic_vector) return std_logic_vector is
-variable R:std_logic_vector(A'Range);
-begin
-  for i in A'Low to A'High loop
-	  R(A'High-(i-A'Low)):=A(i);
-  end loop; 
-  return R;
-end function;
 
 
 function BusXor(B:std_logic_vector) return std_logic is
@@ -37,28 +31,32 @@ begin
 return R;
 end function;
 
---constant Mask:std_logic_vector(31 downto 0):=x"00600000";
-constant Mask:std_logic_vector(31 downto 0):=x"00000003";
 
 signal shift_rg:std_logic_vector(31 downto 0);
-signal test_bit:std_logic;
-signal bits:std_logic_vector(0 downto 0);
-signal FlipMask:std_logic_vector(31 downto 0);
+signal s_shift_rgM:std_logic_vector(31 downto 0);
 
 begin
---FlipMask<=fliplr(Mask);
 
-test_bit<=datain;
 testlf: process (clk) is
+variable v_error:std_logic_vector(0 to NumberOfInputputBits-1);
+variable v_shift_rg,v_shift_rgM:std_logic_vector(31 downto 0);
 begin  
 	if rising_edge(clk) then
 		if ce='1' then
-			shift_rg(shift_rg'Length-1 downto 1)<=shift_rg(shift_rg'Length-2 downto 0);
-			shift_rg(0)<=test_bit;
-			error<=not(test_bit xor BusXor(shift_rg and LFSR_Mask ));
+			v_error:=(others=>'0');
+			v_shift_rg:=shift_rg;
+			for i in 0 to NumberOfInputputBits-1 loop
+				v_shift_rg(shift_rg'Length-1 downto 1):=v_shift_rg(shift_rg'Length-2 downto 0);
+				v_shift_rg(0):=datain(i);
+				v_shift_rgM:=v_shift_rg and LFSR_Mask;
+				v_error(i):=datain(i) xor BusXor(s_shift_rgM);
+			end loop;
+			s_shift_rgM<=v_shift_rgM;
+			shift_rg<=v_shift_rg;
+
+			error<=not v_error(0);
 		end if; --ce
 	end if; --clk
 end process;
-
 
 end testLFSR;

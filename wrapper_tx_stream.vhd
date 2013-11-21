@@ -61,6 +61,7 @@ begin
 		if reset='1' then
 			cnt<=(others=>'0');
 			first_read<='1';
+			stm<=INSERT_PILOT;
 		else
 			if o_interp_ce='1' then
 				if unsigned(cnt)<PILOT_PERIOD-1 then
@@ -166,8 +167,8 @@ rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 10 тактов
 		);
 pilot_ce<=s_pilot_ce_a(s_pilot_ce_a'Length-1);
 
-sampleI_o<=s_sampleI_o(s_sampleI_o'Length-1-2 downto 0)&"00";
-sampleQ_o<=s_sampleQ_o(s_sampleQ_o'Length-1-2 downto 0)&"00";
+sampleI_o<=s_sampleI_o(s_sampleI_o'Length-1-1 downto 0)&"0";
+sampleQ_o<=s_sampleQ_o(s_sampleQ_o'Length-1-1 downto 0)&"0";
 
 
 	

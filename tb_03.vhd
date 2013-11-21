@@ -79,10 +79,10 @@ signal pilot_start:std_logic;
 signal sampleI_tx2,sampleQ_tx2:std_logic_vector(15 downto 0);
 
 signal rd_req:std_logic;
-signal bits_gen:std_logic_vector(1 downto 0):=(others=>'0');
+signal datain_lfsr,bits_gen:std_logic_vector(1 downto 0):=(others=>'0');
 
 
-signal bit_value_rx_ce,bit_value_rx_ce_1w,error,ce_all,datain_lfsr:std_logic;
+signal bit_value_rx_ce,bit_value_rx_ce_1w,error,ce_all:std_logic;
 signal bit_value_rx:std_logic_vector(1 downto 0);
 
 
@@ -115,16 +115,16 @@ begin
 	if rising_edge(clk) then
 		bit_value_rx_ce_1w<=bit_value_rx_ce;
 		ce_all<=bit_value_rx_ce or bit_value_rx_ce_1w;
-		if bit_value_rx_ce='1' then
-			datain_lfsr<=bit_value_rx(0);
-		elsif bit_value_rx_ce_1w='1' then
-			datain_lfsr<=bit_value_rx(1);
-		end if;
+--		if bit_value_rx_ce='1' then
+--			datain_lfsr<=bit_value_rx(0);
+--		elsif bit_value_rx_ce_1w='1' then
+--			datain_lfsr<=bit_value_rx(1);
+--		end if;
 
 
-		if rd_req='1' then
-			bits_gen<=bits_gen+1;
-		end if;
+--		if rd_req='1' then
+--			bits_gen<=bits_gen+1;
+--		end if;
 	end if;
 end process;
 
@@ -137,21 +137,25 @@ LFSRgenerator_i: entity work.LFSRgenerator
 		 clk =>clk,
 		 ce =>rd_req,
 		 reset =>reset,
---		 LFSR_Mask =>x"8000000D",
-		 LFSR_Mask =>x"00000009",
-		 LFSR_Word =>open --bits_gen
+		 LFSR_Mask =>x"8000000D",
+--		 LFSR_Mask =>x"00000009",
+		 LFSR_Word =>bits_gen
 	     );
 
 
 testLFSR_i:entity work.testLFSR
+	Generic map(
+	NumberOfInputputBits=>2
+	)
 	 port map(
 	 	 clk =>clk,
-	 	 ce=>ce_all,
---		 LFSR_Mask =>x"8000000D",
-		 LFSR_Mask =>x"00000009",
-		 datain =>datain_lfsr,
+	 	 ce=>bit_value_rx_ce,
+		 LFSR_Mask =>x"8000000D",
+--		 LFSR_Mask =>x"00000009",
+		 datain =>datain_lfsr,--bit_value_rx,
 		 error =>error
 	     );
+ datain_lfsr<=fliplr(bit_value_rx);
 
 wrapper_tx_stream_i: entity work.wrapper_tx_stream
 	port map(
