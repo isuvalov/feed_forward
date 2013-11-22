@@ -24,13 +24,15 @@ architecture modem_tx_top of modem_tx_top is
 signal sampleI_tx,sampleQ_tx:std_logic_vector(15 downto 0);
 signal rd_req:std_logic;
 
-constant seq_len:integer:=8;
+constant seq_len:integer:=36;
 type Tseq is array(seq_len-1 downto 0) of integer;
 --constant seq:Tseq:=(0,0,0,2,1,2,1,2,3,3,2,2,1,1,3,2);
-constant seq:Tseq:=(0,0,0,2,1,2,3,3);
+--constant seq:Tseq:=(0,0,0,2,1,2,3,3);
+constant seq:Tseq:=(0,0,0,2,1,2,3,3,1,2,0,1,2,3,0,2  --# 16
+                   ,1,0,1,2,0,1,0,1,2,0,2,0,2,3,0,1,0,1,2,2);
 
 signal pos_cnt:integer:=0;
-signal bits_gen:std_logic_vector(1 downto 0):=(others=>'0');
+signal bits_gen2,bits_gen:std_logic_vector(1 downto 0):=(others=>'0');
 
 begin
 
@@ -46,10 +48,12 @@ begin
 				pos_cnt<=0;
 			end if;
 			bits_gen<=conv_std_logic_vector(seq(pos_cnt),bits_gen'Length);
-		end if;
+		end if;		
 	end if;
 end process;
 end generate; --# USE_LFSR/=1
+
+
 
 USE_LFSR02: if USE_LFSR=1 generate
 	LFSRgenerator_i: entity work.LFSRgenerator
@@ -65,6 +69,8 @@ USE_LFSR02: if USE_LFSR=1 generate
 	     );
 end generate; --# USE_LFSR=1
 
+
+bits_gen2<=fliplr(bits_gen);
 
 wrapper_tx_stream_i: entity work.wrapper_tx_stream
 	port map(

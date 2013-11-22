@@ -85,6 +85,9 @@ signal bits_gen:std_logic_vector(1 downto 0):=(others=>'0');
 signal bit_value_rx_ce,bit_value_rx_ce_1w,ce_all,error:std_logic;
 signal bit_value_rx:std_logic_vector(1 downto 0);
 
+signal test_bits_ce: std_logic;
+signal test_bits: std_logic_vector(1 downto 0);
+
 
 begin
 
@@ -112,7 +115,7 @@ end process;
 
 modem_tx_top_i: entity work.modem_tx_top
 	generic map(
-			USE_LFSR=>0
+			USE_LFSR=>1
 	)
     Port map(clk=>clk,
 		  reset=>reset,

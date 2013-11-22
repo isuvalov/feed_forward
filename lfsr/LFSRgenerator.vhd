@@ -30,7 +30,6 @@ end function;
 
 
 signal LFSRDelayLine,LFSRDelayLine_w1,PreviusDelayLine_w1:std_logic_vector(31 downto 0):=(others=>'0');
-signal ce_w1:std_logic;
 
 begin
 
@@ -39,7 +38,6 @@ variable DelayLineWithMask:std_logic_vector(31 downto 0):=(others=>'0');
 variable vLFSRDelayLine:std_logic_vector(31 downto 0):=(others=>'0');
 begin	   
 if rising_edge(clk)	 then
-	ce_w1<=ce;
 	if reset='1' then
 		LFSRDelayLine<=(others=>'0');
 		LFSR_Word<=(others=>'0');

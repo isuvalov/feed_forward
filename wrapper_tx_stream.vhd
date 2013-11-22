@@ -61,7 +61,7 @@ begin
 		if reset='1' then
 			cnt<=(others=>'0');
 			first_read<='1';
-			stm<=INSERT_PILOT;
+			
 		else
 			if o_interp_ce='1' then
 				if unsigned(cnt)<PILOT_PERIOD-1 then
@@ -75,6 +75,11 @@ begin
 			end if;
 		end if;
 
+		if reset='1' then
+			stm<=INSERT_PILOT;
+			duplicate_iq<='0';
+			rd_o<='0';
+		else
 		if o_interp_ce='1' then
 			case stm is
 			when INSERT_PILOT=>
@@ -125,8 +130,9 @@ begin
 			end case;
 		else     --# o_interp_ce
 			rd_o<='0';
+			duplicate_iq<='0';
 		end if;  --# o_interp_ce
-
+		end if; --# reset
         o_interp_ce_w1<=o_interp_ce;
 		o_interp_ce_w2<=o_interp_ce_w1;
 	end if;
