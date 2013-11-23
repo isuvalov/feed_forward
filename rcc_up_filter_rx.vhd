@@ -9,6 +9,7 @@ use work.feedf_consts_pack.all;
 --# выходные значения в два раза меньше т.е. можно не брать самый старший бит
 entity rcc_up_filter_rx is
 	generic (
+		USE_IT:integer:=1;
 		LEN:natural:=2
 	);
 	port(
@@ -60,11 +61,23 @@ signal sumsI_5,sumsQ_5:Tsums_5;
 
 signal s_o_sampleI,s_o_sampleQ: std_logic_vector(15 downto 0);
 
+type Tunsed_delay is array(0 to 16) of std_logic_vector(LEN-1 downto 0);
+signal un_del_I,un_del_Q:Tunsed_delay;
+
 begin
 
 process (clk)
 begin		
 	if rising_edge(clk) then
+	    if USE_IT/=1 then
+			un_del_I(0)<=i_samplesI;
+			un_del_Q(0)<=i_samplesQ;
+			for i in 1 to 16 loop
+				un_del_I(i)<=un_del_I(i-1);
+				un_del_Q(i)<=un_del_Q(i-1);
+			end loop;
+		end if;
+
 		delaylineI(0)<=i_samplesI;
 		delaylineQ(0)<=i_samplesQ;
 		for i in 1 to 32 loop
@@ -121,15 +134,23 @@ begin
 		s_o_sampleI<=SXT(sumsI_5(0)(15-SH5 downto 1-SH5),16)+SXT(sumsI_5(1)(15 downto 1-SH5),16);
 		s_o_sampleQ<=SXT(sumsQ_5(0)(15-SH5 downto 1-SH5),16)+SXT(sumsQ_5(1)(15 downto 1-SH5),16);
 
-        if GLOBAL_DEBUG=1 then
-			o_sampleI<=SXT(s_o_sampleI(s_o_sampleI'Length-1-4 downto 0),o_sampleI'Length);
-			o_sampleQ<=SXT(s_o_sampleQ(s_o_sampleI'Length-1-4 downto 0),o_sampleI'Length);
+		if USE_IT=1 then
+            if GLOBAL_DEBUG=1 then
+				o_sampleI<=SXT(s_o_sampleI(s_o_sampleI'Length-1-4 downto 0),o_sampleI'Length);
+				o_sampleQ<=SXT(s_o_sampleQ(s_o_sampleI'Length-1-4 downto 0),o_sampleI'Length);
+			else
+				o_sampleI<=s_o_sampleI;
+				o_sampleQ<=s_o_sampleQ;
+			end if;
 		else
-			o_sampleI<=s_o_sampleI;
-			o_sampleQ<=s_o_sampleQ;
+			if LEN<o_sampleI'Length then
+				o_sampleI<=SXT(un_del_I(16)&EXT("0",o_sampleI'Length-LEN-1),o_sampleI'Length);
+				o_sampleQ<=SXT(un_del_Q(16)&EXT("0",o_sampleI'Length-LEN-1),o_sampleI'Length);
+			else
+				o_sampleI<=un_del_I(16);
+				o_sampleQ<=un_del_Q(16);
+			end if;
 		end if;
-
-
 	end if;	--clk
 end process;
 		 

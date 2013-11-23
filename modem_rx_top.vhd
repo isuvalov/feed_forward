@@ -136,6 +136,7 @@ end generate; --#SIMULATION/=1
 
 rcc_up_filter_inst: entity work.rcc_up_filter_rx
 	generic map(
+		USE_IT=>0,
 		LEN=>sampleI'Length
 	)
 	port map(
