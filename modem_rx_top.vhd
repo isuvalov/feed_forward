@@ -91,10 +91,10 @@ signal sampleI_to_demod_1w,sampleQ_to_demod_1w:std_logic_vector(15 downto 0);
 type TsampleI_to_demod_delay is array(0 to 7) of std_logic_vector(15 downto 0);
 signal sampleI_to_demod_W,sampleQ_to_demod_W:TsampleI_to_demod_delay;
 signal cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0):=(others=>'0');
-signal sampleQ_moveback_ce,down_ce:std_logic;
+signal sampleQ_moveback_ce,down_ce,down_ce_1w:std_logic;
 
 signal start_rotate_ce_3w,start_rotate_ce_2w,start_rotate_ce_1w:std_logic;
-signal start_rotate_ce_W:std_logic_vector(14 downto 0);
+signal start_rotate_ce_W:std_logic_vector(16 downto 0);
 
 signal s_demod_phase_minus,s_demod_phase :std_logic_vector(15 downto 0);
 signal s_demod_phase_ce,s_demod_phase_ce_1w : std_logic;
@@ -328,9 +328,9 @@ begin
 		sampleI_to_demod_1w<=sampleI_to_demod;
 		sampleQ_to_demod_1w<=sampleQ_to_demod;
 
-
+        down_ce_1w<=down_ce;
         if start_rotate_ce='1' then
---			cnt<=conv_std_logic_vector(InterpolateRate-2,cnt'Length);
+--			cnt<=conv_std_logic_vector(InterpolateRate-1,cnt'Length);
 			cnt<=conv_std_logic_vector(0,cnt'Length);
 			down_ce<='1';
 		else
@@ -361,7 +361,7 @@ end process;
 
 moveB: entity work.complex_mult
 	generic map(
-		NOT_USE_IT=>GLOBAL_DEBUG,
+		NOT_USE_IT=>1,--GLOBAL_DEBUG,
 		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(

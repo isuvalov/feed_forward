@@ -31,6 +31,7 @@ constant filter_taps:Tfilter_taps:=(-81, 8, 47, 116, 221, 363, 543, 757, 998, 12
 	      2311, 2378, 2378, 2311, 2180, 1996, 1771, 1519, 1257, 998, 757, 543, 363, 221, 116, 47, 8, -81);
 
 
+
 type Tdelay_line is array(0 to TAPS-1) of std_logic_vector(15 downto 0);
 signal delay_line,delay_line_c:Tdelay_line:=(others=>(others=>'0'));
 
