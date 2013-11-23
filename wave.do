@@ -131,8 +131,8 @@ add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_ce
 add wave -noupdate -format Analog-Step -height 50 -max 500.0 -min -500.0 -radix decimal -subitemconfig {/tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase(9) {-radix decimal} /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase(8) {-radix decimal} /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase(7) {-radix decimal} /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase(6) {-radix decimal} /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase(5) {-radix decimal} /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase(4) {-radix decimal} /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase(3) {-radix decimal} /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase(2) {-radix decimal} /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase(1) {-radix decimal} /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase(0) {-radix decimal}} /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase
 add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase
 add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/bit_value
-add wave -noupdate /tb/modem_tx_top_i/bits_gen
 add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/out_ce
+add wave -noupdate /tb/modem_tx_top_i/bits_gen
 add wave -noupdate -divider {New Divider}
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/after_pilot_start
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_ce
@@ -226,8 +226,23 @@ add wave -noupdate /tb/testlfsr_i/datain
 add wave -noupdate /tb/testlfsr_i/error
 add wave -noupdate /tb/testlfsr_i/shift_rg
 add wave -noupdate /tb/testlfsr_i/s_shift_rgm
+add wave -noupdate /tb/modem_tx_top_i/clk
+add wave -noupdate /tb/modem_tx_top_i/reset
+add wave -noupdate /tb/modem_tx_top_i/pilot_ce_test
+add wave -noupdate /tb/modem_tx_top_i/samplei_tx_o
+add wave -noupdate /tb/modem_tx_top_i/sampleq_tx_o
+add wave -noupdate /tb/modem_tx_top_i/samplei_tx
+add wave -noupdate /tb/modem_tx_top_i/sampleq_tx
+add wave -noupdate /tb/modem_tx_top_i/bits_gen2
+add wave -noupdate /tb/modem_tx_top_i/rd_req
+add wave -noupdate /tb/modem_tx_top_i/pos_cnt
+add wave -noupdate /tb/modem_tx_top_i/bits_gen
+add wave -noupdate /tb/modem_tx_top_i/usedw
+add wave -noupdate /tb/modem_tx_top_i/gen_ce
+add wave -noupdate /tb/modem_tx_top_i/gen_ce_1w
+add wave -noupdate /tb/modem_tx_top_i/testlfsr_i/error
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {790931419 ps} 0}
+WaveRestoreCursors {{Cursor 1} {1780970657 ps} 0}
 configure wave -namecolwidth 466
 configure wave -valuecolwidth 87
 configure wave -justifyvalue left
@@ -242,4 +257,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {765924600 ps}
+WaveRestoreZoom {1780845412 ps} {1781470826 ps}

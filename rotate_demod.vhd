@@ -41,6 +41,7 @@ begin
 
 complex_mult_inst: entity work.complex_mult
 	generic (
+		NOT_USE_IT=>0,
 		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port(

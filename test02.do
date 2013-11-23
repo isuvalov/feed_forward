@@ -51,6 +51,7 @@ vcom modem_rx_top.vhd
 
 vcom lfsr/LFSRgenerator.vhd
 vcom lfsr/testLFSR.vhd 
+vcom cores/fifo_zero_latency.vhd
 vcom shift_dataflow.vhd 
 vcom modem_tx_top.vhd 
 

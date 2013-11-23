@@ -115,7 +115,7 @@ end process;
 
 modem_tx_top_i: entity work.modem_tx_top
 	generic map(
-			USE_LFSR=>1
+			USE_LFSR=>0
 	)
     Port map(clk=>clk,
 		  reset=>reset,

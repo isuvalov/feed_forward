@@ -171,11 +171,16 @@ rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 10 тактов
 		o_sampleI=>s_sampleI_o,
 		o_sampleQ=>s_sampleQ_o
 		);
-pilot_ce<=s_pilot_ce_a(s_pilot_ce_a'Length-1);
+pilot_ce<=s_pilot_ce;
 
-sampleI_o<=s_sampleI_o(s_sampleI_o'Length-1-1 downto 0)&"0";
-sampleQ_o<=s_sampleQ_o(s_sampleQ_o'Length-1-1 downto 0)&"0";
+G01: if GLOBAL_DEBUG/=1 generate
+	sampleI_o<=s_sampleI_o(s_sampleI_o'Length-1-1 downto 0)&"0";
+	sampleQ_o<=s_sampleQ_o(s_sampleQ_o'Length-1-1 downto 0)&"0";
+end generate;
 
-
+G02: if GLOBAL_DEBUG=1 generate
+	sampleI_o<=s_sampleI_o(s_sampleI_o'Length-1-3 downto 0)&"000";
+	sampleQ_o<=s_sampleQ_o(s_sampleQ_o'Length-1-3 downto 0)&"000";
+end generate;
 	
 end wrapper_tx_stream;

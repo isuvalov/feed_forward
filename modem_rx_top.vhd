@@ -300,13 +300,13 @@ begin
 		end if;
 		freq_val_filt_mult_1w<=freq_val_filt_mult;
 		
-		if GLOBAL_DEBUG/=1 then
-			dds_cos_d<=x"7FFF";
-			dds_sin_d<=(others=>'0');
-		else
-			dds_cos_d<=dds_cos;
-			dds_sin_d<=dds_sin;
-		end if;
+--		if GLOBAL_DEBUG=1 then
+--			dds_cos_d<=x"3FFF";
+--			dds_sin_d<=(others=>'0');
+--		else
+--			dds_cos_d<=dds_cos;
+--			dds_sin_d<=dds_sin;
+--		end if;
 
 		dds_cos_o<=dds_cos;
 		dds_sin_o<=dds_sin;
@@ -357,6 +357,7 @@ end process;
 
 moveB: entity work.complex_mult
 	generic map(
+		NOT_USE_IT=>GLOBAL_DEBUG,
 		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(

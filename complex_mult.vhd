@@ -8,6 +8,7 @@ use work.feedf_consts_pack.all;
 
 entity complex_mult is
 	generic (
+		NOT_USE_IT:integer:=1;
 		CONJUGATION:std_logic:='1' --# умножение на сопряженное число, если '1' - то сопрягать
 	);
 	port(
@@ -33,6 +34,8 @@ architecture complex_mult of complex_mult is
 --#       (A+jB)*(C+jD)=(AC-BD)+j(AD+BC)
 --# conj: (A+jB)*(C-jD)=(AC+BD)+j(BC-AD)
 
+signal A_I_1w,B_Q_1w,A_I_2w,B_Q_2w:std_logic_vector(15 downto 0);
+
 signal AC,AD,BC,BD:std_logic_vector(31 downto 0);
 signal ACmBD,ADpBC,ACpBD,BCmAD:std_logic_vector(16 downto 0);
 signal ce_1w,ce_2w:std_logic;
@@ -46,6 +49,13 @@ begin
 	if rising_edge(clk) then
 		ce_1w<=i_ce;
 		ce_2w<=ce_1w;
+
+		A_I_1w<=A_I;
+		A_I_2w<=A_I_1w;
+        B_Q_1w<=B_Q;
+		B_Q_2w<=B_Q_1w;
+
+
 		if i_ce='1' then
 			AC<=signed(A_I)*signed(C_I);
 			AD<=signed(A_I)*signed(D_Q);
@@ -62,7 +72,10 @@ begin
 			end if;
 --		end if;
 
---		if ce_2w='1' then
+		if NOT_USE_IT=1 then
+			o_I<=A_I_2w;
+            o_Q<=B_Q_2w;
+		else
 			if CONJUGATION='0' then
 				o_I<=ACmBD(ACmBD'Length-1 downto ACmBD'Length-o_I'Length);
 				o_Q<=ADpBC(ACmBD'Length-1 downto ACmBD'Length-o_I'Length);
@@ -70,7 +83,7 @@ begin
 				o_I<=ACpBD(ACmBD'Length-1 downto ACmBD'Length-o_I'Length);
 				o_Q<=BCmAD(ACmBD'Length-1 downto ACmBD'Length-o_I'Length);
 			end if;
---		end if;
+		end if;
         out_ce<=ce_2w;
 	end if;
 end process;
