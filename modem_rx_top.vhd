@@ -88,10 +88,13 @@ signal start_rotate_ce:std_logic;
 
 signal sampleI_to_demod,sampleQ_to_demod:std_logic_vector(15 downto 0);
 signal sampleI_to_demod_1w,sampleQ_to_demod_1w:std_logic_vector(15 downto 0);
+type TsampleI_to_demod_delay is array(0 to 7) of std_logic_vector(15 downto 0);
+signal sampleI_to_demod_W,sampleQ_to_demod_W:TsampleI_to_demod_delay;
 signal cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0):=(others=>'0');
 signal sampleQ_moveback_ce,down_ce:std_logic;
 
 signal start_rotate_ce_3w,start_rotate_ce_2w,start_rotate_ce_1w:std_logic;
+signal start_rotate_ce_W:std_logic_vector(14 downto 0);
 
 signal s_demod_phase_minus,s_demod_phase :std_logic_vector(15 downto 0);
 signal s_demod_phase_ce,s_demod_phase_ce_1w : std_logic;
@@ -318,6 +321,7 @@ begin
         test_inner_pilot_pos<=start_pilotU;
 
 		start_rotate_ce_1w<=start_rotate_ce and s_sync_find;
+		start_rotate_ce_W<=start_rotate_ce_W(start_rotate_ce_W'Length-2 downto 0)&start_rotate_ce_1w;
 		start_rotate_ce_2w<=start_rotate_ce_1w;
 		start_rotate_ce_3w<=start_rotate_ce_2w;
 
@@ -427,7 +431,7 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
 delayer_de: entity work.delayer
 	generic map(
 --		DELAY_LEN=>DELAY_AFTER_FREQESTIM
-		DELAY_LEN=>DELAY_AFTER_FREQESTIM-20
+		DELAY_LEN=>DELAY_AFTER_FREQESTIM-20+18
 	) 
 	port map(
 		clk =>clk,
@@ -439,7 +443,8 @@ delayer_de: entity work.delayer
 		o_sampleI=>sampleI_delay_fe,
 		o_sampleQ=>sampleQ_delay_fe
 		);
-
+--sampleI_delay_fe<=sampleI_delay;
+--sampleQ_delay_fe<=sampleQ_delay;
 
 
 pilot_upper_inst: entity work.pilot_upper
@@ -514,11 +519,11 @@ itertive_demod_inst: entity work.itertive_demod
 	port map(
 		clk =>clk,
 		reset =>reset,
-		after_pilot_start =>start_rotate_ce_1w,--# он должен быть над первым i_ce
+		after_pilot_start =>start_rotate_ce_W(14),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
 --		after_pilot_start =>start_rotate_ce,--# он должен быть над первым i_ce
 		i_ce =>down_ce,--sampleQ_moveback_ce,
-		i_samplesI =>sampleI_to_demod_1w,
-		i_samplesQ =>sampleQ_to_demod_1w,
+		i_samplesI =>sampleI_to_demod,--sampleI_to_demod_W(7),--sampleI_to_demod_1w,
+		i_samplesQ =>sampleQ_to_demod,--sampleQ_to_demod_W(7),--sampleQ_to_demod_1w,
 
 		i_init_phaseI=>start_rotate_I,
 		i_init_phaseQ=>start_rotate_Q,
@@ -542,6 +547,14 @@ begin
 
 		sampleI_to_demod<=sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
     	sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
+
+		sampleI_to_demod_W(0)<=sampleI_to_demod_1w;
+		sampleQ_to_demod_W(0)<=sampleQ_to_demod_1w;
+		for i in 1 to 7 loop
+			sampleI_to_demod_W(i)<=sampleI_to_demod_W(i-1);
+			sampleQ_to_demod_W(i)<=sampleQ_to_demod_W(i-1);
+		end loop;
+
 	
 		bit_value_ce<=bit_value_rx_ce;
         bit_value<=bit_value_rx;

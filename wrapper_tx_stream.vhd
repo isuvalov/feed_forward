@@ -130,7 +130,7 @@ begin
 			end case;
 		else     --# o_interp_ce
 			rd_o<='0';
-			duplicate_iq<='0';
+--			duplicate_iq<='0';
 		end if;  --# o_interp_ce
 		end if; --# reset
         o_interp_ce_w1<=o_interp_ce;
