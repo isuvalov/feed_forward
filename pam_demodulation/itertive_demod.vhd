@@ -280,8 +280,8 @@ begin
 					v_phase_demod_acum_new_pi:=signed(init_phase)*signed(TO_PI);-- x"145F3"; --signed(conv_std_logic_vector(823550,20)); =(2**18)/pi
 					phase_demod_acum_new_pi<=v_phase_demod_acum_new_pi;
 
---					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8),phase_demod_acum_start'Length);
-					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8-1),phase_demod_acum_start'Length);
+					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8),phase_demod_acum_start'Length);
+--					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8-1),phase_demod_acum_start'Length);
 
 					phase_demod_acum_int0<=SXT(init_phase&"0",phase_demod_acum_start'Length);
 			else
