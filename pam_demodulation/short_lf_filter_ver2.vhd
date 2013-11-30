@@ -46,11 +46,6 @@ signal ce_1w,ce_2w,ce_3w:std_logic;
 signal cnt:std_logic_vector(1 downto 0):=(others=>'0');
 
 begin
-
---delay_line_c(0)<=i_phase;
---copy_inst: for i in 1 to TAPS-1 generate
---	delay_line_c(i)<=delay_line(i-1);
---end generate;
 	
 process (clk) is
 variable v_sums:std_logic_vector(sums'Length-1 downto 0);
@@ -58,10 +53,6 @@ begin
 	if rising_edge(clk) then
 
 		if init='1' then
---			if i_ce='1' then
---				delay_line(0)<=i_phase;
---			end if;
---			delay_line_c(0)<=init_phase;
 			for i in 0 to TAPS-1 loop
 				delay_line(i)<=init_phase;
 				delay_line_c(i)<=init_phase;
