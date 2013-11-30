@@ -270,7 +270,7 @@ add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_sa
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesq
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phasei
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phaseq
-add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase
+add wave -noupdate -radix decimal -subitemconfig {/tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(15) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(14) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(13) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(12) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(11) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(10) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(9) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(8) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(7) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(6) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(5) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(4) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(3) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(2) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(1) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase(0) {-radix decimal}} /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase
 add wave -noupdate /tb/testlfsr_i/error
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/out_ce
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/init_phase
@@ -324,9 +324,16 @@ add wave -noupdate -radix decimal -subitemconfig {/tb/modem_rx_top_inst/itertive
 add wave -noupdate -radix decimal -subitemconfig {/tb/modem_rx_top_inst/itertive_demod_inst/dcnt(1) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/dcnt(0) {-radix decimal}} /tb/modem_rx_top_inst/itertive_demod_inst/dcnt
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/down_ce
 add wave -noupdate -radix decimal -subitemconfig {/tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(12) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(11) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(10) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(9) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(8) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(7) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(6) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(5) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(4) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(3) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(2) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(1) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt(0) {-radix decimal}} /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt
+add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/clk
+add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_ce
+add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/i_phase
+add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/bit_value
+add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/out_ce
+add wave -noupdate /tb/modem_rx_top_inst/pam_demod_by_phase_i/test
+add wave -noupdate /tb/error
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {1519084000 ps} 0}
-configure wave -namecolwidth 466
+WaveRestoreCursors {{Cursor 1} {2331495764 ps} 0}
+configure wave -namecolwidth 340
 configure wave -valuecolwidth 87
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
@@ -340,4 +347,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {1495104541 ps} {1542670941 ps}
+WaveRestoreZoom {0 ps} {3056571 ns}
