@@ -88,7 +88,7 @@ bihQ: entity work.bih_filter_integrator_sign
 		sample =>sampleQ,
 
 		filtered =>filterrrQ,
-		ce_out =>ce_filt
+		ce_out =>open
 	);
 
 

@@ -105,6 +105,7 @@ qam4_mapper_inst:entity work.qam4_mapper
 		i_bits =>bits,
 		i_ce => o_interp_ce_w1,
 		
+		i_duplicate_iq=>'1',
 		o_samplesI=>mod_samplesI,
 		o_samplesQ=>mod_samplesQ,
 		o_ce=>sm_qam_ce  --# Этот будет на третьем такте после reset

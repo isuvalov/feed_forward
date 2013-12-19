@@ -4,6 +4,8 @@ use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
 PACKAGE feedf_consts_pack IS
 
+constant GLOBAL_DEBUG:integer:=0;  --# При этом специально расстройка частоты постулируется равной 0 (freq offset=0)
+
 constant PILOT_LEN:natural:=64;
 constant InterpolateRate:natural:=4;
 constant Ndiv:natural:=0; --# Количество бит которые отсекаются еще до сложения в аккомуляторе
@@ -13,6 +15,8 @@ constant PERIOD_OF_PILOT:natural:=8192;
 
 --# '1' it is +1, '0' it is -1
 constant PILOT:std_logic_vector(0 to PILOT_LEN-1):="1100111001001001000010001100001010000001101011000100000100000001";
+constant PILOT_PERIOD:natural:=8192;
+--constant PILOT_PERIOD:natural:=30000;
 
 
 type TsmoofWindow is array(0 to (PILOT_LEN*InterpolateRate/2)-2) of integer;

@@ -57,12 +57,12 @@ signal cnt_interp:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);
 
 signal o_interp_ce,o_interp_ce_w2,o_interp_ce_w1,sm_qam_ce:std_logic;
 signal bits:std_logic_vector(1 downto 0);
-signal lfsr_reg:std_logic_vector(31 downto 0):=x"21322132";
+signal lfsr_reg,bits_cnt:std_logic_vector(31 downto 0):=x"21322132";
 
 signal mod_samplesI,mod_samplesQ:std_logic_vector(1 downto 0);
 
 --signal cnt:std_logic_vector(11 downto 0);
-signal cnt,cnt_1w:std_logic_vector(log2roundup(PERIOD_OF_PILOT)-1 downto 0);
+signal cnt,cnt_1w:std_logic_vector(log2roundup(PILOT_PERIOD)-1 downto 0);
 signal qw_rd_1w,qw_rd,test_mux:std_logic;
 signal s_sampleI_o,s_sampleQ_o:std_logic_vector(sampleI_o'Length-1 downto 0);
 signal m_sampleI_o,m_sampleQ_o:std_logic_vector(sampleI_o'Length-1 downto 0);
@@ -71,7 +71,9 @@ signal adc_array_im,adc_array_re:std_logic_vector(15 downto 0);
 type Ttest_mem is array(0 to PILOT_LEN) of std_logic_vector(15 downto 0);
 signal test_mem_I,test_mem_Q:Ttest_mem;
 
-signal first_read,s_pilot_ce:std_logic;
+signal first_read,s_pilot_ce,s_pilot_ce_1w,s_pilot_ce_2w:std_logic;
+signal s_pilot_ce_a:std_logic_vector(9-1 downto 0);
+signal duplicate_iq:std_logic;
 
 begin
 
@@ -104,6 +106,9 @@ begin
 	if rising_edge(clk) then
 		qw_rd_1w<=qw_rd;
 		cnt_1w<=cnt;
+		s_pilot_ce_1w<=s_pilot_ce;
+		s_pilot_ce_2w<=s_pilot_ce_1w;
+		s_pilot_ce_a<=s_pilot_ce_a(s_pilot_ce_a'Length-2 downto 0)&s_pilot_ce_2w;
 		if first_read='1' then
 			if qw_rd_1w='1' then
     	    	test_mem_I(conv_integer(cnt_1w))<=adc_array_re;
@@ -146,7 +151,7 @@ begin
 			first_read<='1';
 		else
 			if o_interp_ce='1' then
-				if unsigned(cnt)<PERIOD_OF_PILOT-1 then
+				if unsigned(cnt)<PILOT_PERIOD-1 then
 					cnt<=cnt+1;
 				else
 					cnt<=(others=>'0');
@@ -166,11 +171,15 @@ begin
 				end if;
 				test_mux<='1';
 				s_pilot_ce<='1';
+				duplicate_iq<='1';
 			else
+				duplicate_iq<='0';
 				test_mux<='0';
 				s_pilot_ce<='0';
 --				bits<="01";--lfsr_reg(bits'Length-1 downto 0);
-				bits<=lfsr_reg(bits'Length-1 downto 0);
+--				bits<=lfsr_reg(bits'Length-1 downto 0);
+				bits<=bits_cnt(1 downto 0);
+				bits_cnt<=bits_cnt+1;
 			end if;
 		else
 			test_mux<='0';
@@ -198,6 +207,7 @@ qam4_mapper_inst:entity work.qam4_mapper
 		clk =>clk,
 		reset =>reset,
 		i_bits =>bits,
+		i_duplicate_iq => duplicate_iq,
 		i_ce => o_interp_ce_w1,
 		
 		o_samplesI=>mod_samplesI,
@@ -205,7 +215,7 @@ qam4_mapper_inst:entity work.qam4_mapper
 		o_ce=>sm_qam_ce
 		);
 
-rcc_up_filter_inst: entity work.rcc_up_filter
+rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 10 тактов
 	generic map(
 		LEN=>mod_samplesI'Length
 	)
@@ -217,7 +227,7 @@ rcc_up_filter_inst: entity work.rcc_up_filter
 		o_sampleI=>s_sampleI_o,
 		o_sampleQ=>s_sampleQ_o
 		);
-pilot_ce<=s_pilot_ce;
+pilot_ce<=s_pilot_ce_a(s_pilot_ce_a'Length-1);
 
 
 --sampleI_o<=SXT(cnt(3 downto 0),16);--,m_sampleI_o;

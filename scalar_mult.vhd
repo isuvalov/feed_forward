@@ -77,17 +77,15 @@ begin
 			if ce_w4='1' then
 				sumI_o<=sum_regI;
 				sumQ_o<=sum_regQ;
+				sum_ce<='1';
+			else
+				sum_ce<='0';
 			end if;
 		else
+			sum_ce<='0';
 			sum_regI<=sum_regI+mul_regI;
 			sum_regQ<=sum_regQ+mul_regQ;
 		end if;	
-
-		if ce_w3='1' and ce_w2='0' then
-			sum_ce<='1';
-		else
-			sum_ce<='0';
-		end if;
 
 	end if;	--clk
 end process;

@@ -2,11 +2,14 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
+library work;
+use work.feedf_consts_pack.all;
 
 
 --# выходные значения в два раза меньше т.е. можно не брать самый старший бит
 entity rcc_up_filter_rx is
 	generic (
+		USE_IT:integer:=1;
 		LEN:natural:=2
 	);
 	port(
@@ -31,6 +34,7 @@ constant SH5:integer:=1;
 
 type Tcoefs is array(0 to 32) of integer;
 constant coefs:Tcoefs:=(50, 0, -70, -109, -71, 40, 161, 198, 89, -138, -356, -386, -102, 489, 1216, 1815, 2047, 1815, 1216, 489, -102, -386, -356, -138, 89, 198, 161, 40, -71, -109, -70, 0, 50);
+constant coefs_test:Tcoefs:=(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2047, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 constant MULTSIZE:natural:=Nbit_FILT_COSINE+i_samplesI'Length;
 
@@ -57,11 +61,23 @@ signal sumsI_5,sumsQ_5:Tsums_5;
 
 signal s_o_sampleI,s_o_sampleQ: std_logic_vector(15 downto 0);
 
+type Tunsed_delay is array(0 to 16) of std_logic_vector(LEN-1 downto 0);
+signal un_del_I,un_del_Q:Tunsed_delay;
+
 begin
 
 process (clk)
 begin		
 	if rising_edge(clk) then
+	    if USE_IT/=1 then
+			un_del_I(0)<=i_samplesI;
+			un_del_Q(0)<=i_samplesQ;
+			for i in 1 to 16 loop
+				un_del_I(i)<=un_del_I(i-1);
+				un_del_Q(i)<=un_del_Q(i-1);
+			end loop;
+		end if;
+
 		delaylineI(0)<=i_samplesI;
 		delaylineQ(0)<=i_samplesQ;
 		for i in 1 to 32 loop
@@ -70,8 +86,13 @@ begin
 		end loop;
 
 		for i in 0 to 32 loop
-			muls_I(i)<=signed(conv_std_logic_vector(coefs(i),Nbit_FILT_COSINE))*signed(delaylineI(i));
-			muls_Q(i)<=signed(conv_std_logic_vector(coefs(i),Nbit_FILT_COSINE))*signed(delaylineQ(i));
+			if GLOBAL_DEBUG=1 then
+				muls_I(i)<=signed(conv_std_logic_vector(coefs_test(i),Nbit_FILT_COSINE))*signed(delaylineI(i));
+				muls_Q(i)<=signed(conv_std_logic_vector(coefs_test(i),Nbit_FILT_COSINE))*signed(delaylineQ(i));
+			else
+				muls_I(i)<=signed(conv_std_logic_vector(coefs(i),Nbit_FILT_COSINE))*signed(delaylineI(i));
+				muls_Q(i)<=signed(conv_std_logic_vector(coefs(i),Nbit_FILT_COSINE))*signed(delaylineQ(i));
+			end if;
 		end loop;
 		
 		for i in 0 to 15 loop
@@ -113,8 +134,23 @@ begin
 		s_o_sampleI<=SXT(sumsI_5(0)(15-SH5 downto 1-SH5),16)+SXT(sumsI_5(1)(15 downto 1-SH5),16);
 		s_o_sampleQ<=SXT(sumsQ_5(0)(15-SH5 downto 1-SH5),16)+SXT(sumsQ_5(1)(15 downto 1-SH5),16);
 
-		o_sampleI<=s_o_sampleI;
-		o_sampleQ<=s_o_sampleQ;
+		if USE_IT=1 then
+            if GLOBAL_DEBUG=1 then
+				o_sampleI<=SXT(s_o_sampleI(s_o_sampleI'Length-1-4 downto 0),o_sampleI'Length);
+				o_sampleQ<=SXT(s_o_sampleQ(s_o_sampleI'Length-1-4 downto 0),o_sampleI'Length);
+			else
+				o_sampleI<=s_o_sampleI;
+				o_sampleQ<=s_o_sampleQ;
+			end if;
+		else
+			if LEN<o_sampleI'Length then
+				o_sampleI<=SXT(un_del_I(16)&EXT("0",o_sampleI'Length-LEN-1),o_sampleI'Length);
+				o_sampleQ<=SXT(un_del_Q(16)&EXT("0",o_sampleI'Length-LEN-1),o_sampleI'Length);
+			else
+				o_sampleI<=un_del_I(16);
+				o_sampleQ<=un_del_Q(16);
+			end if;
+		end if;
 	end if;	--clk
 end process;
 		 

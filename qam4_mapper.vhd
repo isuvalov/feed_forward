@@ -8,6 +8,7 @@ entity qam4_mapper is
 		clk : in STD_LOGIC;
 		reset : in std_logic;
 		i_bits: in std_logic_vector(1 downto 0);
+		i_duplicate_iq: in std_logic;
 		i_ce : in std_logic;
 		
 		o_samplesI: out std_logic_vector(1 downto 0);
@@ -23,7 +24,10 @@ architecture qam4_mapper of qam4_mapper is
 type Tcomplex is array (0 to 1) of integer;
 type Tmem is array(0 to 3) of Tcomplex;
 
-constant mem:Tmem:=((1,1),(-1,1),(-1,-1),(1,-1));
+--constant mem:Tmem:=((1,1),(-1,1),(-1,-1),(1,-1));
+--constant mem:Tmem:=((1,0),(0,1),(-1,0),(0,-1));
+--constant mem:Tmem:=((1,0),(-1,0),(0,1),(0,-1));
+constant mem:Tmem:=((1,0),(0,1),(-1,0),(0,-1));
 
 
 begin
@@ -38,7 +42,11 @@ begin
 		else --#reset
 			o_ce<=i_ce;
 			o_samplesI<=conv_std_logic_vector(mem(conv_integer(i_bits))(0),o_samplesI'Length);
-			o_samplesQ<=conv_std_logic_vector(mem(conv_integer(i_bits))(1),o_samplesI'Length);
+			if i_duplicate_iq='1' then
+				o_samplesQ<=conv_std_logic_vector(mem(conv_integer(i_bits))(0),o_samplesI'Length);
+			else
+				o_samplesQ<=conv_std_logic_vector(mem(conv_integer(i_bits))(1),o_samplesI'Length);
+			end if;
 		end if; --#reset
 	end if;	--clk
 end process;

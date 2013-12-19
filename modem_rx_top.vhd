@@ -4,6 +4,7 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 library work;
 use work.feedf_consts_pack.all;
+use work.assert_pack.all;
 
 entity modem_rx_top is
 	generic (
@@ -21,7 +22,15 @@ entity modem_rx_top is
 
 		  test_I: out std_logic_vector(15 downto 0);
 		  test_Q: out std_logic_vector(15 downto 0);
-			  
+		  test_inner_pilot_pos: out std_logic;
+		
+		  demod_phase :out std_logic_vector(15 downto 0);
+		  demod_phase_ce : out std_logic;
+
+		  bit_value_ce: out std_logic;
+		  bit_value: out std_logic_vector(1 downto 0);
+
+		  sync_find: out std_logic;
 		  dds_cos_o: out std_logic_vector(15 downto 0);
 		  dds_sin_o: out std_logic_vector(15 downto 0);
 		  pilot_start: out std_logic --# Этот импульс будет задержан на InterpolateRate*PILOT_LEN+5+Sqrt_Latency тактов
@@ -40,6 +49,7 @@ constant DELAY_LEN:natural:=InterpolateRate*PILOT_LEN+SQRT_LATENCY+FILTRCC_LATEN
 constant DDS_LATENCY:natural:=8;
 constant DELAY_AFTER_FREQESTIM:natural:=25413+DDS_LATENCY+1; --# Высчитывается по симуляции сигналом time_for_freqcalc_cnt_reg 
 constant PILOTUP_START_DELAY:natural:=9+3; --# Время которое надо для того чтоб генератор интерполированного пилота начал выдавать отсчеты
+constant DELAY_COMPLEX_NORMALIZER:natural:=51+2; 
 
 signal sampleI_delay,sampleQ_delay:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal sampleI_delay_fe,sampleQ_delay_fe:std_logic_vector(sampleIfilt'Length-1 downto 0);
@@ -52,6 +62,7 @@ signal freq_val_filt_mult_1w,freq_val_filt_mult:std_logic_vector(freq_val_filt'L
 
 signal freq_ce,freq_ce_f,freq_ce_f_1w,freq_ce_f_2w,good_values:std_logic;
 signal dds_cos,dds_sin:std_logic_vector(15 downto 0);
+signal dds_cos_d,dds_sin_d:std_logic_vector(15 downto 0);
 
 signal s_pilot_start_norm,pilot_wr,start_pilotU:std_logic;
 signal sampleI_norm,sampleQ_norm:std_logic_vector(15 downto 0);
@@ -62,17 +73,41 @@ signal corrQ_s: std_logic_vector(15 downto 0);
 signal time_for_freqcalc_ce:std_logic;
 signal time_for_freqcalc_cnt,time_for_freqcalc_cnt_reg:std_logic_vector(31 downto 0):=(others=>'0');
 
-signal sampleI_moveback,sampleQ_moveback:std_logic_vector(dds_cos'Length+sampleI_delay_fe_reg'Length-1 downto 0);
+--signal sampleI_moveback,sampleQ_moveback:std_logic_vector(dds_cos'Length+sampleI_delay_fe_reg'Length-1 downto 0);
+signal sampleI_moveback,sampleQ_moveback:std_logic_vector(15 downto 0);
 signal pilotU_I,pilotU_Q:std_logic_vector(15 downto 0);
 
 signal start_pilotU_have:std_logic;
 signal start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0);
 
 signal scalar_sumI,scalar_sumQ:std_logic_vector(31 downto 0);
-signal scalar_sum_ce,pilot_valid:std_logic;
+signal scalar_sum_ce,pilot_valid,pilot_valid_1w,pilot_valid_2w,pilot_valid_3w:std_logic;
 
+signal start_rotate_I,start_rotate_Q:std_logic_vector(15 downto 0);
+signal start_rotate_ce:std_logic;
+
+--signal start_rotate_ce_W:std_logic_vector(15 downto 0);
+
+signal sampleI_to_demod,sampleQ_to_demod:std_logic_vector(15 downto 0);
+signal sampleI_to_demod_1w,sampleQ_to_demod_1w:std_logic_vector(15 downto 0);
+type TsampleI_to_demod_delay is array(0 to 20) of std_logic_vector(15 downto 0);
+signal sampleI_to_demod_W,sampleQ_to_demod_W:TsampleI_to_demod_delay;
+signal cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0):=(others=>'0');
+signal sampleQ_moveback_ce,down_ce,down_ce_1w:std_logic;
+
+signal start_rotate_ce_3w,start_rotate_ce_2w,start_rotate_ce_1w:std_logic;
+signal start_rotate_ce_W:std_logic_vector(16 downto 0);
+
+signal s_demod_phase_minus,s_demod_phase :std_logic_vector(15 downto 0);
+signal s_demod_phase_ce,s_demod_phase_ce_1w : std_logic;
+signal s_sync_find,print_event: std_logic;
+
+signal bit_value_rx_ce:std_logic;
+signal bit_value_rx:std_logic_vector(1 downto 0);
 
 begin
+
+sync_find<=s_sync_find;
 
 sampleIE<=SXT(sampleI,sampleIE'Length);
 sampleQE<=SXT(sampleQ,sampleQE'Length);
@@ -103,6 +138,7 @@ end generate; --#SIMULATION/=1
 
 rcc_up_filter_inst: entity work.rcc_up_filter_rx
 	generic map(
+		USE_IT=>1,
 		LEN=>sampleI'Length
 	)
 	port map(
@@ -202,8 +238,10 @@ freq_estimator_inst: entity work.freq_estimator
 		i_samplesI=>sampleI_norm,
 		i_samplesQ=>sampleQ_norm,
 		freq_ce=>freq_ce,
-		o_freq=>freq_value --#  надо разделить число на (4607023/(5.5))
+		o_freq=>open --freq_value --#  надо разделить число на (4607023/(5.5))
 		);
+freq_value<=(others=>'0');
+
 
 --# Так как надо привести к 32 битному числу которое укажет частоту
 --# то умножить надо на 2**31/(4607023/(5.5))=2563.729346 так как надо 
@@ -269,35 +307,106 @@ begin
 			freq_val_filt_mult<=signed(freq_val_filt)*unsigned(MUL_SCALE);
 		end if;
 		freq_val_filt_mult_1w<=freq_val_filt_mult;
+		
+--		if GLOBAL_DEBUG=1 then
+--			dds_cos_d<=x"3FFF";
+--			dds_sin_d<=(others=>'0');
+--		else
+		dds_cos_d<=dds_cos;
+		dds_sin_d<=dds_sin;
+--		end if;
 
 		dds_cos_o<=dds_cos;
 		dds_sin_o<=dds_sin;
 
 
-		sampleI_moveback<=signed(sampleI_delay_fe_reg)*signed(dds_cos);
-		sampleQ_moveback<=signed(sampleQ_delay_fe_reg)*signed(dds_sin);
+--		sampleI_moveback<=signed(sampleI_delay_fe_reg)*signed(dds_cos);
+--		sampleQ_moveback<=signed(sampleQ_delay_fe_reg)*signed(dds_sin);
 
-		if s_pilot_start='1' then
-			start_delayer_cnt<=conv_std_logic_vector(DELAY_AFTER_FREQESTIM-PILOTUP_START_DELAY-18,start_delayer_cnt'Length);		
-			start_pilotU<='0';
-			start_pilotU_have<='0';
+        test_inner_pilot_pos<=start_pilotU;
+
+
+		start_rotate_ce_1w<=start_rotate_ce and s_sync_find;
+		start_rotate_ce_W<=start_rotate_ce_W(start_rotate_ce_W'Length-2 downto 0)&start_rotate_ce_1w;
+		start_rotate_ce_2w<=start_rotate_ce_1w;
+		start_rotate_ce_3w<=start_rotate_ce_2w;
+
+		sampleI_to_demod_1w<=sampleI_to_demod;
+		sampleQ_to_demod_1w<=sampleQ_to_demod;
+
+--		start_rotate_ce_W<=start_rotate_ce_W(start_rotate_ce_W'Length-2 downto 0)&start_rotate_ce;
+
+        down_ce_1w<=down_ce;
+        if start_rotate_ce='1' then
+--		  if start_rotate_ce_W(12-2)='1' then
+--			cnt<=conv_std_logic_vector(InterpolateRate-1,cnt'Length);
+			cnt<=conv_std_logic_vector(0,cnt'Length);
+			down_ce<='1';
 		else
-			if unsigned(start_delayer_cnt)>0 then
-				start_delayer_cnt<=start_delayer_cnt-1;
-				start_pilotU<='0';
+			if unsigned(cnt)<InterpolateRate-1 then
+				cnt<=cnt+1;
+				down_ce<='0';
 			else
-				if start_pilotU_have='0' then
-					start_pilotU<='1';
-					start_pilotU_have<='1';
-				else
-					start_pilotU<='0';
-				end if;
+				cnt<=(others=>'0');
+				down_ce<='1';
 			end if;
 		end if;
+        pilot_valid_1w<=pilot_valid;
+		pilot_valid_2w<=pilot_valid_1w;
+		pilot_valid_3w<=pilot_valid_2w;
 
+
+		if pilot_valid_2w='1' and pilot_valid_3w='0' and s_sync_find='1' then
+			print_event<='1';
+			print(GLOBAL_DEBUG,"On scalar_mult.vhd pilot first value is ("&int_to_string(conv_integer(signed(sampleI_moveback)))&
+				","&int_to_string(conv_integer(signed(sampleQ_moveback)))&")");
+		else
+			print_event<='0';
+		end if;
 
 	end if;
 end process;
+
+
+moveB: entity work.complex_mult
+	generic map(
+		NOT_USE_IT=>0,--GLOBAL_DEBUG,
+		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
+	)
+	port map(
+		clk =>clk,
+		i_ce =>'1',--down_ce,
+		A_I =>sampleI_delay_fe_reg(sampleI_delay_fe_reg'Length-1 downto sampleI_delay_fe_reg'Length-16),
+		B_Q =>sampleQ_delay_fe_reg(sampleQ_delay_fe_reg'Length-1 downto sampleQ_delay_fe_reg'Length-16),
+
+		C_I =>dds_cos_d,
+		D_Q =>dds_sin_d,
+
+		o_I =>sampleI_moveback,
+		o_Q =>sampleQ_moveback,
+		out_ce =>sampleQ_moveback_ce
+		);
+
+
+
+
+
+pilotsync_inst: entity work.pilot_sync_every_time
+	generic map(
+		SIMULATION=>SIMULATION,
+		DELAY_AFTER_FREQESTIM=>DELAY_AFTER_FREQESTIM,
+		DELAY_LEN=>PILOT_PERIOD*InterpolateRate
+	) 
+	port map(
+		clk =>clk,
+		reset =>reset,
+
+		realpilot_event =>s_pilot_start,
+		
+		
+		start_pilotU =>start_pilotU,
+        sync_find =>s_sync_find
+		);
 
 
 dds_I_inst:entity work.dds_synthesizer_pipe
@@ -330,7 +439,8 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
 
 delayer_de: entity work.delayer
 	generic map(
-		DELAY_LEN=>DELAY_AFTER_FREQESTIM
+--		DELAY_LEN=>DELAY_AFTER_FREQESTIM
+		DELAY_LEN=>DELAY_AFTER_FREQESTIM-20+18
 	) 
 	port map(
 		clk =>clk,
@@ -342,7 +452,8 @@ delayer_de: entity work.delayer
 		o_sampleI=>sampleI_delay_fe,
 		o_sampleQ=>sampleQ_delay_fe
 		);
-
+--sampleI_delay_fe<=sampleI_delay;
+--sampleQ_delay_fe<=sampleQ_delay;
 
 
 pilot_upper_inst: entity work.pilot_upper
@@ -363,7 +474,7 @@ scalar_mult_inst: entity work.scalar_mult
 		clk =>clk,
 		reset =>reset,
 
-		ce=>pilot_valid,
+		ce=>pilot_valid_2w,--pilot_valid,
 
 		aI=>sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16),
 		aQ=>sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16),
@@ -376,6 +487,115 @@ scalar_mult_inst: entity work.scalar_mult
 		sumQ_o=>scalar_sumQ
 		);
 
+
+
+--complex_normalizer_inst: entity work.complex_normalizer
+--	generic map(
+--		CONJUGATION=>'0' --# сопряжение числа по выходу, если '1' - то сопрягать
+--	)
+--	port map(
+--		clk =>clk,
+--		reset =>reset,
+--		i_ce =>scalar_sum_ce,
+--		i_samplesI =>scalar_sumI(scalar_sumI'Length-1 downto scalar_sumI'Length-16),
+--		i_samplesQ =>scalar_sumQ(scalar_sumQ'Length-1 downto scalar_sumQ'Length-16),
+--  
+--		o_samplesI=>start_rotate_I,
+--		o_samplesQ=>start_rotate_Q,
+--		out_ce=>start_rotate_ce
+--		);
+
+
+
+start_rotate_I<=scalar_sumI(scalar_sumI'Length-1-4 downto scalar_sumI'Length-16-4);
+start_rotate_Q<=scalar_sumQ(scalar_sumQ'Length-1-4 downto scalar_sumQ'Length-16-4);
+start_rotate_ce<=scalar_sum_ce;
+
+
+
+
+
+--delay_before_d: entity work.delayer
+--	generic map(
+--		DELAY_LEN=>DELAY_COMPLEX_NORMALIZER --# еще добавить задержку от скалярного произведения
+--	) 
+--	port map(
+--		clk =>clk,
+--		reset =>reset,
+--  
+--		i_sampleI=>sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16),
+--		i_sampleQ=>sampleQ_moveback(sampleQ_moveback'Length-1 downto sampleQ_moveback'Length-16),
+--  
+--		o_sampleI=>sampleI_to_demod,
+--		o_sampleQ=>sampleQ_to_demod
+--		);
+
+
+itertive_demod_inst: entity work.itertive_demod
+	port map(
+		clk =>clk,
+		reset =>reset,
+--		after_pilot_start =>start_rotate_ce_W(15),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
+		after_pilot_start =>start_rotate_ce_W(14),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
+--		after_pilot_start =>start_rotate_ce,--# он должен быть над первым i_ce
+		i_ce =>down_ce,--sampleQ_moveback_ce,
+--		i_samplesI =>sampleI_to_demod,--sampleI_to_demod_W(7),--sampleI_to_demod_1w,
+--		i_samplesQ =>sampleQ_to_demod,--sampleQ_to_demod_W(7),--sampleQ_to_demod_1w,
+
+		i_samplesI =>sampleI_to_demod_W(2*4-2),--sampleI_to_demod_1w,
+		i_samplesQ =>sampleQ_to_demod_W(2*4-2),--sampleQ_to_demod_1w,
+
+
+		i_init_phaseI=>start_rotate_I,
+		i_init_phaseQ=>start_rotate_Q,
+
+
+		o_samples_phase=>s_demod_phase,
+		out_ce=>s_demod_phase_ce
+		);
+
+process(clk) is
+begin
+	if rising_edge(clk) then
+		demod_phase<=s_demod_phase;
+		demod_phase_ce<=s_demod_phase_ce;
+
+
+		if s_demod_phase_ce='1' then
+			s_demod_phase_minus<=s_demod_phase;
+		end if;
+        s_demod_phase_ce_1w<=s_demod_phase_ce;
+
+		sampleI_to_demod<=sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
+    	sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
+
+		sampleI_to_demod_W(0)<=sampleI_to_demod_1w;
+		sampleQ_to_demod_W(0)<=sampleQ_to_demod_1w;
+		for i in 1 to 20 loop
+			sampleI_to_demod_W(i)<=sampleI_to_demod_W(i-1);
+			sampleQ_to_demod_W(i)<=sampleQ_to_demod_W(i-1);
+		end loop;
+
+	
+		bit_value_ce<=bit_value_rx_ce;
+        bit_value<=bit_value_rx;
+
+	end if;
+end process;
+
+--		sampleI_to_demod<=sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
+--        sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
+
+
+pam_demod_by_phase_i: entity work.pam_demod_by_phase
+	port map(
+		clk =>clk,
+		i_ce =>s_demod_phase_ce_1w,
+		i_phase =>s_demod_phase_minus (9 downto 0),
+
+		bit_value=>bit_value_rx,
+		out_ce=>bit_value_rx_ce
+		);
 
 
 end modem_rx_top;

@@ -1,5 +1,7 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
+add wave -noupdate -color Coral -itemcolor Coral /tb/modem_rx_top_inst/sync_find
+add wave -noupdate -color Coral -itemcolor Coral -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/loss_cnt
 add wave -noupdate /tb/pilot_ce_test
 add wave -noupdate /tb/pilot_ce_test_1w
 add wave -noupdate /tb/test_tx_inst/pilot_ce
@@ -126,8 +128,35 @@ add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/sumsq_5
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/s_o_samplei
 add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilot_upper_inst/rcc_up_filter_inst/s_o_sampleq
+add wave -noupdate -divider {New Divider}
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/clk
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/reset
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/realpilot_event
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/start_pilotu
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/sync_find
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/start_pilotu_have
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/s_start_pilotu
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/start_delayer_cnt
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/loss_cnt
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/stm
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_prev_a
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_best
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_prev
+add wave -noupdate -radix unsigned -subitemconfig {/tb/modem_rx_top_inst/pilotsync_inst/main_cnt(13) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(12) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(11) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(10) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(9) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(8) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(7) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(6) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(5) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(4) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(3) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(2) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(1) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(0) {-radix unsigned}} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt
+add wave -noupdate -radix unsigned -subitemconfig {/tb/modem_rx_top_inst/pilotsync_inst/main_cnt(13) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(12) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(11) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(10) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(9) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(8) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(7) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(6) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(5) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(4) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(3) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(2) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(1) {-radix unsigned} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt(0) {-radix unsigned}} /tb/modem_rx_top_inst/pilotsync_inst/main_cnt
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_prev_sum
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/s_sync_find
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/one_p
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/g_start_pilotu_have
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/g_start_pilotu
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/g_start_delayer_cnt
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotu_have
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotu
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/m_start_delayer_cnt
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/m_realpilot_event
+add wave -noupdate -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/good_come
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {993980000 ps} 0}
+WaveRestoreCursors {{Cursor 1} {1780022968 ps} 0}
 configure wave -namecolwidth 377
 configure wave -valuecolwidth 87
 configure wave -justifyvalue left
@@ -142,4 +171,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {986189342 ps} {999484318 ps}
+WaveRestoreZoom {0 ps} {2388393 ns}
