@@ -302,13 +302,16 @@ begin
 end process;
 
 
-phase_demod_acum_start_shift<=phase_demod_acum_start(8 downto 0);
+--phase_demod_acum_start_shift<=phase_demod_acum_start(8 downto 0);
+phase_demod_acum_start_shift<=phase_demod_acum_start(9 downto 1);
 
 phase_demod_acum_start_div_mod<=phase_demod_acum_start_shift when phase_demod_acum_start_shift(8)='0' else 0-(phase_demod_acum_start_shift(8 downto 0));
 
+--phase_demod_acumMOD<=phase_demod_acum_start_div_mod when phase_demod_acum_start(phase_demod_acum_start'Length-1)='0' else
+--			511-phase_demod_acum_start_div_mod;
+
 phase_demod_acumMOD<=phase_demod_acum_start_div_mod when phase_demod_acum_start(phase_demod_acum_start'Length-1)='0' else
 			511-phase_demod_acum_start_div_mod;
-
 
 
 
