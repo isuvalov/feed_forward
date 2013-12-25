@@ -130,6 +130,13 @@ signal a_calc_ce:std_logic;
 signal a_calc_ce_cnt:std_logic_vector(4 downto 0):=(others=>'0');
 signal smp_cnt:integer;
 
+signal pilot_valid:std_logic;
+signal pilot_valid_cnt:std_logic_vector(log2roundup(PILOT_LEN*InterpolateRate)-1 downto 0);
+signal sampleI_pilot,sampleQ_pilot:std_logic_vector(15 downto 0);
+
+signal analog_pilotII,analog_pilotQQ,analog_pilotIQ,analog_pilotQI:std_logic_vector(31 downto 0);
+signal analog_pilotmskI,analog_pilotmskQ:std_logic_vector(16 downto 0);
+
 begin
 
 
@@ -152,6 +159,16 @@ b_sc_pilotQ<=not PILOT_Q(PILOT_LEN-1-conv_integer(samples_cnt(samples_cnt'Length
 s_pilotIn<="00";--not(PILOT_I(PILOT_LEN-1-conv_integer(samples_cnt(samples_cnt'Length-1 downto log2roundup(InterpolateRate))) ))&"1";
 sc_pilotQn<="00";--PILOT_Q(PILOT_LEN-1-conv_integer(samples_cnt(samples_cnt'Length-1 downto log2roundup(InterpolateRate))))&"1";
 
+pilot_upper_i: entity work.pilot_upper
+	port map(
+		clk =>clk,
+		reset =>pilot_start,--reset,
+
+		pilot_valid=>open,--pilot_valid,
+		sampleI_o =>sampleI_pilot,
+		sampleQ_o =>sampleQ_pilot
+		);
+
 
 make_pilotmsk:process (clk)
 begin		
@@ -160,6 +177,8 @@ begin
 		i_ce_w2<=i_ce_w1;	
 		i_ce_w3<=i_ce_w2;
 		if pilot_start='1' then
+			pilot_valid<='1';
+			pilot_valid_cnt<=(others=>'0');
 --			if i_ce='1' then
 --				pilotII<=signed(i_samplesI)*signed(s_pilotI);
 --				pilotQQ<=signed(i_samplesQ)*signed(sc_pilotQ); --# make conj(pilot)
@@ -175,7 +194,24 @@ begin
 				samples_cnt<=conv_std_logic_vector(0,samples_cnt'Length);
 --			end if;
 		else
+			if unsigned(pilot_valid_cnt)<PILOT_LEN*InterpolateRate-1 then
+				pilot_valid_cnt<=pilot_valid_cnt+1;
+				pilot_valid<='1';
+			else
+				pilot_valid<='0';
+			end if;
+
+
 			if i_ce='1' then
+
+				analog_pilotII<=signed(sampleI_pilot)*signed(i_samplesI);
+				analog_pilotQQ<=signed(sampleQ_pilot)*signed(i_samplesQ);
+
+				analog_pilotIQ<=signed(sampleQ_pilot)*signed(i_samplesI);
+				analog_pilotQI<=signed(sampleI_pilot)*signed(i_samplesQ);
+
+
+
 				if b_s_pilotI='0' then
 					pilotII<=x"0000"-i_samplesI;
 				else
@@ -208,10 +244,18 @@ begin
 				samples_cnt<=samples_cnt+1;
 			end if;
 		end if;
-		--if i_ce_w1='1' then
-			pilotmskI<=SXT(pilotII,pilotmskI'Length)-SXT(pilotQQ,pilotmskI'Length);	
-			pilotmskQ<=SXT(pilotIQ,pilotmskI'Length)+SXT(pilotQI,pilotmskI'Length);
-		--end if;
+
+--		pilotmskI<=SXT(pilotII,pilotmskI'Length)-SXT(pilotQQ,pilotmskI'Length);	
+--		pilotmskQ<=SXT(pilotIQ,pilotmskI'Length)+SXT(pilotQI,pilotmskI'Length);
+
+--		analog_pilotmskI<=SXT(analog_pilotII(31-3 downto 16-3),pilotmskI'Length)-SXT(analog_pilotQQ(31-3 downto 16-3),pilotmskI'Length);	
+--		analog_pilotmskQ<=SXT(analog_pilotIQ(31-3 downto 16-3),pilotmskI'Length)+SXT(analog_pilotQI(31-3 downto 16-3),pilotmskI'Length);
+
+		analog_pilotmskI<=SXT(analog_pilotII(31-3 downto 16-3),pilotmskI'Length)+SXT(analog_pilotQQ(31-3 downto 16-3),pilotmskI'Length);	
+		analog_pilotmskQ<=SXT(analog_pilotQI(31-3 downto 16-3),pilotmskI'Length)-SXT(analog_pilotIQ(31-3 downto 16-3),pilotmskI'Length);
+
+
+
 		pilotmskI_w1<=pilotmskI;
 		pilotmskQ_w1<=pilotmskQ;
 
@@ -219,6 +263,9 @@ begin
 		pilotmsk2Q_w1<=SXT(x"0000",pilotmsk2Q_w1'Length)-pilotmskQ;
 	end if;
 end process;
+
+pilotmskI<=0-analog_pilotmskI;
+pilotmskQ<=0-analog_pilotmskQ;
 
 writepilot:process (clk)
 begin		

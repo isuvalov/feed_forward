@@ -64,8 +64,15 @@ signal freq_ce,freq_ce_f,freq_ce_f_1w,freq_ce_f_2w,good_values:std_logic;
 signal dds_cos,dds_sin:std_logic_vector(15 downto 0);
 signal dds_cos_d,dds_sin_d:std_logic_vector(15 downto 0);
 
-signal s_pilot_start_norm,pilot_wr,start_pilotU:std_logic;
+signal s_pilot_start_norm_1w,s_pilot_start_norm,pilot_wr,start_pilotU:std_logic;
 signal sampleI_norm,sampleQ_norm:std_logic_vector(15 downto 0);
+
+type Tsample_norm_W is array(0 to 40) of std_logic_vector(15 downto 0);
+signal sampleI_norm_W,sampleQ_norm_W:Tsample_norm_W;
+
+signal sampleI_norm_1w,sampleQ_norm_1w,sampleI_norm_2w,sampleQ_norm_2w:std_logic_vector(15 downto 0);
+signal sampleI_norm_3w,sampleQ_norm_3w:std_logic_vector(15 downto 0);
+
 
 signal corrI_s: std_logic_vector(15 downto 0);
 signal corrQ_s: std_logic_vector(15 downto 0);
@@ -235,12 +242,12 @@ freq_estimator_inst: entity work.freq_estimator
 		reset =>reset,
 		pilot_start=>s_pilot_start_norm, --# он должен быть над первым i_ce
 		i_ce =>pilot_wr,
-		i_samplesI=>sampleI_norm,
-		i_samplesQ=>sampleQ_norm,
+		i_samplesI=>sampleI_norm_W(34),--_3w,
+		i_samplesQ=>sampleQ_norm_W(34),--_3w,
 		freq_ce=>freq_ce,
-		o_freq=>open --freq_value --#  надо разделить число на (4607023/(5.5))
+		o_freq=>freq_value --#  надо разделить число на (4607023/(5.5))
 		);
-freq_value<=(others=>'0');
+--freq_value<=(others=>'0');
 
 
 --# Так как надо привести к 32 битному числу которое укажет частоту
@@ -287,6 +294,17 @@ bih_filter_integrator_inst: entity work.bih_filter_freq
 process (clk)
 begin
 	if rising_edge(clk) then
+
+		sampleI_norm_W(0)<=sampleI_norm;
+		sampleQ_norm_W(0)<=sampleQ_norm;
+
+		for i in 1 to 40 loop
+			sampleI_norm_W(i)<=sampleI_norm_W(i-1);
+			sampleQ_norm_W(i)<=sampleQ_norm_W(i-1);
+		end loop;
+
+
+		s_pilot_start_norm_1w<=s_pilot_start_norm;
         sampleI_delay_fe_reg<=sampleI_delay_fe;
 		sampleQ_delay_fe_reg<=sampleQ_delay_fe;
 		if s_pilot_start_norm='1' then
