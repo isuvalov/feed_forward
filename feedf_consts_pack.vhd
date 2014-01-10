@@ -4,7 +4,7 @@ use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
 PACKAGE feedf_consts_pack IS
 
-constant GLOBAL_DEBUG:integer:=1;  --# При этом специально расстройка частоты постулируется равной 0 (freq offset=0)
+constant GLOBAL_DEBUG:integer:=0;  --# При этом специально расстройка частоты постулируется равной 0 (freq offset=0)
 
 constant PILOT_LEN:natural:=64;
 constant InterpolateRate:natural:=4;
