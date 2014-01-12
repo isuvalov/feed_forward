@@ -89,6 +89,7 @@ signal start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 d
 
 signal scalar_sumI,scalar_sumQ:std_logic_vector(31 downto 0);
 signal scalar_sum_ce,pilot_valid,pilot_valid_1w,pilot_valid_2w,pilot_valid_3w:std_logic;
+signal pilot_valid_W:std_logic_vector(15 downto 0);
 
 signal start_rotate_I,start_rotate_Q:std_logic_vector(15 downto 0);
 signal start_rotate_ce:std_logic;
@@ -269,7 +270,8 @@ bih_filter_integrator_inst: entity work.bih_filter_freq
 		filtered =>freq_val_filt2,
 		ce_out =>freq_ce_f
 	);
-freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-1 downto 0),freq_val_filt'Length);
+freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-1 downto 0),freq_val_filt'Length)-200;
+--freq_val_filt<=freq_val_filt2;
 
 
 --small_lf_fir_inst: entity work.small_lf_fir
@@ -373,6 +375,7 @@ begin
         pilot_valid_1w<=pilot_valid;
 		pilot_valid_2w<=pilot_valid_1w;
 		pilot_valid_3w<=pilot_valid_2w;
+		pilot_valid_W<=pilot_valid_W(pilot_valid_W'Length-2 downto 0)&pilot_valid_1w;
 
 
 		if pilot_valid_2w='1' and pilot_valid_3w='0' and s_sync_find='1' then
@@ -493,7 +496,7 @@ scalar_mult_inst: entity work.scalar_mult
 		clk =>clk,
 		reset =>reset,
 
-		ce=>pilot_valid_2w,--pilot_valid,
+		ce=>pilot_valid_W(11),--pilot_valid_2w,
 
 		aI=>sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16),
 		aQ=>sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16),
