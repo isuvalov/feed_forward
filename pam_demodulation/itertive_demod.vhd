@@ -62,7 +62,7 @@ end if;
     return result ;
 end signed_abs;
 
-signal init_phase,sample_phase,init_add_phase,sample_add_phase,sample_phase_ok,sample_init_ok,sample_phase_reg:std_logic_vector(19 downto 0):=(others=>'0');
+signal init_phase2,init_phase,sample_phase,init_add_phase,sample_add_phase,sample_phase_ok,sample_init_ok,sample_phase_reg:std_logic_vector(19 downto 0):=(others=>'0');
 signal samples_phase_mul,init_phase_mul:std_logic_vector(19+15 downto 0);
 --signal :std_logic_vector(19 downto 0);
 signal sample_phase_short,phase_demod_acumMOD,phi_error:std_logic_vector(8 downto 0);
