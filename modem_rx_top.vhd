@@ -98,7 +98,7 @@ signal start_rotate_ce:std_logic;
 
 signal sampleI_to_demod,sampleQ_to_demod:std_logic_vector(15 downto 0);
 signal sampleI_to_demod_1w,sampleQ_to_demod_1w:std_logic_vector(15 downto 0);
-type TsampleI_to_demod_delay is array(0 to 20) of std_logic_vector(15 downto 0);
+type TsampleI_to_demod_delay is array(0 to 20+21) of std_logic_vector(15 downto 0);
 signal sampleI_to_demod_W,sampleQ_to_demod_W:TsampleI_to_demod_delay;
 signal cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0):=(others=>'0');
 signal sampleQ_moveback_ce,down_ce,down_ce_1w:std_logic;
@@ -557,15 +557,15 @@ itertive_demod_inst: entity work.itertive_demod
 	port map(
 		clk =>clk,
 		reset =>reset,
---		after_pilot_start =>start_rotate_ce_W(15),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
-		after_pilot_start =>start_rotate_ce_W(14),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
+		after_pilot_start =>start_rotate_ce_W(16),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
+--		after_pilot_start =>start_rotate_ce_W(14),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
 --		after_pilot_start =>start_rotate_ce,--# он должен быть над первым i_ce
 		i_ce =>down_ce,--sampleQ_moveback_ce,
 --		i_samplesI =>sampleI_to_demod,--sampleI_to_demod_W(7),--sampleI_to_demod_1w,
 --		i_samplesQ =>sampleQ_to_demod,--sampleQ_to_demod_W(7),--sampleQ_to_demod_1w,
 
-		i_samplesI =>sampleI_to_demod_W(2*4-2),--sampleI_to_demod_1w,
-		i_samplesQ =>sampleQ_to_demod_W(2*4-2),--sampleQ_to_demod_1w,
+		i_samplesI =>sampleI_to_demod_W(2*4-2+11),--sampleI_to_demod_1w,
+		i_samplesQ =>sampleQ_to_demod_W(2*4-2+11),--sampleQ_to_demod_1w,
 
 
 		i_init_phaseI=>start_rotate_I,
@@ -600,7 +600,7 @@ begin
 
 		sampleI_to_demod_W(0)<=sampleI_to_demod_1w;
 		sampleQ_to_demod_W(0)<=sampleQ_to_demod_1w;
-		for i in 1 to 20 loop
+		for i in 1 to 20+21 loop
 			sampleI_to_demod_W(i)<=sampleI_to_demod_W(i-1);
 			sampleQ_to_demod_W(i)<=sampleQ_to_demod_W(i-1);
 		end loop;

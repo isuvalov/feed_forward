@@ -99,7 +99,7 @@ signal down_ce:std_logic;
 signal whole_dcnt:std_logic_vector(log2roundup(PILOT_PERIOD)-1 downto 0);
 
 constant TO_PI:std_logic_vector(19 downto 0):=x"145F3";
-constant TO_PI_sm:std_logic_vector(19 downto 0):=x"2FFFF";
+constant TO_PI_sm:std_logic_vector(19 downto 0):=x"0A2F9";
 constant POROGMUL:std_logic_vector(19 downto 0):=conv_std_logic_vector(FI_POROG_PHASE*1,10)&"0000000000"; 
 
 file OUTPUT: TEXT open WRITE_MODE is "STD_OUTPUT";
@@ -281,7 +281,7 @@ begin
 		end if; --# ce
 
 			if new_after_pilot_start='1' then --and ce_1w='1' then
-					v_phase_demod_acum_new_pi:=signed(init_phase)*signed(TO_PI_sm);-- x"145F3"; --signed(conv_std_logic_vector(823550,20)); =(2**18)/pi
+					v_phase_demod_acum_new_pi:=signed(init_phase)*signed(TO_PI);-- x"145F3"; --signed(conv_std_logic_vector(823550,20)); =(2**18)/pi
 					phase_demod_acum_new_pi<=v_phase_demod_acum_new_pi;
 
 					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8),phase_demod_acum_start'Length);

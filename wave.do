@@ -20,13 +20,13 @@ add wave -noupdate -color Coral -itemcolor Coral -radix unsigned /tb/modem_rx_to
 add wave -noupdate /tb/error
 add wave -noupdate /tb/error
 add wave -noupdate /tb/testlfsr_i/error
-add wave -noupdate -format Analog-Step -height 100 -max 299999.99999999994 -min -300000.0 -radix decimal -subitemconfig {/tb/modem_rx_top_inst/itertive_demod_inst/init_phase(19) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(18) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(17) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(16) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(15) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(14) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(13) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(12) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(11) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(10) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(9) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(8) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(7) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(6) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(5) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(4) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(3) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(2) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(1) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(0) {-radix decimal}} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase
+add wave -noupdate -format Analog-Step -height 100 -max 599999.99999999988 -min -600000.0 -radix decimal -subitemconfig {/tb/modem_rx_top_inst/itertive_demod_inst/init_phase(19) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(18) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(17) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(16) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(15) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(14) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(13) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(12) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(11) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(10) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(9) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(8) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(7) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(6) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(5) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(4) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(3) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(2) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(1) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(0) {-radix decimal}} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase
 add wave -noupdate -divider {New Divider}
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/clk
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/reset
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/after_pilot_start
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesi
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesq
+add wave -noupdate -format Analog-Step -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesi
+add wave -noupdate -format Analog-Step -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesq
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phasei
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phaseq
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase
@@ -86,9 +86,40 @@ add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/test_sample_cnt
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/s_phase_demod_acum_new_pi
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/dcnt
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/down_ce
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/after_pilot_start
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt
+add wave -noupdate /tb/modem_tx_top_i/wrapper_tx_stream_i/test_seq
+add wave -noupdate -format Analog-Step -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesi
+add wave -noupdate -format Analog-Step -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesq
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/clk
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/reset
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce
+add wave -noupdate -format Analog-Backstep -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/scalar_mult_inst/ai
+add wave -noupdate -format Analog-Backstep -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/scalar_mult_inst/aq
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/bi
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/bq
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/sum_ce
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/sumi_o
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/sumq_o
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/sum_regi
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/sum_regq
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/mul_regi
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/mul_regq
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aibi
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aqbq
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aibq
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aqbi
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aibi_m_aqbq
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aibq_p_aqbi
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aibi_p_aqbq
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aqbi_m_aibq
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce_w1
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce_w2
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce_w3
+add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce_w4
+add wave -noupdate /tb/modem_tx_top_i/wrapper_tx_stream_i/test_seq
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {1289102869 ps} 0}
+WaveRestoreCursors {{Cursor 1} {264345112 ps} 0}
 configure wave -namecolwidth 356
 configure wave -valuecolwidth 94
 configure wave -justifyvalue left
@@ -103,4 +134,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {1583236200 ps}
+WaveRestoreZoom {0 ps} {143484600 ps}
