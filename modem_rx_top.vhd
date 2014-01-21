@@ -529,9 +529,9 @@ scalar_mult_inst: entity work.scalar_mult
 
 
 
-start_rotate_I<=scalar_sumI(scalar_sumI'Length-1-4 downto scalar_sumI'Length-16-4);
-start_rotate_Q<=scalar_sumQ(scalar_sumQ'Length-1-4 downto scalar_sumQ'Length-16-4);
-start_rotate_ce<=scalar_sum_ce;
+--start_rotate_I<=scalar_sumI(scalar_sumI'Length-1-4 downto scalar_sumI'Length-16-4);
+--start_rotate_Q<=scalar_sumQ(scalar_sumQ'Length-1-4 downto scalar_sumQ'Length-16-4);
+--start_rotate_ce<=scalar_sum_ce;
 
 
 
@@ -581,6 +581,13 @@ begin
 	if rising_edge(clk) then
 		demod_phase<=s_demod_phase;
 		demod_phase_ce<=s_demod_phase_ce;
+
+		if scalar_sum_ce='1' then
+			start_rotate_I<=scalar_sumI(scalar_sumI'Length-1-4 downto scalar_sumI'Length-16-4);
+			start_rotate_Q<=scalar_sumQ(scalar_sumQ'Length-1-4 downto scalar_sumQ'Length-16-4);
+		end if;
+		start_rotate_ce<=scalar_sum_ce;
+
 
 
 		if s_demod_phase_ce='1' then
