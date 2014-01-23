@@ -270,7 +270,16 @@ bih_filter_integrator_inst: entity work.bih_filter_freq
 		filtered =>freq_val_filt2,
 		ce_out =>freq_ce_f
 	);
-freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-1 downto 0),freq_val_filt'Length)-200;
+
+freqcorr01: if SIMULATION/=1 generate
+	freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-1 downto 0),freq_val_filt'Length)-200;
+end generate;
+
+
+freqcorr02: if SIMULATION=1 generate
+	freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-3 downto 0)&"00",freq_val_filt'Length)-200;
+end generate;
+
 --freq_val_filt<=freq_val_filt2;
 
 

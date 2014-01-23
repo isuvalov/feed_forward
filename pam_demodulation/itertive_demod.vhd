@@ -285,10 +285,10 @@ begin
 					phase_demod_acum_new_pi<=v_phase_demod_acum_new_pi;
 
 					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8),phase_demod_acum_start'Length);
---					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8-1),phase_demod_acum_start'Length);
 
---					phase_demod_acum_int0<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8),phase_demod_acum_start'Length);
---					phase_demod_acum_int0<=conv_std_logic_vector(72000,phase_demod_acum_int0'Length);
+--					phase_demod_acum_start<=SXT(init_phase&"0000",phase_demod_acum_start'Length);
+
+
 					phase_demod_acum_int0<=SXT(init_phase&"0",phase_demod_acum_start'Length); --!!!! роньше было это теперь сделал v_phase_demod_acum_new_pi 
 					--# но работает только при изначально больших числах phase_demod_acum_int0 - 72000 или 72000
 					test_it<='1';
@@ -394,6 +394,7 @@ short_lf_filter_inst: entity work.short_lf_filter
 		i_ce =>d_ce_2w,--d_i_ce,
 		init =>new_after_pilot_start_2w,
 		init_phase =>init_phase(init_phase'Length-1-3 downto init_phase'Length-16-3),
+--		init_phase =>init_phase(init_phase'Length-1 downto init_phase'Length-16),
 		i_phase =>phase_demod_acum_p_errE(phase_demod_acum_p_err'Length-1-1 downto phase_demod_acum_p_err'Length-16-1),
 		o_phase =>filt_acum,
 		out_ce =>open
