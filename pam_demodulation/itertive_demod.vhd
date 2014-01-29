@@ -29,7 +29,7 @@ end itertive_demod;
 
 
 architecture itertive_demod of itertive_demod is
-
+constant DEBUG_SAVE:integer:=1;
 constant DEBUG:integer:=0;
 constant SHFT:natural:=11;
 constant FI_POROG_PHASE:integer:=201; --# =Fi_porog*256
@@ -81,6 +81,7 @@ type Tsample_add_phase_a is array(0 to 18) of std_logic_vector(19 downto 0);
 --type Tsample_add_phase_a is array(0 to 16) of std_logic_vector(19 downto 0);
 signal sample_add_phase_a,init_add_phase_a:Tsample_add_phase_a;
 
+signal after_pilot_start_1w:std_logic;
 signal new_after_pilot_start_a: std_logic_vector(15-2+12-1 downto 0):=(others=>'0');
 signal new_after_pilot_start_2w,new_after_pilot_start_1w,new_after_pilot_start,ce_1w,ce_2w,ce_3w,ce_correct:std_logic;
 
@@ -97,6 +98,9 @@ signal s_phase_demod_acum_new_pi:std_logic_vector(phase_demod_acum_new_pi'Length
 signal dcnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0):=(others=>'0');
 signal down_ce:std_logic;
 signal whole_dcnt:std_logic_vector(log2roundup(PILOT_PERIOD)-1 downto 0);
+
+signal saveit3,saveit2_1w,saveit2,saveit,saveit_1w:std_logic:='0';
+signal savenum,save_cnt:integer:=0;
 
 constant TO_PI:std_logic_vector(19 downto 0):=x"145F3";
 constant TO_PI_sm:std_logic_vector(19 downto 0):=x"0A2F9";
@@ -171,6 +175,92 @@ s_phase_demod_acum_new_pi<=(phase_demod_acum_new)*(x"145F3"); --signed(conv_std_
 --assert false report integer'IMAGE(phase_demod_acum_start) severity note;
 --assert false report Std_Logic'image(phase_demod_acum_start) severity note;
 --assert d_ce_2w='0' report "phase_demod_acum_start="&int_to_string(conv_integer(signed(phase_demod_acum_start)),10) severity note;
+
+
+DEBUG_SAVE01: if DEBUG_SAVE=1 generate
+
+process(clk)
+begin
+	if after_pilot_start='1' and savenum=0 then
+		saveit<='1';
+		save_cnt<=PILOT_PERIOD*InterpolateRate+1;
+		savenum<=savenum+1;
+--	if rising_edge(clk) then
+--		if after_pilot_start='1' and savenum=0 then
+--			saveit<='1';
+--			save_cnt<=PILOT_PERIOD*InterpolateRate;
+--			savenum<=savenum+1;
+		elsif  rising_edge(clk) then
+			if save_cnt>0 then
+				save_cnt<=save_cnt-1;
+			else
+				saveit<='0';
+			end if;
+--		end if;
+	end if;
+end process;
+
+process(clk)
+begin
+	if rising_edge(clk) then
+		saveit_1w<=saveit;
+		if saveit='1' and saveit_1w='0' then
+			saveit2<='1';
+		else
+			saveit2<='0';
+		end if;
+		saveit2_1w<=saveit2;
+	end if;
+end process;
+    saveit3<=saveit2_1w or saveit2;
+
+	sph01: entity work.ToTextFile
+	generic map(BitLen =>i_samplesI'Length,
+			WriteHex =>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile =>"frame_phase_init_I.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>saveit2,
+		 block_marker =>'0',
+		 DataToSave =>i_init_phaseI
+	     );
+
+	sph02: entity work.ToTextFile
+	generic map(BitLen =>i_samplesI'Length,
+			WriteHex =>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile =>"frame_phase_init_Q.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>saveit2,
+		 block_marker =>'0',
+		 DataToSave =>i_init_phaseQ
+	     );
+
+
+	s01: entity work.ToTextFile
+	generic map(BitLen =>i_samplesI'Length,
+			WriteHex =>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile =>"frame_I.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>saveit,
+		 block_marker =>'0',
+		 DataToSave =>i_samplesI
+	     );
+
+
+	s02: entity work.ToTextFile
+	generic map(BitLen =>i_samplesI'Length,
+			WriteHex =>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile =>"frame_Q.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>saveit,
+		 block_marker =>'0',
+		 DataToSave =>i_samplesQ
+	     );
+
+end generate;
 
 
 process (clk) is

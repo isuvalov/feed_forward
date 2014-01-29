@@ -47,6 +47,7 @@ if rising_edge(clk)	 then
 			vLFSRDelayLine(LFSRDelayLine'Length-1 downto 1):=vLFSRDelayLine(LFSRDelayLine'Length-2 downto 0);			
 			vLFSRDelayLine(0):=not BusXor(DelayLineWithMask);
 			DelayLineWithMask:=vLFSRDelayLine and LFSR_Mask;
+
 			LFSR_Word(i)<=vLFSRDelayLine(31);
 		end loop;							
 		LFSRDelayLine<=vLFSRDelayLine;
