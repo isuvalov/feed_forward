@@ -29,7 +29,7 @@ end itertive_demod;
 
 
 architecture itertive_demod of itertive_demod is
-constant DEBUG_SAVE:integer:=1;
+constant DEBUG_SAVE:integer:=0;
 constant DEBUG:integer:=0;
 constant SHFT:natural:=11;
 constant FI_POROG_PHASE:integer:=201; --# =Fi_porog*256
@@ -259,8 +259,7 @@ end process;
 		 block_marker =>'0',
 		 DataToSave =>i_samplesQ
 	     );
-
-end generate;
+end generate; --# DEBUG_SAVE
 
 
 process (clk) is
