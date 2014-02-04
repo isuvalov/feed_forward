@@ -50,6 +50,8 @@ signal time_out,time_out1:std_logic_vector(log2roundup(InterpolateRate*PILOT_LEN
 type TEXTREMUM_STM is (WAITING,LOOK_MAX,TIMEOUT);
 signal EXTREMUM_STM:TEXTREMUM_STM;
 
+signal start_cnt:std_logic_vector(correlation_sqrt'Length-1 downto 0);
+signal cor_filtered_ce_st:std_logic;
 
 begin
 time_out1<=SXT("10",time_out1'Length);
@@ -81,7 +83,20 @@ begin
 		if sample_ce_w1='1' then
 			sample_sq<=sampleI_sq+sampleQ_sq;
 		end if;
-		if cor_filtered_ce='1' then
+
+		if reset='1' then
+           start_cnt<=(others=>'1');
+		   cor_filtered_ce_st<='0';
+		else
+			if unsigned(start_cnt)>0 then
+				start_cnt<=start_cnt-1;
+				cor_filtered_ce_st<='0';
+			else
+				cor_filtered_ce_st<='1';
+			end if;
+		end if;
+
+		if cor_filtered_ce='1' and cor_filtered_ce_st='1' then
 			cor_filtered_mult<=unsigned(cor_filtered)*unsigned(MULT_POROG);
 		end if;
 

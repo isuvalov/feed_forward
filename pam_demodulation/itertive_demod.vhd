@@ -29,7 +29,7 @@ end itertive_demod;
 
 
 architecture itertive_demod of itertive_demod is
-constant DEBUG_SAVE:integer:=0;
+constant DEBUG_SAVE:integer:=1;
 constant DEBUG:integer:=0;
 constant SHFT:natural:=11;
 constant FI_POROG_PHASE:integer:=201; --# =Fi_porog*256
@@ -355,7 +355,7 @@ begin
 		end if;		
 
 --		new_after_pilot_start_a<=new_after_pilot_start_a(new_after_pilot_start_a'Length-2 downto 0)&(after_pilot_start and i_ce);
-		new_after_pilot_start_a<=new_after_pilot_start_a(new_after_pilot_start_a'Length-2 downto 0)&(after_pilot_start and ce_3w);
+		new_after_pilot_start_a<=new_after_pilot_start_a(new_after_pilot_start_a'Length-2 downto 0)&(after_pilot_start and ce_1w);
 		new_after_pilot_start<=new_after_pilot_start_a(new_after_pilot_start_a'Length-1);
 		new_after_pilot_start_1w<=new_after_pilot_start;
 		new_after_pilot_start_2w<=new_after_pilot_start_1w;

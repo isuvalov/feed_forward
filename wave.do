@@ -27,12 +27,12 @@ add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/reset
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/after_pilot_start
 add wave -noupdate -format Analog-Step -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesi
 add wave -noupdate -format Analog-Step -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesq
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phasei
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phaseq
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phasei
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phaseq
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/out_ce
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/init_phase2
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/init_phase
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/init_phase2
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/init_phase
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_phase
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/init_add_phase
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_add_phase
@@ -118,8 +118,34 @@ add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce_w2
 add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce_w3
 add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce_w4
 add wave -noupdate /tb/modem_tx_top_i/wrapper_tx_stream_i/test_seq
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/clk
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/reset
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/realpilot_event
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/start_pilotu
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/sync_find
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/start_pilotu_have
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/s_start_pilotu
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/start_delayer_cnt
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/loss_cnt
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/stm
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_prev_a
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_best
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_prev
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/main_cnt
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_prev_sum
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/s_sync_find
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/one_p
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/g_start_pilotu_have
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/g_start_pilotu
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/g_start_delayer_cnt
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotu_have_1w
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotu_have
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotu
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_start_delayer_cnt
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_realpilot_event
+add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/good_come
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {264345112 ps} 0}
+WaveRestoreCursors {{Cursor 1} {1257372586 ps} 0}
 configure wave -namecolwidth 356
 configure wave -valuecolwidth 94
 configure wave -justifyvalue left
@@ -134,4 +160,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {143484600 ps}
+WaveRestoreZoom {1253641318 ps} {1260534677 ps}
