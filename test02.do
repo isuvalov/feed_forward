@@ -60,5 +60,6 @@ vcom tb_04.vhd
 
 vsim -novopt -t ps work.tb
 
+setenv MTI_TF_LIMIT 1000
 
 do wave.do

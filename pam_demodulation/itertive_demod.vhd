@@ -30,7 +30,7 @@ end itertive_demod;
 
 architecture itertive_demod of itertive_demod is
 constant DEBUG_SAVE:integer:=1;
-constant DEBUG:integer:=0;
+constant DEBUG:integer:=1;
 constant SHFT:natural:=11;
 constant FI_POROG_PHASE:integer:=201; --# =Fi_porog*256
 
@@ -303,7 +303,7 @@ begin
 --		if new_after_pilot_start='1' then
 --			assert new_after_pilot_start='1' report "Work have began!" severity note;
 --		end if;
-		if DEBUG=1 then
+		if DEBUG=1 and saveit='1' then
 		if d_i_ce='1' then
 			TX_LOC:=sTX_LOC;
 			STD.TEXTIO.write(TX_LOC,int_to_string(conv_integer(signed(phase_demod_acum_p_errE)))&"  " );
@@ -325,7 +325,8 @@ begin
 			if new_after_pilot_start='1' then
 				STD.TEXTIO.write(TX_LOC,int_to_string(0)&">>>>> ");
 			end if;
-			STD.TEXTIO.write(TX_LOC,int_to_string(2*conv_integer(signed(sample_phase)))&"  " );
+			STD.TEXTIO.write(TX_LOC,int_to_string(conv_integer(signed(i_samplesI)))&"  " );
+			STD.TEXTIO.write(TX_LOC,int_to_string(conv_integer(signed(sample_phase)))&"  " );
 --			STD.TEXTIO.write(OUTPUT, TX_LOC2);
 			sTX_LOC:=TX_LOC;
 		end if;
@@ -354,8 +355,8 @@ begin
 			sample_phase_reg<=sample_phase(sample_phase'Length-1 downto 0);
 		end if;		
 
---		new_after_pilot_start_a<=new_after_pilot_start_a(new_after_pilot_start_a'Length-2 downto 0)&(after_pilot_start and i_ce);
-		new_after_pilot_start_a<=new_after_pilot_start_a(new_after_pilot_start_a'Length-2 downto 0)&(after_pilot_start and ce_1w);
+		new_after_pilot_start_a<=new_after_pilot_start_a(new_after_pilot_start_a'Length-2 downto 0)&(after_pilot_start and i_ce);
+--		new_after_pilot_start_a<=new_after_pilot_start_a(new_after_pilot_start_a'Length-2 downto 0)&(after_pilot_start and ce_1w);
 		new_after_pilot_start<=new_after_pilot_start_a(new_after_pilot_start_a'Length-1);
 		new_after_pilot_start_1w<=new_after_pilot_start;
 		new_after_pilot_start_2w<=new_after_pilot_start_1w;
@@ -373,9 +374,10 @@ begin
 					v_phase_demod_acum_new_pi:=signed(init_phase)*signed(TO_PI);-- x"145F3"; --signed(conv_std_logic_vector(823550,20)); =(2**18)/pi
 					phase_demod_acum_new_pi<=v_phase_demod_acum_new_pi;
 
-					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8),phase_demod_acum_start'Length);
+--					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8),phase_demod_acum_start'Length);
 
---					phase_demod_acum_start<=SXT(init_phase&"0000",phase_demod_acum_start'Length);
+
+					phase_demod_acum_start<=sample_init_ok(sample_init_ok'Length-2 downto 0)&"0";
 
 
 					phase_demod_acum_int0<=SXT(init_phase&"0",phase_demod_acum_start'Length); --!!!! роньше было это теперь сделал v_phase_demod_acum_new_pi 
@@ -388,7 +390,7 @@ begin
 
 					phase_demod_acum_new_pi<=v_phase_demod_acum_new_pi;--v_phase_demod_acum_new_pi;
 
---					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8),phase_demod_acum_start'Length);   OK
+--					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8),phase_demod_acum_start'Length);  -- OK
 					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8-1),phase_demod_acum_start'Length);
 
 					phase_demod_acum_int0<=phase_demod_acum_new;
@@ -417,7 +419,7 @@ table_phaseerrors_inst: table_phaseerrors
 	port map(
 		clk =>clk,
 
-		input_angles=>std_logic_vector(sample_phase_ok(8 downto 0)),
+		input_angles=>std_logic_vector(sample_phase_ok(9 downto 1)),
 		phase_acum_mod=>phase_demod_acumMOD,--std_logic_vector(sample_init_ok(sample_init_ok'Length-1 downto sample_init_ok'Length-9)),
 
 		phi_error =>phi_error,

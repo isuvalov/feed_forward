@@ -566,7 +566,7 @@ itertive_demod_inst: entity work.itertive_demod
 	port map(
 		clk =>clk,
 		reset =>reset,
-		after_pilot_start =>start_rotate_ce_W(16),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
+		after_pilot_start =>start_rotate_ce_W(15),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
 --		after_pilot_start =>start_rotate_ce_W(14),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
 --		after_pilot_start =>start_rotate_ce,--# он должен быть над первым i_ce
 		i_ce =>down_ce,--sampleQ_moveback_ce,
@@ -585,6 +585,7 @@ itertive_demod_inst: entity work.itertive_demod
 		out_ce=>s_demod_phase_ce
 		);
 
+		start_rotate_ce<=scalar_sum_ce;
 process(clk) is
 begin
 	if rising_edge(clk) then
@@ -595,7 +596,7 @@ begin
 			start_rotate_I<=scalar_sumI(scalar_sumI'Length-1-4 downto scalar_sumI'Length-16-4);
 			start_rotate_Q<=scalar_sumQ(scalar_sumQ'Length-1-4 downto scalar_sumQ'Length-16-4);
 		end if;
-		start_rotate_ce<=scalar_sum_ce;
+
 
 
 
