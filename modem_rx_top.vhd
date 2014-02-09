@@ -98,7 +98,7 @@ signal start_rotate_ce:std_logic;
 
 signal sampleI_to_demod,sampleQ_to_demod:std_logic_vector(15 downto 0);
 signal sampleI_to_demod_1w,sampleQ_to_demod_1w:std_logic_vector(15 downto 0);
-type TsampleI_to_demod_delay is array(0 to 20+21) of std_logic_vector(15 downto 0);
+type TsampleI_to_demod_delay is array(0 to 20+21+26) of std_logic_vector(15 downto 0);
 signal sampleI_to_demod_W,sampleQ_to_demod_W:TsampleI_to_demod_delay;
 signal cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0):=(others=>'0');
 signal sampleQ_moveback_ce,down_ce,down_ce_1w:std_logic;
@@ -271,14 +271,14 @@ bih_filter_integrator_inst: entity work.bih_filter_freq
 		ce_out =>freq_ce_f
 	);
 
-freqcorr01: if SIMULATION/=1 generate
+--freqcorr01: if SIMULATION/=1 generate
 	freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-1 downto 0),freq_val_filt'Length)-200;
-end generate;
+--end generate;
 
 
-freqcorr02: if SIMULATION=1 generate
-	freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-3 downto 0)&"00",freq_val_filt'Length)-200;
-end generate;
+--freqcorr02: if SIMULATION=1 generate
+--	freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-3 downto 0)&"00",freq_val_filt'Length)-200;
+--end generate;
 
 --freq_val_filt<=freq_val_filt2;
 
@@ -573,8 +573,10 @@ itertive_demod_inst: entity work.itertive_demod
 --		i_samplesI =>sampleI_to_demod,--sampleI_to_demod_W(7),--sampleI_to_demod_1w,
 --		i_samplesQ =>sampleQ_to_demod,--sampleQ_to_demod_W(7),--sampleQ_to_demod_1w,
 
-		i_samplesI =>sampleI_to_demod_W(2*4-2+11),--sampleI_to_demod_1w,
-		i_samplesQ =>sampleQ_to_demod_W(2*4-2+11),--sampleQ_to_demod_1w,
+		i_samplesI =>sampleI_to_demod_W(2*4-2+11+26),--sampleI_to_demod_1w,
+		i_samplesQ =>sampleQ_to_demod_W(2*4-2+11+26),--sampleQ_to_demod_1w,
+
+
 
 
 		i_init_phaseI=>start_rotate_I,
@@ -610,7 +612,7 @@ begin
 
 		sampleI_to_demod_W(0)<=sampleI_to_demod_1w;
 		sampleQ_to_demod_W(0)<=sampleQ_to_demod_1w;
-		for i in 1 to 20+21 loop
+		for i in 1 to 20+21+26 loop
 			sampleI_to_demod_W(i)<=sampleI_to_demod_W(i-1);
 			sampleQ_to_demod_W(i)<=sampleQ_to_demod_W(i-1);
 		end loop;

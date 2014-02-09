@@ -68,11 +68,13 @@ signal samples_phase_mul,init_phase_mul:std_logic_vector(19+15 downto 0);
 signal sample_phase_short,phase_demod_acumMOD,phi_error:std_logic_vector(8 downto 0);
 signal val_engle_reg,val_engle:std_logic_vector(9 downto 0);
 
-signal phase_demod_acum,filt_acum,phase_delta_round,phase_delta,phase_demod_acum_new,phase_demod_acum_demod:std_logic_vector(19 downto 0):=(others=>'0');
+signal phase_demod_acum,filt_acum,phase_delta_round,phase_demod_acum_new,phase_demod_acum_demod:std_logic_vector(19 downto 0):=(others=>'0');
+signal phase_delta:std_logic_vector(19+1 downto 0):=(others=>'0');
 signal phase_demod_acum_new_pi:std_logic_vector(phase_demod_acum_new'Length+20-1 downto 0):=(others=>'0');
 signal phase_delta_short:std_logic_vector(8 downto 0):=(others=>'0');
 signal phase_demod_acum_int0,phase_demod_acum_start,phase_demod_acum_p_err,phase_demod_acum_p_err_1w:std_logic_vector(19 downto 0):=(others=>'0');
 signal phase_demod_acum_p_errE:std_logic_vector(phase_demod_acum_p_err'Length-1 downto 0):=(others=>'0');
+signal phase_demod_acum_p_errE2:std_logic_vector(15 downto 0):=(others=>'0');
 signal phase_demod_acum_start_shift:std_logic_vector(8 downto 0):=(others=>'0');
 
 signal phase_demod_acum_start_div_mod:std_logic_vector(8 downto 0):=(others=>'0');
@@ -102,8 +104,8 @@ signal whole_dcnt:std_logic_vector(log2roundup(PILOT_PERIOD)-1 downto 0);
 signal saveit3,saveit2_1w,saveit2,saveit,saveit_1w:std_logic:='0';
 signal savenum,save_cnt:integer:=0;
 
-constant TO_PI:std_logic_vector(19 downto 0):=x"145F3";
-constant TO_PI_sm:std_logic_vector(19 downto 0):=x"0A2F9";
+   constant TO_PI:std_logic_vector(19 downto 0):=x"145F3";
+constant TO_PI_sm:std_logic_vector(19 downto 0):=x"000A2";
 constant POROGMUL:std_logic_vector(19 downto 0):=conv_std_logic_vector(FI_POROG_PHASE*1,10)&"0000000000"; 
 
 file OUTPUT: TEXT open WRITE_MODE is "STD_OUTPUT";
@@ -142,7 +144,9 @@ r2p_inst: entity work.cordic_wrapper
 		phase =>sample_phase
 		);
 --#(x*10474>>14)
-samples_phase_mul<=signed(sample_phase)*signed(conv_std_logic_vector(10474,15));
+--samples_phase_mul<=signed(sample_phase)*signed(conv_std_logic_vector(10474,15));
+
+samples_phase_mul<=signed(sample_phase)*signed(conv_std_logic_vector(81*2,15));   --# вроде как можно поставить тригер
 
 
 sample_phase_short<=std_logic_vector(sample_phase(19 downto 20-9));
@@ -212,7 +216,7 @@ begin
 		saveit2_1w<=saveit2;
 	end if;
 end process;
-    saveit3<=saveit2_1w or saveit2;
+    --saveit3<=saveit2_1w or saveit2;
 
 	sph01: entity work.ToTextFile
 	generic map(BitLen =>i_samplesI'Length,
@@ -259,6 +263,20 @@ end process;
 		 block_marker =>'0',
 		 DataToSave =>i_samplesQ
 	     );
+
+saveit3<=d_ce_1w and saveit;
+
+	s03: entity work.ToTextFile
+	generic map(BitLen =>sample_phase'Length,
+			WriteHex =>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile =>"frame_phase.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>saveit3,
+		 block_marker =>'0',
+		 DataToSave =>sample_phase
+	     );
+
 end generate; --# DEBUG_SAVE
 
 
@@ -346,6 +364,9 @@ begin
 			TX_LOC:=sTX_LOC;
 			STD.TEXTIO.write(TX_LOC,int_to_string(conv_integer(signed(phi_error)))&"  ");
 			STD.TEXTIO.write(TX_LOC,int_to_string(conv_integer(signed(val_engle)))&"  ");
+			STD.TEXTIO.write(TX_LOC,int_to_string(conv_integer(signed(phase_demod_acum_int0)))&"  ");
+
+
 --			STD.TEXTIO.write(OUTPUT, TX_LOC);
 			sTX_LOC:=TX_LOC;
 		end if;
@@ -361,7 +382,7 @@ begin
 		new_after_pilot_start_1w<=new_after_pilot_start;
 		new_after_pilot_start_2w<=new_after_pilot_start_1w;
 
-        sample_phase_ok<=SXT(samples_phase_mul(samples_phase_mul'Length-1-1 downto samples_phase_mul'Length-sample_phase_ok'Length+10-1),sample_phase_ok'Length);
+        sample_phase_ok<=SXT(samples_phase_mul(samples_phase_mul'Length-1 downto samples_phase_mul'Length-sample_phase_ok'Length+2),sample_phase_ok'Length);
         sample_init_ok<=SXT(init_phase_mul(init_phase_mul'Length-1-1 downto init_phase_mul'Length-sample_init_ok'Length+10-1),sample_phase_ok'Length);
 
 		if i_ce='1' then
@@ -371,8 +392,8 @@ begin
 		end if; --# ce
 
 			if new_after_pilot_start='1' then --and ce_1w='1' then
-					v_phase_demod_acum_new_pi:=signed(init_phase)*signed(TO_PI);-- x"145F3"; --signed(conv_std_logic_vector(823550,20)); =(2**18)/pi
-					phase_demod_acum_new_pi<=v_phase_demod_acum_new_pi;
+					--v_phase_demod_acum_new_pi:=signed(sample_phase)*signed(TO_PI);-- x"145F3"; --signed(conv_std_logic_vector(823550,20)); =(2**18)/pi
+					--phase_demod_acum_new_pi<=v_phase_demod_acum_new_pi;
 
 --					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8),phase_demod_acum_start'Length);
 
@@ -380,18 +401,16 @@ begin
 					phase_demod_acum_start<=sample_init_ok(sample_init_ok'Length-2 downto 0)&"0";
 
 
-					phase_demod_acum_int0<=SXT(init_phase&"0",phase_demod_acum_start'Length); --!!!! роньше было это теперь сделал v_phase_demod_acum_new_pi 
+					phase_demod_acum_int0<=SXT(init_phase(init_phase'Length-1 downto 6),phase_demod_acum_start'Length); --!!!! роньше было это теперь сделал v_phase_demod_acum_new_pi 
 					--# но работает только при изначально больших числах phase_demod_acum_int0 - 72000 или 72000
 					test_it<='1';
 			else
 					test_it<='0';
 				if d_ce_1w='1' then
-					v_phase_demod_acum_new_pi:=signed(phase_demod_acum_new)*signed(TO_PI);--(x"145F3"); --signed(conv_std_logic_vector(823550,20)); =floor((1/pi)*2^18)
+					v_phase_demod_acum_new_pi:=signed(sample_phase)*signed(TO_PI);--(x"145F3"); --signed(conv_std_logic_vector(823550,20)); =floor((1/pi)*2^18)
 
 					phase_demod_acum_new_pi<=v_phase_demod_acum_new_pi;--v_phase_demod_acum_new_pi;
-
---					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8),phase_demod_acum_start'Length);  -- OK
-					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1-1 downto v_phase_demod_acum_new_pi'Length-phase_demod_acum_start'Length+8-1),phase_demod_acum_start'Length);
+					phase_demod_acum_start<=SXT(v_phase_demod_acum_new_pi(v_phase_demod_acum_new_pi'Length-1 downto v_phase_demod_acum_new_pi'Length-(phase_demod_acum_start'Length-6)),phase_demod_acum_start'Length);  -- OK
 
 					phase_demod_acum_int0<=phase_demod_acum_new;
 				end if;
@@ -426,6 +445,7 @@ table_phaseerrors_inst: table_phaseerrors
 		val_engle =>val_engle
 		);
 
+--        phase_delta<=SXT(phase_demod_acum_p_errE(phase_demod_acum_p_err'Length-1 downto 1),phase_delta'Length)+SXT(filt_acum(filt_acum'Length-1-5 downto 0)&"00000",phase_delta'Length);
         phase_delta<=SXT(phase_demod_acum_p_errE(phase_demod_acum_p_err'Length-1 downto 0),phase_delta'Length)   -SXT(filt_acum(filt_acum'Length-1-6 downto 0)&"00000",phase_delta'Length);
 		phase_delta_short<=phase_delta(0+phase_delta_short'Length-1+9 downto 0+9);--,phase_delta_short'Length);
 
@@ -438,13 +458,15 @@ process (clk) is
 begin
 	if rising_edge(clk) then
 		phase_demod_acum_p_err_1w<=phase_demod_acum_p_err;
-		if new_after_pilot_start='1' then
-			phase_demod_acum_p_errE<=SXT(init_phase,phase_demod_acum_p_errE'Length);
-		else
+		--if new_after_pilot_start_2w='1' then
+--			phase_demod_acum_p_errE<=SXT(init_phase,phase_demod_acum_p_errE'Length);
+		--	phase_demod_acum_p_errE<=SXT(phase_demod_acum_int0(phase_demod_acum_int0'Length-1 downto 1),phase_demod_acum_p_errE'Length);
+		--else
 			if d_ce_3w='1' then
-				phase_demod_acum_p_errE<=SXT(phase_demod_acum_int0(phase_demod_acum_int0'Length-1 downto 1),phase_demod_acum_p_err'Length)+SXT(phi_error&x"00"&"00",phase_demod_acum_p_err'Length);
+				phase_demod_acum_p_errE<=SXT(phase_demod_acum_int0(phase_demod_acum_int0'Length-1 downto 1),phase_demod_acum_p_err'Length)-SXT(phi_error&"00000",phase_demod_acum_p_err'Length);
+--				phase_demod_acum_p_errE<=SXT(phase_demod_acum_int0(phase_demod_acum_int0'Length-1 downto 2),phase_demod_acum_p_err'Length)+SXT(phi_error&x"00"&"0",phase_demod_acum_p_err'Length);
 			end if;
-		end if;
+		--end if;
         d_ce_correct_perr<=d_ce_3w;
 
 		if d_ce_3w='1' then
@@ -456,11 +478,14 @@ begin
 			if signed(phase_delta_short)>FI_POROG_PHASE then
 				--# '01'=+1 , '10'=-1, '00'=0
 				cccc<="01";
-				phase_demod_acum_new<=phase_demod_acum_p_errE-SXT((conv_std_logic_vector(FI_POROG_PHASE,8)&x"00"&"0"),20);
+--				phase_demod_acum_new<=phase_demod_acum_p_errE-SXT((conv_std_logic_vector(FI_POROG_PHASE,8)&x"00"&"0"),20);
+				phase_demod_acum_new<=phase_demod_acum_p_errE-"00011001001000000000";
+				
 				phase_demod_acum_demod<=signed(SXT(val_engle_reg&"0",phase_demod_acum_demod'Length)) + signed(POROGMUL);  --# = val_engle + FI_POROG_PHASE*(2^10)
 			elsif signed(phase_delta_short)<-FI_POROG_PHASE then
 				cccc<="10";
-				phase_demod_acum_new<=phase_demod_acum_p_errE+SXT((conv_std_logic_vector(FI_POROG_PHASE,8)&x"00"&"0"),20);
+--				phase_demod_acum_new<=phase_demod_acum_p_errE+SXT((conv_std_logic_vector(FI_POROG_PHASE,8)&x"00"&"0"),20);
+				phase_demod_acum_new<=phase_demod_acum_p_errE+"00011001001000000000";
 				phase_demod_acum_demod<=signed(SXT(val_engle_reg&"0",phase_demod_acum_demod'Length)) - signed(POROGMUL);  --# = val_engle - FI_POROG_PHASE*(2^10)
 			else
 				cccc<="00";
@@ -479,14 +504,15 @@ phase_demod_acum_p_err<=phase_demod_acum_p_errE(phase_demod_acum_p_errE'Length-2
 
 --phase_demod_acum_p_err<=phase_demod_acum_p_errE(phase_demod_acum_p_errE'Length-1 downto 0);
 
+phase_demod_acum_p_errE2<=SXT(phase_demod_acum_p_errE(phase_demod_acum_p_err'Length-1 downto phase_demod_acum_p_err'Length-16+1),16);
 short_lf_filter_inst: entity work.short_lf_filter
 	port map(
 		clk =>clk,
 		i_ce =>d_ce_2w,--d_i_ce,
 		init =>new_after_pilot_start_2w,
-		init_phase =>init_phase(init_phase'Length-1-3 downto init_phase'Length-16-3),
+		init_phase =>init_phase(init_phase'Length-1-1 downto init_phase'Length-16-1),
 --		init_phase =>init_phase(init_phase'Length-1 downto init_phase'Length-16),
-		i_phase =>phase_demod_acum_p_errE(phase_demod_acum_p_err'Length-1-1 downto phase_demod_acum_p_err'Length-16-1),
+		i_phase =>phase_demod_acum_p_errE2, --phase_demod_acum_p_errE(phase_demod_acum_p_err'Length-1 downto phase_demod_acum_p_err'Length-16+1)
 		o_phase =>filt_acum,
 		out_ce =>open
 		);

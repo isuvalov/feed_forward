@@ -41,7 +41,7 @@ signal sampleI_tx,sampleQ_tx:std_logic_vector(15 downto 0);
 signal rd_req:std_logic;
 
 --constant seq_len:integer:=36;
---constant seq_len:integer:=8;
+constant seq_len:integer:=8;
 type Tseq is array(seq_len-1 downto 0) of integer;
 --constant seq:Tseq:=(0,0,0,2,1,2,1,2,3,3,2,2,1,1,3,2);
 --constant seq:Tseq:=(0,2,3,0,3,1,0,3);
