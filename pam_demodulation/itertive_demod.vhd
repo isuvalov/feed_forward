@@ -29,7 +29,7 @@ end itertive_demod;
 
 
 architecture itertive_demod of itertive_demod is
-constant DEBUG_SAVE:integer:=1;
+constant DEBUG_SAVE:integer:=0;
 constant DEBUG:integer:=1;
 constant SHFT:natural:=11;
 constant FI_POROG_PHASE:integer:=201; --# =Fi_porog*256
@@ -146,7 +146,7 @@ r2p_inst: entity work.cordic_wrapper
 --#(x*10474>>14)
 --samples_phase_mul<=signed(sample_phase)*signed(conv_std_logic_vector(10474,15));
 
-samples_phase_mul<=signed(sample_phase)*signed(conv_std_logic_vector(81*2,15));   --# вроде как можно поставить тригер
+--samples_phase_mul<=signed(sample_phase)*signed(conv_std_logic_vector(81*2,15));   --# вроде как можно поставить тригер
 
 
 sample_phase_short<=std_logic_vector(sample_phase(19 downto 20-9));
@@ -375,6 +375,8 @@ begin
 		if ce_3w='1' then
 			sample_phase_reg<=sample_phase(sample_phase'Length-1 downto 0);
 		end if;		
+
+samples_phase_mul<=signed(sample_phase)*signed(conv_std_logic_vector(81*2,15));   --# вроде как можно поставить тригер
 
 		new_after_pilot_start_a<=new_after_pilot_start_a(new_after_pilot_start_a'Length-2 downto 0)&(after_pilot_start and i_ce);
 --		new_after_pilot_start_a<=new_after_pilot_start_a(new_after_pilot_start_a'Length-2 downto 0)&(after_pilot_start and ce_1w);
