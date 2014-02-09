@@ -40,12 +40,13 @@ end component;
 signal sampleI_tx,sampleQ_tx:std_logic_vector(15 downto 0);
 signal rd_req:std_logic;
 
-constant seq_len:integer:=36;
+--constant seq_len:integer:=36;
+constant seq_len:integer:=8;
 type Tseq is array(seq_len-1 downto 0) of integer;
 --constant seq:Tseq:=(0,0,0,2,1,2,1,2,3,3,2,2,1,1,3,2);
---constant seq:Tseq:=(0,0,0,2,1,2,3,3);
-constant seq:Tseq:=(0,0,0,2,1,2,3,3,1,2,0,1,2,3,0,2  --# 16
-                   ,1,0,1,2,0,1,0,1,2,0,2,0,2,3,0,1,0,1,2,2);
+--constant seq:Tseq:=(0,2,3,0,3,1,0,3);
+--constant seq:Tseq:=(3,0,3,2,1,2,3,3,1,2,3,3,2,3,0,2  --# 16
+--                   ,3,0,3,3,0,3,0,1,2,0,2,0,3,3,0,3,0,1,2,2);
 
 signal pos_cnt:integer:=0;
 signal bits_gen2,bits_gen:std_logic_vector(1 downto 0):=(others=>'0');
@@ -63,13 +64,13 @@ begin
 		if s_pilot_ce_test='1' then
 			pos_cnt<=0;
 		elsif rd_req='1' then
---			bits_gen<=bits_gen+1;
+			bits_gen<=bits_gen+1;
 			if pos_cnt<seq_len-1 then
 				pos_cnt<=pos_cnt+1;
 			else
 				pos_cnt<=0;
 			end if;
-			bits_gen<=conv_std_logic_vector(seq(pos_cnt),bits_gen'Length);
+--			bits_gen<=conv_std_logic_vector(seq(pos_cnt),bits_gen'Length);
 		end if;		
 	end if;
 end process;

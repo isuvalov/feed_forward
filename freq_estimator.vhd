@@ -36,6 +36,8 @@ architecture freq_estimator of freq_estimator is
 constant ML_R_BITS:natural:=2; --#Значение на которое смещается данные перед перемножением идущим в CORDIC
 constant ADD_TO_TABLE:natural:=10; --# Добавка бит для того чтоб произвести более точное деление при нормировки первых сумм
 
+constant SIG_DELAY:natural:=1; --# Смещение сигнала относительно из-за задержания строба старта
+
 
 function div_table_ceil(M,l,NbitMul:integer) return std_logic_vector is
 --# NbitMul указывает на сколько бит сдвигаем на верх.
@@ -130,6 +132,20 @@ signal a_calc_ce:std_logic;
 signal a_calc_ce_cnt:std_logic_vector(4 downto 0):=(others=>'0');
 signal smp_cnt:integer;
 
+signal pilot_valid:std_logic;
+signal pilot_valid_cnt:std_logic_vector(log2roundup(PILOT_LEN*InterpolateRate)-1 downto 0);
+signal sampleI_pilot,sampleQ_pilot:std_logic_vector(15 downto 0);
+
+signal analog_pilotII,analog_pilotQQ,analog_pilotIQ,analog_pilotQI:std_logic_vector(31 downto 0);
+signal analog_pilotmskI,analog_pilotmskQ:std_logic_vector(16 downto 0);
+signal pilot_start_W:std_logic_vector(32 downto 0);
+signal ce_WW:std_logic_vector(42 downto 0);
+signal pilot_start_work:std_logic;
+
+type Tdelay_samples is array(32 downto 0) of std_logic_vector(i_samplesI'Length-1 downto 0);
+signal test_samplesI,test_samplesQ:std_logic_vector(i_samplesI'Length-1 downto 0);
+signal delay_samplesI,delay_samplesQ:Tdelay_samples;
+
 begin
 
 
@@ -152,14 +168,39 @@ b_sc_pilotQ<=not PILOT_Q(PILOT_LEN-1-conv_integer(samples_cnt(samples_cnt'Length
 s_pilotIn<="00";--not(PILOT_I(PILOT_LEN-1-conv_integer(samples_cnt(samples_cnt'Length-1 downto log2roundup(InterpolateRate))) ))&"1";
 sc_pilotQn<="00";--PILOT_Q(PILOT_LEN-1-conv_integer(samples_cnt(samples_cnt'Length-1 downto log2roundup(InterpolateRate))))&"1";
 
+pilot_upper_i: entity work.pilot_upper
+	port map(
+		clk =>clk,
+		reset =>pilot_start_W(2*InterpolateRate),--reset,
 
+		pilot_valid=>open,--pilot_valid,
+		sampleI_o =>sampleI_pilot,
+		sampleQ_o =>sampleQ_pilot
+		);
+
+pilot_start_work<=pilot_start_W(7*InterpolateRate-1);
 make_pilotmsk:process (clk)
 begin		
 	if rising_edge(clk) then
 		i_ce_w1<=i_ce;
-		i_ce_w2<=i_ce_w1;	
+		i_ce_w2<=ce_WW(7*InterpolateRate-1+11);--i_ce_w1;	
 		i_ce_w3<=i_ce_w2;
-		if pilot_start='1' then
+
+		pilot_start_W<=pilot_start_W(pilot_start_W'Length-2 downto 0)&pilot_start;
+		ce_WW<=ce_WW(ce_WW'Length-2 downto 0)&i_ce;
+
+delay_samplesI(0)<=i_samplesI;
+delay_samplesQ(0)<=i_samplesQ;
+
+		for i in 0 to 32-1 loop
+			delay_samplesI(i+1)<=delay_samplesI(i);
+			delay_samplesQ(i+1)<=delay_samplesQ(i);
+		end loop;
+
+
+		if pilot_start_work='1' then
+			pilot_valid<='1';
+			pilot_valid_cnt<=(others=>'0');
 --			if i_ce='1' then
 --				pilotII<=signed(i_samplesI)*signed(s_pilotI);
 --				pilotQQ<=signed(i_samplesQ)*signed(sc_pilotQ); --# make conj(pilot)
@@ -175,29 +216,46 @@ begin
 				samples_cnt<=conv_std_logic_vector(0,samples_cnt'Length);
 --			end if;
 		else
+			if unsigned(pilot_valid_cnt)<PILOT_LEN*InterpolateRate-1 then
+				pilot_valid_cnt<=pilot_valid_cnt+1;
+				pilot_valid<='1';
+			else
+				pilot_valid<='0';
+			end if;
+
+
 			if i_ce='1' then
+
+				analog_pilotII<=signed(sampleI_pilot)*signed(delay_samplesI(SIG_DELAY));
+				analog_pilotQQ<=signed(0-sampleQ_pilot)*signed(delay_samplesQ(SIG_DELAY));
+
+				analog_pilotIQ<=signed(0-sampleQ_pilot)*signed(delay_samplesI(SIG_DELAY));
+				analog_pilotQI<=signed(sampleI_pilot)*signed(delay_samplesQ(SIG_DELAY));
+
+
+
 				if b_s_pilotI='0' then
-					pilotII<=x"0000"-i_samplesI;
+					pilotII<=x"0000"-delay_samplesI(SIG_DELAY);
 				else
-					pilotII<=i_samplesI;
+					pilotII<=delay_samplesI(SIG_DELAY);
 				end if;
 
 				if b_sc_pilotQ='0' then
-					pilotQQ<=x"0000"-i_samplesQ;
+					pilotQQ<=x"0000"-delay_samplesQ(SIG_DELAY);
 				else
-					pilotQQ<=i_samplesQ;
+					pilotQQ<=delay_samplesQ(SIG_DELAY);
 				end if;
 
 				if b_sc_pilotQ='0' then
-					pilotIQ<=x"0000"-i_samplesI;
+					pilotIQ<=x"0000"-delay_samplesI(SIG_DELAY);
 				else
-					pilotIQ<=i_samplesI;
+					pilotIQ<=delay_samplesI(SIG_DELAY);
 				end if;
 
 				if b_s_pilotI='0' then
-					pilotQI<=x"0000"-i_samplesQ;
+					pilotQI<=x"0000"-delay_samplesQ(SIG_DELAY);
 				else
-					pilotQI<=i_samplesQ;
+					pilotQI<=delay_samplesQ(SIG_DELAY);
 				end if;
 
 
@@ -208,10 +266,18 @@ begin
 				samples_cnt<=samples_cnt+1;
 			end if;
 		end if;
-		--if i_ce_w1='1' then
-			pilotmskI<=SXT(pilotII,pilotmskI'Length)-SXT(pilotQQ,pilotmskI'Length);	
-			pilotmskQ<=SXT(pilotIQ,pilotmskI'Length)+SXT(pilotQI,pilotmskI'Length);
-		--end if;
+
+--		pilotmskI<=SXT(pilotII,pilotmskI'Length)-SXT(pilotQQ,pilotmskI'Length);	
+--		pilotmskQ<=SXT(pilotIQ,pilotmskI'Length)+SXT(pilotQI,pilotmskI'Length);
+
+		analog_pilotmskI<=SXT(analog_pilotII(31-5 downto 16-5),pilotmskI'Length)-SXT(analog_pilotQQ(31-5 downto 16-5),pilotmskI'Length);	
+		analog_pilotmskQ<=SXT(analog_pilotIQ(31-5 downto 16-5),pilotmskI'Length)+SXT(analog_pilotQI(31-5 downto 16-5),pilotmskI'Length);
+
+--		analog_pilotmskI<=SXT(analog_pilotII(31-3 downto 16-3),pilotmskI'Length)+SXT(analog_pilotQQ(31-3 downto 16-3),pilotmskI'Length);	
+--		analog_pilotmskQ<=SXT(analog_pilotQI(31-3 downto 16-3),pilotmskI'Length)-SXT(analog_pilotIQ(31-3 downto 16-3),pilotmskI'Length);
+
+
+
 		pilotmskI_w1<=pilotmskI;
 		pilotmskQ_w1<=pilotmskQ;
 
@@ -220,11 +286,18 @@ begin
 	end if;
 end process;
 
+pilotmskI<=analog_pilotmskI;
+pilotmskQ<=analog_pilotmskQ;
+
+test_samplesI<=delay_samplesI(SIG_DELAY);
+test_samplesQ<=delay_samplesQ(SIG_DELAY);
+
+
 writepilot:process (clk)
 begin		
 	if rising_edge(clk) then
-		i_samplesI_w1<=i_samplesI;
-		i_samplesQ_w1<=i_samplesQ;
+		i_samplesI_w1<=delay_samplesI(SIG_DELAY);
+		i_samplesQ_w1<=delay_samplesQ(SIG_DELAY);
 
 
 		if reset='1' then
@@ -235,7 +308,7 @@ begin
 		else
 			case pwr_stm is 
 			when WAITING=>
-				if pilot_start='1' then
+				if pilot_start_work='1' then
 					
 					if i_ce_w2='1' then
 						wr<='1';

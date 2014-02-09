@@ -57,7 +57,7 @@ begin
 				delay_line(i)<=init_phase;
 				delay_line_c(i)<=init_phase;
 			end loop;			
-			sums<=SXT(init_phase&"0000",sums_fin'Length);
+			sums<=SXT(init_phase,sums_fin'Length);
 		else  --# init					
 			if i_ce='1' then
 				delay_line_c<=delay_line;
@@ -97,7 +97,7 @@ begin
 
 	end if;
 end process;
-		o_phase<=SXT(sums_fin(sums_fin'Length-1 downto sums_fin'Length-o_phase'Length+2),o_phase'Length);
+		o_phase<=SXT(sums_fin(sums_fin'Length-1-2 downto sums_fin'Length-o_phase'Length),o_phase'Length);
 --        o_phase<=conv_std_logic_vector(0,o_phase'Length);
 
 
