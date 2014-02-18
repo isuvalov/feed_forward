@@ -150,9 +150,14 @@ add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotu
 add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_start_delayer_cnt
 add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_realpilot_event
 add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/good_come
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/table_phaseerrors_inst/input_angles
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/table_phaseerrors_inst/phase_acum_mod
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/table_phaseerrors_inst/phi_error
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/table_phaseerrors_inst/test_pos
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/table_phaseerrors_inst/val_engle
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {819052341 ps} 0}
-configure wave -namecolwidth 425
+WaveRestoreCursors {{Cursor 1} {1257094623 ps} 0}
+configure wave -namecolwidth 478
 configure wave -valuecolwidth 94
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
@@ -166,4 +171,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {334314650 ps} {2087667650 ps}
+WaveRestoreZoom {1256997999 ps} {1257449605 ps}
