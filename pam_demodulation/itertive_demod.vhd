@@ -63,6 +63,7 @@ end if;
 end signed_abs;
 
 signal init_phase2,init_phase,sample_phase,init_add_phase,sample_add_phase,sample_phase_ok,sample_ok,sample_init_ok,sample_phase_reg:std_logic_vector(19 downto 0):=(others=>'0');
+signal init_phase_big:std_logic_vector(15 downto 0);
 signal samples_phase_mul,init_phase_mul:std_logic_vector(19+15 downto 0);
 signal init_phase_mul_mod,samples_phase_mul_mod:std_logic_vector(19+15+4+1 downto 0);
 --signal :std_logic_vector(19 downto 0);
@@ -552,13 +553,15 @@ phase_demod_acum_p_err<=phase_demod_acum_p_errE(phase_demod_acum_p_errE'Length-2
 --phase_demod_acum_p_err<=phase_demod_acum_p_errE(phase_demod_acum_p_errE'Length-1 downto 0);
 
 phase_demod_acum_p_errE2<=SXT(phase_demod_acum_p_errE(phase_demod_acum_p_err'Length-1 downto phase_demod_acum_p_err'Length-16+1),16);
+
+init_phase_big<=init_phase(init_phase'Length-1-1-4 downto init_phase'Length-16-4)&"0";
 short_lf_filter_inst: entity work.short_lf_filter
 	port map(
 		clk =>clk,
 		i_ce =>d_ce_2w,--d_i_ce,
-		init =>new_after_pilot_start_2w,
+		init =>new_after_pilot_start,
 		init_phase =>init_phase(init_phase'Length-1-1 downto init_phase'Length-16-1),
---		init_phase =>init_phase(init_phase'Length-1 downto init_phase'Length-16),
+--		init_phase =>init_phase_big,
 		i_phase =>phase_demod_acum_p_errE2, --phase_demod_acum_p_errE(phase_demod_acum_p_err'Length-1 downto phase_demod_acum_p_err'Length-16+1)
 		o_phase =>filt_acum,
 		out_ce =>open
