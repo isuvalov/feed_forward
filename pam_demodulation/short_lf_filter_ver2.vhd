@@ -109,7 +109,8 @@ begin
 	end if;
 end process;
 --		o_phase<=SXT(sums_fin(sums_fin'Length-1-2 downto sums_fin'Length-o_phase'Length),o_phase'Length);
-		o_phase<=SXT(sums_fin(sums_fin'Length-1-2 downto sums_fin'Length-o_phase'Length),o_phase'Length);
+--		o_phase<=SXT(sums_fin(sums_fin'Length-1-2 downto sums_fin'Length-o_phase'Length-2),o_phase'Length);
+		o_phase<=sums_fin(sums_fin'Length-1-2 downto sums_fin'Length-o_phase'Length-2);
 
 
 
