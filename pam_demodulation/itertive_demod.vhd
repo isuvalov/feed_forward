@@ -353,6 +353,7 @@ begin
 			TX_LOC:=sTX_LOC;
 			STD.TEXTIO.write(TX_LOC,int_to_string(conv_integer(signed(phase_demod_acum_p_errE)))&"  " );
 			STD.TEXTIO.write(TX_LOC,int_to_string(conv_integer(signed(filt_acum)))&"  " );
+			STD.TEXTIO.write(TX_LOC,int_to_string(conv_integer(  signed(   SXT(filt_acum(filt_acum'Length-1-5 downto 0)&"00000",phase_delta'Length)  )   ))&"  " );
 			STD.TEXTIO.write(TX_LOC,int_to_string(conv_integer(signed(phase_delta)))&"  " );
 			STD.TEXTIO.write(TX_LOC,int_to_string(conv_integer(signed(phase_delta_short)))&"  " );
 			sTX_LOC:=TX_LOC;
