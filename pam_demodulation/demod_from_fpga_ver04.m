@@ -160,9 +160,9 @@ in_val_phase_int=floor(0.5*in_val_phase_int0*81/(2^(ACUM_SIZE-1)));
          
 %         phase_demod_acum_MOD_int=bitand(abs(floor(phase_demod_acum_int/2)),511);
         phase_demod_acum_MOD_int=bitand(abs(phase_demod_acum_int),511);
-        if (phase_demod_acum_int<0)
-               phase_demod_acum_MOD_int=511-phase_demod_acum_MOD_int;
-        end
+%         if (phase_demod_acum_int<0)
+%                phase_demod_acum_MOD_int=511-phase_demod_acum_MOD_int;
+%         end
 
         log_string=[log_string phase_demod_acum_MOD_int];
         
@@ -225,14 +225,15 @@ in_val_phase_int=floor(0.5*in_val_phase_int0*81/(2^(ACUM_SIZE-1)));
                       
         log_string=[log_string phase_delta_int];
         phase_delta_int_short=floor(phase_delta_int/(2^(ACUM_SIZE-8-1+1)));
+
         
 %         if (phase_delta_int_short>255)
 %             phase_delta_int_short=255;
-%         elseif phase_delta_int_short<-256
-%             phase_delta_int_short=-256;
+%         elseif phase_delta_int_short<-255
+%             phase_delta_int_short=-255;
 %         end
         
-        if (phase_delta_int_short>255) %%  Тут надо сделать лучше!!!!! Must be better!
+        if (phase_delta_int_short>255) %% !!!!! Must be better!
                 phase_delta_int_short=bitand(phase_delta_int_short,255);
         elseif (phase_delta_int_short<-256)
                 phase_delta_int_short=256-bitand(abs(phase_delta_int_short),255);

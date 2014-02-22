@@ -115,6 +115,8 @@ signal input_angles2:std_logic_vector(8 downto 0);
 constant TO_PI_sm:std_logic_vector(19 downto 0):=x"00051";
 constant POROGMUL:std_logic_vector(19 downto 0):=conv_std_logic_vector(FI_POROG_PHASE*1,10)&"0000000000"; 
 
+
+
 file OUTPUT: TEXT open WRITE_MODE is "STD_OUTPUT";
 shared variable sTX_LOC : LINE;	
 
@@ -478,8 +480,8 @@ phase_demod_acum_start_shift<=phase_demod_acum_start(9 downto 1);
 phase_demod_acum_start_div_mod<=phase_demod_acum_start_shift when signed(phase_demod_acum_start_shift)>0 else 0-(phase_demod_acum_start_shift);
 --phase_demod_acum_start_div_mod<=phase_demod_acum_start_shift when signed(phase_demod_acum_start)>0 else 0-(phase_demod_acum_start_shift(8 downto 0));
 
---phase_demod_acumMOD<=phase_demod_acum_start_div_mod when phase_demod_acum_start(phase_demod_acum_start'Length-1)='0' else 511-phase_demod_acum_start_div_mod;
-phase_demod_acumMOD<=511-phase_demod_acum_start_div_mod when signed(phase_demod_acum_start)<0 else phase_demod_acum_start_div_mod;
+--phase_demod_acumMOD<=511-phase_demod_acum_start_div_mod when signed(phase_demod_acum_start)<0 else phase_demod_acum_start_div_mod;
+phase_demod_acumMOD<=phase_demod_acum_start_div_mod;
 
 
 --input_angles2<=sample_phase_ok(8+1 downto 0+1);
@@ -501,15 +503,16 @@ table_phaseerrors_inst: table_phaseerrors
 
 process(phase_delta) is
 begin
-		if signed(phase_delta)>255 then
-			phase_delta_saturate<=conv_std_logic_vector(255,phase_delta_saturate'Length);
-		elsif signed(phase_delta)<-256 then
-			phase_delta_saturate<=conv_std_logic_vector(-256,phase_delta_saturate'Length);
+		if signed(phase_delta(phase_delta_short'Length-1+10 downto 0+10))>255 then
+			phase_delta_saturate<=conv_std_logic_vector(255+1024,phase_delta_saturate'Length);
+		elsif signed(phase_delta(phase_delta_short'Length-1+10 downto 0+10))<-256 then
+			phase_delta_saturate<=conv_std_logic_vector(-255-1024,phase_delta_saturate'Length);
 		else
 			phase_delta_saturate<=phase_delta;
 		end if;
 end process;
 
+--		phase_delta_short<=phase_delta_saturate(phase_delta_short'Length-1+10 downto 0+10);--,phase_delta_short'Length);
 		phase_delta_short<=phase_delta(phase_delta_short'Length-1+10 downto 0+10);--,phase_delta_short'Length);
 
 process (clk) is
@@ -538,7 +541,8 @@ begin
 				cccc<="01";
 --				phase_demod_acum_new<=phase_demod_acum_p_errE-SXT((conv_std_logic_vector(FI_POROG_PHASE,8)&x"00"&"0"),20);
 --				phase_demod_acum_new<=phase_demod_acum_p_errE-SXT((conv_std_logic_vector(FI_POROG_PHASE,8)&x"00"&"0"),20);
-				phase_demod_acum_new<=phase_demod_acum_p_errE-"00011001001000000000";
+				phase_demod_acum_new<=phase_demod_acum_p_errE-"00011001001000000000"; --# =100.5*(2^10)
+--				phase_demod_acum_new<=phase_demod_acum_p_errE-"00110010010000000000"; --# =2*100.5*(2^10)
 				
 				phase_demod_acum_demod<=signed(SXT(val_engle_reg&"0",phase_demod_acum_demod'Length)) + signed(POROGMUL);  --# = val_engle + FI_POROG_PHASE*(2^10)
 			elsif signed(phase_delta_short)<-FI_POROG_PHASE then
@@ -546,6 +550,7 @@ begin
 --				phase_demod_acum_new<=phase_demod_acum_p_errE+SXT((conv_std_logic_vector(FI_POROG_PHASE,8)&x"00"&"0"),20);
 --				phase_demod_acum_new<=phase_demod_acum_p_errE+SXT((conv_std_logic_vector(FI_POROG_PHASE,8)&x"00"&"0"),20);
 				phase_demod_acum_new<=phase_demod_acum_p_errE+"00011001001000000000";
+--				phase_demod_acum_new<=phase_demod_acum_p_errE+"00110010010000000000";
 				phase_demod_acum_demod<=signed(SXT(val_engle_reg&"0",phase_demod_acum_demod'Length)) - signed(POROGMUL);  --# = val_engle - FI_POROG_PHASE*(2^10)
 			else
 				cccc<="00";
