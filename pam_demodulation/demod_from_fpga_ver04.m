@@ -1,7 +1,7 @@
 % сделал из файла back_to_phase_maketable_int_div2.m 
 %%
-mpath='D:\Projects\Nienshans\Feed_Forward\vhdl\';
 mpath='D:\John\Nien\vhdl\';
+mpath='D:\Projects\Nienshans\Feed_Forward\vhdl\';
 
 load ([mpath 'frame_phase_init_I.txt'],'-ascii');
 load ([mpath 'frame_phase_init_Q.txt'],'-ascii');
@@ -119,7 +119,8 @@ mass=[];
 f1=[];
 f2=[];
 
-
+phase_demod_fi_matlab=[];
+phase_demod_fi_my=[];
 val_a=[];
 phase_dem=zeros(1,file_len);
     for zd=1:file_len           
@@ -148,7 +149,7 @@ in_val_phase_int=floor(0.5*in_val_phase_int0*81/(2^(ACUM_SIZE-1)));
         log_string=[log_string in_val_phase_int0];        
         log_string=[log_string in_val_phase_int];
 
-        if (zd==40) 
+        if (zd==3925) 
             fprintf('here\n');
         end
         
@@ -240,28 +241,58 @@ in_val_phase_int=floor(0.5*in_val_phase_int0*81/(2^(ACUM_SIZE-1)));
         end;
         log_string=[log_string phase_delta_int_short];
            %%%%%%%%%
+% phase_demod_fi_matlab=[];
+% phase_demod_fi_my=[];
+           
 
             if (phase_delta_int_short>Fi_porog_int/2)
-            cccc=1;
-%              val_dec=demodulate(demod_engine,val.*exp(-1i*cccc*2*Fi_porog)); % Делаем коррекцию данных уже опираясь на линейность фазы
-               val_dec=demodulate(demod_engine,exp(1i*cccc*2*Fi_porog+1i*val_angle_back)); % Делаем коррекцию данных уже опираясь на линейность фазы
-               phase_dem(zd)=val_angle_int+Fi_porog_int*2*cccc;
-%             elseif (phase_delta<-Fi_porog)
-              elseif (phase_delta_int_short<-Fi_porog_int/2)
-            cccc=-1;
-%              val_dec=demodulate(demod_engine,val.*exp(-1i*cccc*2*Fi_porog));
-               val_dec=demodulate(demod_engine,exp(1i*cccc*2*Fi_porog+1i*val_angle_back));
-               phase_dem(zd)=val_angle_int+Fi_porog_int*2*cccc;               
-        else
-            cccc=0;
-            val_dec=demodulate(demod_engine,exp(1i*cccc*2*Fi_porog+1i*val_angle_back));
-            phase_dem(zd)=val_angle_int+Fi_porog_int*2*cccc;
-          end
+               cccc=1;
+               val_dec_m=demodulate(demod_engine,exp(1i*cccc*2*Fi_porog+1i*val_angle_back)); % Делаем коррекцию данных уже опираясь на линейность фазы               
+               phase_demod_fi_matlab=[phase_demod_fi_matlab angle( exp(1i*cccc*2*Fi_porog+1i*val_angle_back) )];
+               phase_demod_acum_demod=val_angle_int+Fi_porog_int;                               
+               phase_dem(zd)=phase_demod_acum_demod;
+               phase_demod_fi_my=[phase_demod_fi_my phase_dem(zd)];
+            elseif (phase_delta_int_short<-Fi_porog_int/2)
+               cccc=-1;
+               val_dec_m=demodulate(demod_engine,exp(1i*cccc*2*Fi_porog+1i*val_angle_back));
+               phase_demod_fi_matlab=[phase_demod_fi_matlab angle( exp(1i*cccc*2*Fi_porog+1i*val_angle_back) )];
+               phase_demod_acum_demod=val_angle_int-Fi_porog_int;
+               phase_dem(zd)=phase_demod_acum_demod;
+               phase_demod_fi_my=[phase_demod_fi_my phase_dem(zd)];
+            else
+                cccc=0;
+                val_dec_m=demodulate(demod_engine,exp(1i*cccc*2*Fi_porog+1i*val_angle_back));
+                phase_demod_fi_matlab=[phase_demod_fi_matlab angle( exp(1i*cccc*2*Fi_porog+1i*val_angle_back) )];
+                phase_demod_acum_demod=val_angle_int;                
+                phase_dem(zd)=val_angle_int;
+                phase_demod_fi_my=[phase_demod_fi_my phase_dem(zd)];
+            end
           log_string=[log_string cccc];
 %            phase_demod_acum=phase_demod_acum-cccc*2*Fi_porog;
 %             phase_demod_acum_int0=phase_demod_acum_int0-cccc*2*Fi_porog_int*(2^(ACUM_SIZE-(Nbit-1)-1));
 %             phase_demod_acum=phase_demod_acum-cccc*1*Fi_porog;
-            phase_demod_acum_int0=phase_demod_acum_int0-cccc*1*Fi_porog_int*(2^(ACUM_SIZE-(Nbit-1)-1));
+%              phase_demod_acum_int0=phase_demod_acum_int0-cccc*1*Fi_porog_int*(2^(ACUM_SIZE-(Nbit-1)-1));
+
+%             if (phase_demod_acum_demod>floor(128*pi))
+%                 phase_demod_acum_demod=floor(2*pi*128)+phase_demod_acum_demod;
+%             elseif (phase_demod_acum_demod<-floor(128*pi))
+%                 phase_demod_acum_demod=floor(2*pi*128)-phase_demod_acum_demod;
+%             else
+%                 phase_demod_acum_demod=phase_demod_acum_demod;
+%             end;
+%             if (phase_demod_acum_demod<-pi*128)
+%                 phase_demod_acum_demod=mod(phase_demod_acum_demod,pi*128);
+%             elseif (phase_demod_acum_demod>pi*128)
+%                 phase_demod_acum_demod=pi*128-mod(phase_demod_acum_demod,pi*128);
+%             else
+%                 phase_demod_acum_demod=phase_demod_acum_demod;
+%             end;
+                
+            val_dec=demodulate(demod_engine,exp(1i*(phase_demod_acum_demod/(2^7)) ));
+%             val_dec=val_dec_m;
+
+           phase_demod_acum_int0=phase_demod_acum_int0-2*cccc*floor(100.5*(2^10));
+            
 
           log_string=[log_string phase_demod_acum_int0];
           
@@ -292,14 +323,21 @@ in_val_phase_int=floor(0.5*in_val_phase_int0*81/(2^(ACUM_SIZE-1)));
 lfsr_2bit_b=(de2bi(mass2,2));
 a=reshape((lfsr_2bit_b).',1,[]);
 figure_handle = figure;
-subplot(4,1,1);
-plot(m_test_lfsr(a, fliplr(de2bi(hex2dec('8000000D'),32))  ))
-subplot(4,1,2);
+h1=subplot(5,1,1);
+testb=m_test_lfsr(a, fliplr(de2bi(hex2dec('8000000D'),32))  );
+plot(testb);
+h2=subplot(5,1,2);
 plot(reshape(repmat(mass2,floor(InterpolateRate/2),1),1,[])+5)
-subplot(4,1,3);
+h3=subplot(5,1,3);
 plot(pilot_phases);
-subplot(4,1,4);
+h4=subplot(5,1,4);
 plot(pilot_phases2);
+h5=subplot(5,1,5);
+plot(phase_dem);
+
+fprintf('Errors is %i\n',sum(bitxor(testb,1)));
+
+% linkaxes([h1 h2 h3 h4 h5],'x');
 
 %%
 % find(loglines_int(:,1)==-1934);
@@ -309,3 +347,8 @@ plot(pilot_phases2);
 
 %  loglines_int3(:,1)=loglines_int2(:,1); % real sample
 %  loglines_int3(:,2)=loglines_int2(:,2); % in_val_phase_int0 = sample_phase
+%%
+figure;
+plot(phase_demod_fi_my);
+hold on;
+plot(phase_demod_fi_matlab*128,'r');

@@ -115,6 +115,8 @@ signal input_angles2:std_logic_vector(8 downto 0);
 constant TO_PI_sm:std_logic_vector(19 downto 0):=x"00051";
 constant POROGMUL:std_logic_vector(19 downto 0):=conv_std_logic_vector(FI_POROG_PHASE*1,10)&"0000000000"; 
 
+--   constant POROGMUL:std_logic_vector(19 downto 0):=conv_std_logic_vector(FI_POROG_PHASE*1,12)&"00000000"; 
+
 
 
 file OUTPUT: TEXT open WRITE_MODE is "STD_OUTPUT";
@@ -541,25 +543,28 @@ begin
 				cccc<="01";
 --				phase_demod_acum_new<=phase_demod_acum_p_errE-SXT((conv_std_logic_vector(FI_POROG_PHASE,8)&x"00"&"0"),20);
 --				phase_demod_acum_new<=phase_demod_acum_p_errE-SXT((conv_std_logic_vector(FI_POROG_PHASE,8)&x"00"&"0"),20);
-				phase_demod_acum_new<=phase_demod_acum_p_errE-"00011001001000000000"; --# =100.5*(2^10)
+				phase_demod_acum_new<=phase_demod_acum_p_errE+"00011001001000000000"; --# =100.5*(2^10)
 --				phase_demod_acum_new<=phase_demod_acum_p_errE-"00110010010000000000"; --# =2*100.5*(2^10)
 				
-				phase_demod_acum_demod<=signed(SXT(val_engle_reg&"0",phase_demod_acum_demod'Length)) + signed(POROGMUL);  --# = val_engle + FI_POROG_PHASE*(2^10)
+				phase_demod_acum_demod<=signed(SXT(val_engle_reg,phase_demod_acum_demod'Length)) + signed(POROGMUL);  --# = val_engle + FI_POROG_PHASE*(2^10)
 			elsif signed(phase_delta_short)<-FI_POROG_PHASE then
 				cccc<="10";
 --				phase_demod_acum_new<=phase_demod_acum_p_errE+SXT((conv_std_logic_vector(FI_POROG_PHASE,8)&x"00"&"0"),20);
 --				phase_demod_acum_new<=phase_demod_acum_p_errE+SXT((conv_std_logic_vector(FI_POROG_PHASE,8)&x"00"&"0"),20);
-				phase_demod_acum_new<=phase_demod_acum_p_errE+"00011001001000000000";
+				phase_demod_acum_new<=phase_demod_acum_p_errE-"00011001001000000000";
 --				phase_demod_acum_new<=phase_demod_acum_p_errE+"00110010010000000000";
-				phase_demod_acum_demod<=signed(SXT(val_engle_reg&"0",phase_demod_acum_demod'Length)) - signed(POROGMUL);  --# = val_engle - FI_POROG_PHASE*(2^10)
+--				phase_demod_acum_demod<=signed(SXT(val_engle_reg&"0",phase_demod_acum_demod'Length)) - signed(POROGMUL);  --# = val_engle - FI_POROG_PHASE*(2^10)
+				phase_demod_acum_demod<=signed(SXT(val_engle_reg,phase_demod_acum_demod'Length)) - signed(POROGMUL);  --# = val_engle - FI_POROG_PHASE*(2^10)
 			else
 				cccc<="00";
 				phase_demod_acum_new<=phase_demod_acum_p_errE;
-				phase_demod_acum_demod<=SXT(val_engle,phase_demod_acum_demod'Length); --# make phase for demodulation
+--				phase_demod_acum_demod<=SXT(val_engle,phase_demod_acum_demod'Length); --# make phase for demodulation
+				phase_demod_acum_demod<=SXT(val_engle_reg,phase_demod_acum_demod'Length); --# make phase for demodulation
 			end if;
 		end if;
 
-		o_samples_phase<=phase_demod_acum_demod(o_samples_phase'Length-1 downto 0);
+--		o_samples_phase<=phase_demod_acum_demod(o_samples_phase'Length-1 downto 0);
+		o_samples_phase<=phase_demod_acum_demod(phase_demod_acum_demod'Length-1 downto phase_demod_acum_demod'Length-o_samples_phase'Length);
 		out_ce<=d_ce_1w;--d_ce_3w;
 
 	end if;
