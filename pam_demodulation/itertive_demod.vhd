@@ -173,9 +173,10 @@ r2p_inst2: entity work.cordic_wrapper
 		i_samplesI =>i_init_phaseI,
 		i_samplesQ =>i_init_phaseQ,
 
-		phase =>init_phase
+		phase =>init_phase2
 		);
---init_phase<=init_phase2;--83443/2+SXT(init_phase2(init_phase2'Length-1 downto 2),init_phase'Length);
+init_phase<=SXT(init_phase2(init_phase2'Length-1 downto 3),init_phase'Length);
+--83443/2+SXT(init_phase2(init_phase2'Length-1 downto 2),init_phase'Length);
 --init_phase_mul<=signed(init_phase)*signed(conv_std_logic_vector(10474,15));
 
 init_phase_mul<=signed(init_phase)*signed(conv_std_logic_vector(81,15));

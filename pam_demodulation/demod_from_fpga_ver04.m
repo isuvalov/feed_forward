@@ -9,6 +9,7 @@ load ([mpath 'frame_I.txt'],'-ascii');
 load ([mpath 'frame_Q.txt'],'-ascii');
 load ([mpath 'frame_phase.txt'],'-ascii');
 load ([mpath 'frame_phaseinit.txt'],'-ascii');
+% frame_phaseinit=frame_phaseinit/(8);
 clc
 
 %%
@@ -31,6 +32,7 @@ alpha2=0.1;
 FreqOffset=0;
 M=4;
 FILTLEN=32;
+% FILTLEN=64;
 R=0.2;
 
 foffest_a=[];
@@ -54,7 +56,6 @@ localt=0;
 localt_prev=0;
 scatter_array=[];
 
-FILTLEN=32;
 Nbit=16;
 NN=(2^Nbit-1)-1;
 M=4;
@@ -70,6 +71,7 @@ data_transfer_filtdata_int=data_transfer_filtdata_int_pre(1:InterpolateRate:end)
 
 file_len=length(data_transfer_filtdata_int)-10;
  file_len=7900;
+%  file_len=4000; 
 
 %%%%%%%%%
 % data_transfer_filtdata_int
@@ -89,6 +91,10 @@ ACUM_SIZE=18;
 
 TANGLE_SIZE=8;
 TACUM_SIZE=8;
+
+% TANGLE_SIZE=Nbit;
+% TACUM_SIZE=Nbit;
+
 loglines_int=[];
 log_string=[];
 mass2=[];
@@ -115,7 +121,7 @@ mass=[];
     filt_array_int=floor(frame_phaseinit/(2^3)).*ones(1,FILTLEN);
     
     
-    Fi_porog_int=floor(Fi_porog*256);
+    Fi_porog_int=floor(Fi_porog*(2^(Nbit-1)));
 f1=[];
 f2=[];
 
@@ -123,28 +129,27 @@ phase_demod_fi_matlab=[];
 phase_demod_fi_my=[];
 val_a=[];
 phase_dem=zeros(1,file_len);
+
+MULTVAL=floor((2^ACUM_SIZE)/pi);
+
     for zd=1:file_len           
         log_string=[log_string real(data_transfer_filtdata_int(zd))];         
         if (zd==1)
              in_val_phase_real=phase_demod_acum;
              in_val_phase_int0=floor(in_val_phase_real*(2^((ACUM_SIZE))));
              in_val_phase_int0=frame_phaseinit*2;
-%                in_val_phase_int0_mul=in_val_phase_int0*10474;
-             in_val_phase_int0_mul=floor(in_val_phase_int0*hex2dec('145F3'));
-%             in_val_phase_int0_mul_div=floor(in_val_phase_int0_mul/(2^24));
-            in_val_phase_int0_mul_div=floor(in_val_phase_int0_mul/(2^26)); % --= sample_init_ok
-%            in_val_phase_int0_mul_div=floor(in_val_phase_int0_mul_div/(2^12)) % --= phase_demod_acum_start                                    
+%              in_val_phase_int0_mul=floor(in_val_phase_int0*hex2dec('145F3')); % = (2^18)/pi=145F3
+            in_val_phase_int0_mul=floor(in_val_phase_int0*MULTVAL); % = (2^18)/pi=145F3
+            in_val_phase_int0_mul_div=floor(in_val_phase_int0_mul/(2^(ACUM_SIZE+(Nbit-1)))); % --= sample_init_ok
         else
             in_val_phase_real=angle(data_transfer_filtdata_int(zd)); % тут у нас +/-PI        
-            in_val_phase_int0_mul=floor(phase_demod_acum_int0*hex2dec('145F3'));
-            in_val_phase_int0_mul_div=floor(in_val_phase_int0_mul/(2^26));
-%              in_val_phase_int0=floor(in_val_phase_real*(2^(ACUM_SIZE-1)));
-%              in_val_phase_int0=in_val_phase_int0;
-              in_val_phase_int0=frame_phase(zd)*2;            
+%             in_val_phase_int0_mul=floor(phase_demod_acum_int0*hex2dec('145F3'));
+            in_val_phase_int0_mul=floor(phase_demod_acum_int0*MULTVAL);            
+            in_val_phase_int0_mul_div=floor(in_val_phase_int0_mul/(2^(ACUM_SIZE+(Nbit-1))));
+            in_val_phase_int0=frame_phase(zd)*2;            
         end;
         
-%          in_val_phase_int=floor((in_val_phase_int0/pi)*NBitVal/(2^(ACUM_SIZE-1)));
-in_val_phase_int=floor(0.5*in_val_phase_int0*81/(2^(ACUM_SIZE-1)));
+        in_val_phase_int=floor(0.5*in_val_phase_int0*81/(2^(ACUM_SIZE-1)));
 
         log_string=[log_string in_val_phase_int0];        
         log_string=[log_string in_val_phase_int];
@@ -153,52 +158,41 @@ in_val_phase_int=floor(0.5*in_val_phase_int0*81/(2^(ACUM_SIZE-1)));
             fprintf('here\n');
         end
         
-%         ok_value=floor((phase_demod_acum_int0/pi)*NBitVal/(2^(ACUM_SIZE-1)));
         phase_demod_acum_int=in_val_phase_int0_mul_div;        
          log_string=[log_string phase_demod_acum_int]; % This is in FPGA=phase_demod_acum_start
     
         phase_demod_acum_int=floor(phase_demod_acum_int/2); 
          
-%         phase_demod_acum_MOD_int=bitand(abs(floor(phase_demod_acum_int/2)),511);
-        phase_demod_acum_MOD_int=bitand(abs(phase_demod_acum_int),511);
-%         if (phase_demod_acum_int<0)
-%                phase_demod_acum_MOD_int=511-phase_demod_acum_MOD_int;
-%         end
+
+         phase_demod_acum_MOD_int=bitand(abs(phase_demod_acum_int),511);
 
         log_string=[log_string phase_demod_acum_MOD_int];
         
-%           if (zd==0)
-%                in_val_phase_int=floor(110*2);
-%                phase_demod_acum_MOD_int=floor(111*2);
-%                phase_demod_acum_int0=74941;
-%           elseif (zd==1)
-%                in_val_phase_int=240;
-%                phase_demod_acum_MOD_int=46;              
-%           end %  if (zd>1)
         %%%%%%%%%%%% table %%%%%%%%%%%
 %           in_val_phase_int=floor(in_val_phase_int/2);
 %         phase_demod_acum_MOD_int=floor(phase_demod_acum_MOD_int/2);
-        in_val_phase_int=floor(in_val_phase_int/(2^(Nbit-TANGLE_SIZE)))*(2^(Nbit-TANGLE_SIZE));
-        phase_demod_acum_MOD_int=floor(phase_demod_acum_MOD_int/(2^(Nbit-TACUM_SIZE)))*(2^(Nbit-TACUM_SIZE));
+
+
+        in_val_phase_int=floor(in_val_phase_int/(2^(Nbit-TANGLE_SIZE)))*(2^(Nbit-TANGLE_SIZE));       % При коментарии этих строчек получаем лучшую помехоустойчивость  
+        phase_demod_acum_MOD_int=floor(phase_demod_acum_MOD_int/(2^(Nbit-TACUM_SIZE)))*(2^(Nbit-TACUM_SIZE)); % но тогда происходит большое кол-во отличий от FPGA
         
         in_val_phase=pi*in_val_phase_int/NBitVal;
-        phase_demod_acum_MOD=pi*phase_demod_acum_MOD_int/NBitVal;
+        phase_demod_acum_MOD=pi*phase_demod_acum_MOD_int/(NBitVal);
          val=exp(1i*(in_val_phase-phase_demod_acum_MOD));
+         
+         
          val_a=[val_a val];
         val_dec=demodulate(demod_engine,val); % ???????????? PAM
         val_mod2=modulate(mod_engine,val_dec);
         c=corrcoef( [0 val_mod2],[0 val] ); % ????????? ???? ?????????? ??????????? ???????? ? ????????????????
         phi_err_real=angle(  val.*conj(val_mod2)  ); % Считаем что тоже +/-PI
-        phi_err_int=floor(((phi_err_real)*NBitVal)/2);
-%         val_angle_int=angle(val)*NBitVal/pi;
+        
+        phi_err_int=floor(((phi_err_real)*NBitVal)/2);  % in FPGA!!!
+
         val_angle_int=floor(angle(val)*NBitVal);
         val_angle_int=floor(val_angle_int/2);
         %%%%%%%%%%%% table %%%%%%%%%%%
-%         if (val_angle_int>NBitVal*2) 
-%            fprintf('here\n');
-%         end
-%         val_angle_int=val_angle_int*2;
-%         phi_err_int=phi_err_int*2;
+
         
 
 
@@ -208,15 +202,10 @@ in_val_phase_int=floor(0.5*in_val_phase_int0*81/(2^(ACUM_SIZE-1)));
         val_angle_back=2*val_angle_int/NBitVal;
         
         log_string=[log_string phase_demod_acum_int0]; % without err
-        phase_demod_acum_int0=floor(phase_demod_acum_int0/2)+phi_err_int*(2^(ACUM_SIZE-7-1));        
+        phase_demod_acum_int0=floor(phase_demod_acum_int0/2)+phi_err_int*(2^(ACUM_SIZE-7-1));    % in FPGA
         log_string=[log_string phase_demod_acum_int0];
 
-        
-%        filt_array_int2=floor(filt_array_int/(2^7));
-%         phase_acum_int=floor(sum(filt_array_int2.*filt_x_int)./(2^(11+1))); % 2800,
-%        filt_array_int=[floor(phase_demod_acum_int0/(2^1)) filt_array_int(1:FILTLEN-1)]; 
-
- 		[phase_acum_int,filt_array_int]=filt_like_fpga(floor(phase_demod_acum_int0/(2^5)),filt_array_int);
+  		[phase_acum_int,filt_array_int]=filt_like_fpga(floor(phase_demod_acum_int0/(2^5)),filt_array_int);
 
 
 		log_string=[log_string phase_acum_prev_int];
@@ -226,6 +215,8 @@ in_val_phase_int=floor(0.5*in_val_phase_int0*81/(2^(ACUM_SIZE-1)));
                       
         log_string=[log_string phase_delta_int];
         phase_delta_int_short=floor(phase_delta_int/(2^(ACUM_SIZE-8-1+1)));
+
+%         phase_delta_int_short=floor(phase_delta_int/(2^(ACUM_SIZE-8-1)));
 
         
 %         if (phase_delta_int_short>255)
@@ -239,6 +230,9 @@ in_val_phase_int=floor(0.5*in_val_phase_int0*81/(2^(ACUM_SIZE-1)));
         elseif (phase_delta_int_short<-256)
                 phase_delta_int_short=256-bitand(abs(phase_delta_int_short),255);
         end;
+
+
+
         log_string=[log_string phase_delta_int_short];
            %%%%%%%%%
 % phase_demod_fi_matlab=[];
@@ -268,30 +262,13 @@ in_val_phase_int=floor(0.5*in_val_phase_int0*81/(2^(ACUM_SIZE-1)));
                 phase_demod_fi_my=[phase_demod_fi_my phase_dem(zd)];
             end
           log_string=[log_string cccc];
-%            phase_demod_acum=phase_demod_acum-cccc*2*Fi_porog;
-%             phase_demod_acum_int0=phase_demod_acum_int0-cccc*2*Fi_porog_int*(2^(ACUM_SIZE-(Nbit-1)-1));
-%             phase_demod_acum=phase_demod_acum-cccc*1*Fi_porog;
-%              phase_demod_acum_int0=phase_demod_acum_int0-cccc*1*Fi_porog_int*(2^(ACUM_SIZE-(Nbit-1)-1));
-
-%             if (phase_demod_acum_demod>floor(128*pi))
-%                 phase_demod_acum_demod=floor(2*pi*128)+phase_demod_acum_demod;
-%             elseif (phase_demod_acum_demod<-floor(128*pi))
-%                 phase_demod_acum_demod=floor(2*pi*128)-phase_demod_acum_demod;
-%             else
-%                 phase_demod_acum_demod=phase_demod_acum_demod;
-%             end;
-%             if (phase_demod_acum_demod<-pi*128)
-%                 phase_demod_acum_demod=mod(phase_demod_acum_demod,pi*128);
-%             elseif (phase_demod_acum_demod>pi*128)
-%                 phase_demod_acum_demod=pi*128-mod(phase_demod_acum_demod,pi*128);
-%             else
-%                 phase_demod_acum_demod=phase_demod_acum_demod;
-%             end;
                 
-            val_dec=demodulate(demod_engine,exp(1i*(phase_demod_acum_demod/(2^7)) ));
-%             val_dec=val_dec_m;
+           val_dec=demodulate(demod_engine,exp(1i*(phase_demod_acum_demod/(2^7)) ));
+%          val_dec=val_dec_m;
 
-           phase_demod_acum_int0=phase_demod_acum_int0-2*cccc*floor(100.5*(2^10));
+             phase_demod_acum_int0=phase_demod_acum_int0-2*cccc*floor(100.5*(2^(ACUM_SIZE-(Nbit-1))));
+%             phase_demod_acum_int0=floor(phase_demod_acum_int0/2)-2*cccc*floor(100.5*(2^9));
+%             phase_demod_acum_int0=phase_demod_acum_int0*2;
             
 
           log_string=[log_string phase_demod_acum_int0];
@@ -348,7 +325,7 @@ fprintf('Errors is %i\n',sum(bitxor(testb,1)));
 %  loglines_int3(:,1)=loglines_int2(:,1); % real sample
 %  loglines_int3(:,2)=loglines_int2(:,2); % in_val_phase_int0 = sample_phase
 %%
-figure;
-plot(phase_demod_fi_my);
-hold on;
-plot(phase_demod_fi_matlab*128,'r');
+% figure;
+% plot(phase_demod_fi_my);
+% hold on;
+% plot(phase_demod_fi_matlab*128,'r');
