@@ -573,8 +573,8 @@ itertive_demod_inst: entity work.itertive_demod
 --		i_samplesI =>sampleI_to_demod,--sampleI_to_demod_W(7),--sampleI_to_demod_1w,
 --		i_samplesQ =>sampleQ_to_demod,--sampleQ_to_demod_W(7),--sampleQ_to_demod_1w,
 
-		i_samplesI =>sampleI_to_demod_W(2*4-2+11+26),--sampleI_to_demod_1w,
-		i_samplesQ =>sampleQ_to_demod_W(2*4-2+11+26),--sampleQ_to_demod_1w,
+		i_samplesI =>sampleI_to_demod_W(2*4-2+11+26-24),--sampleI_to_demod_1w,
+		i_samplesQ =>sampleQ_to_demod_W(2*4-2+11+26-24),--sampleQ_to_demod_1w,
 
 
 

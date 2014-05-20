@@ -206,10 +206,16 @@ DEBUG_SAVE01: if DEBUG_SAVE=1 generate
 
 process(clk)
 begin
-	if after_pilot_start='1' and savenum=0 then
+
+	if after_pilot_start='1' then
+		savenum<=savenum+1;
+	end if;	
+
+
+	if after_pilot_start='1' and savenum=6 then
 		saveit<='1';
 		save_cnt<=PILOT_PERIOD*InterpolateRate+1;
-		savenum<=savenum+1;
+--		savenum<=savenum+1;
 --	if rising_edge(clk) then
 --		if after_pilot_start='1' and savenum=0 then
 --			saveit<='1';
