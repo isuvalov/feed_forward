@@ -29,6 +29,7 @@ add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/saveit
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/saveit2
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/saveit3
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/saveit2_1w
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/savenum
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/saveit_1w
 add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/after_pilot_start
 add wave -noupdate -format Analog-Step -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesi
@@ -150,9 +151,14 @@ add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotu
 add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_start_delayer_cnt
 add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_realpilot_event
 add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/good_come
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/table_phaseerrors_inst/input_angles
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/table_phaseerrors_inst/phase_acum_mod
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/table_phaseerrors_inst/phi_error
+add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/table_phaseerrors_inst/test_pos
+add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/table_phaseerrors_inst/val_engle
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {819052341 ps} 0}
-configure wave -namecolwidth 425
+WaveRestoreCursors {{Cursor 1} {1911000000 ps} 0}
+configure wave -namecolwidth 478
 configure wave -valuecolwidth 94
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
@@ -166,4 +172,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {334314650 ps} {2087667650 ps}
+WaveRestoreZoom {0 ps} {3150 us}

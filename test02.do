@@ -18,7 +18,7 @@ vcom rcc_up_filter_rx.vhd
 vcom ce_manager.vhd 
 vcom generate_test_tx.vhd 
 vcom wrapper_tx_stream.vhd
-
+vcom pilot_upper.vhd 
 vcom complex_mult.vhd
 vcom bih_filter_integrator.vhd 
 vcom bih_filter_integrator_sign.vhd
@@ -31,7 +31,6 @@ vcom freq_estimator.vhd
 vcom get_max_values.vhd
 vcom normalizer.vhd 
 vcom delayer.vhd 
-vcom pilot_upper.vhd 
 vcom scalar_mult.vhd
 vcom remove_zero.vhd
 vcom pilot_sync_every_time.vhd 
