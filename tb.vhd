@@ -336,6 +336,4 @@ ToTextFile_inst:entity work.ToTextFile
 		 DataToSave =>o_freq
 	     );
 
-
-
 end tb;
