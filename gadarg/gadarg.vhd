@@ -44,7 +44,7 @@ type Tdelay_line is array(FILTER_LEN-1 downto 0) of std_logic_vector(i_sampleI'L
 signal delay_line_I,delay_line_Q:Tdelay_line;
 
 type Tcoefs is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_COEF_WIDTH-1 downto 0);
-signal coefs_work,coefs_i,coefs_q:Tcoefs;
+signal coefs_work,coefs_ii,coefs_qq,coefs_iq,coefs_qi:Tcoefs;
 
 type Tc_mul is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
 signal c_mul_i,c_mul_q:Tc_mul;
@@ -92,13 +92,17 @@ end process;
 
 vr2i<=vr2r;
 vr3i<=vr3r;
+vi2i<=vi2r;
+vi3i<=vi3r;
 
 process (clk) is
 begin		
 	if rising_edge(clk) then
 		if reset='1' then
-			coefs_i<=(others=>(others=>'0'));
-			coefs_q<=(others=>(others=>'0'));
+			coefs_ii<=(others=>(others=>'0'));
+			coefs_qq<=(others=>(others=>'0'));
+			coefs_iq<=(others=>(others=>'0'));
+			coefs_qi<=(others=>(others=>'0'));
 			step_cnt<=conv_std_logic_vector(COPY_STEP-1,step_cnt'Length);
 		else    --# reset
 			if i_ce='1' then
@@ -214,11 +218,26 @@ begin
 					--# MULSUM_LATENCY+2 because have addition square and minus
 					WI0r_div(i)<=signed(vi2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_with_step_i(2+MULSUM_LATENCY+i));
 					--# but may be it can be cut... because we have some KKK  ... !!!!!!!!!!!!!!!!!!!!!!
-					WIr(i)<=signed(WR0r_div(i))*signed(vi3r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH));
+					WIr(i)<=signed(WI0r_div(i))*signed(vi3r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH));
 				end loop;
+				-------------------
+				--#vi2i=vi2r
+				--#vi3i=vi3r
+				for i in 0 to FILTER_LEN-1 loop 
+					--# MULSUM_LATENCY+2 because have addition square and minus
+					WI0i_div(i)<=signed(vi2i(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_with_step_q(2+MULSUM_LATENCY+i));
+					--# but may be it can be cut... because we have some KKK  ... !!!!!!!!!!!!!!!!!!!!!!
+					WIi(i)<=signed(WI0i_div(i))*signed(vi3i(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH));
+				end loop;
+				--#===============================
 
+			 	for i in 0 to FILTER_LEN-1 loop 
+                	coefs_ii(i)<=coefs_ii(i)-WRr(i)(WRr(i)'Length-1 downto KKK);
+                	coefs_qq(i)<=coefs_qq(i)+WIi(i)(WIi(i)'Length-1 downto KKK);
 
-
+                	coefs_qi(i)<=coefs_qi(i)-WIr(i)(WIr(i)'Length-1 downto KKK);
+                	coefs_iq(i)<=coefs_iq(i)+WRi(i)(WRi(i)'Length-1 downto KKK);
+				end loop;
 
 			end if; --# i_ce
 
