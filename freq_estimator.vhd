@@ -139,6 +139,7 @@ signal sampleI_pilot,sampleQ_pilot:std_logic_vector(15 downto 0);
 signal analog_pilotII,analog_pilotQQ,analog_pilotIQ,analog_pilotQI:std_logic_vector(31 downto 0);
 signal analog_pilotmskI,analog_pilotmskQ:std_logic_vector(16 downto 0);
 signal pilot_start_W:std_logic_vector(32 downto 0);
+signal ce_WW:std_logic_vector(42 downto 0);
 signal pilot_start_work:std_logic;
 
 type Tdelay_samples is array(32 downto 0) of std_logic_vector(i_samplesI'Length-1 downto 0);
@@ -182,10 +183,11 @@ make_pilotmsk:process (clk)
 begin		
 	if rising_edge(clk) then
 		i_ce_w1<=i_ce;
-		i_ce_w2<=i_ce_w1;	
+		i_ce_w2<=ce_WW(7*InterpolateRate-1+11);--i_ce_w1;	
 		i_ce_w3<=i_ce_w2;
 
 		pilot_start_W<=pilot_start_W(pilot_start_W'Length-2 downto 0)&pilot_start;
+		ce_WW<=ce_WW(ce_WW'Length-2 downto 0)&i_ce;
 
 delay_samplesI(0)<=i_samplesI;
 delay_samplesQ(0)<=i_samplesQ;

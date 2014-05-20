@@ -139,7 +139,8 @@ port map(
 );
 
 phase<=std_logic_vector(theta_o_p2(theta_o'Length-1-7 downto theta_o'Length-phase'Length-7));
---phase<=std_logic_vector(theta_o_p2(theta_o'Length-1-3 downto theta_o'Length-phase'Length-3));
+--phase<=std_logic_vector(theta_o_p2(theta_o'Length-1-8 downto theta_o'Length-phase'Length-8));
+
 
 end cordic_wrapper;
 

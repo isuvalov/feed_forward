@@ -49,6 +49,8 @@ signal s_pilot_ce_a:std_logic_vector(9-1 downto 0);
 signal duplicate_iq:std_logic;
 signal delay_cnt:std_logic_vector(3 downto 0);
 
+signal test_seq:std_logic;
+
 type Tstm is (INSERT_PILOT,PREAMBULE01,PREAMBULE02,PREAMBULE03,INSERT_DATA);
 signal stm:Tstm;
 
@@ -87,6 +89,8 @@ begin
 				else
 					stm<=INSERT_DATA;--PREAMBULE01;
 				end if;
+				test_seq<=PILOT((PILOT_LEN-1)-conv_integer(cnt(log2roundup(PILOT_LEN)-1 downto 0)));
+
 				if PILOT((PILOT_LEN-1)-conv_integer(cnt(log2roundup(PILOT_LEN)-1 downto 0)))='1' then --# set or 0 or 2
 					bits<="00";
 				else
@@ -97,6 +101,7 @@ begin
 				rd_o<='0';
 				delay_cnt<=(others=>'1');
 			when PREAMBULE01=>
+				test_seq<='Z';
 				s_pilot_ce<='0';
 				duplicate_iq<='0';
                 bits<="00";
@@ -119,6 +124,7 @@ begin
 				stm<=INSERT_DATA;
 				rd_o<='0';
 			when INSERT_DATA=>
+				test_seq<='Z';
 				s_pilot_ce<='0';
 				duplicate_iq<='0';
 				rd_o<='1';
