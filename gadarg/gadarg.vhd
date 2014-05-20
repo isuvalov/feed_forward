@@ -57,13 +57,13 @@ signal c_mul_sum_i,c_mul_sum_q:Tc_mul_sum;
 signal sumed_muls_i,sumed_muls_q:std_logic_vector(FILTER_WORK_WIDTH-1 downto 0);
 signal sq_sumed_muls_i,sq_sumed_muls_q:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
 signal vr2r,vr3r,vi2r:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
-signal vr2i,vr3i,vi3r:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
+signal vr2i,vr3i,vi3r,vi2i,vi3i:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
 
 
 type TWx0_div is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH-1 downto 0);
 type TWx_div is array(FILTER_LEN-1 downto 0) of std_logic_vector(2*FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH-1 downto 0);
-signal WR0r_div,WR0i_div,WI0r_div:TWx0_div;
-signal WRr,WRi,WIr:TWx_div;
+signal WR0r_div,WR0i_div,WI0r_div,WI0i_div:TWx0_div;
+signal WRr,WRi,WIr,WIi:TWx_div;
 
 begin
 
@@ -232,6 +232,8 @@ begin
 				--#===============================
 
 			 	for i in 0 to FILTER_LEN-1 loop 
+				  coefs_work(i)<=coefs_ii(i)-WRr(i)(WRr(i)'Length-1 downto KKK);
+
                 	coefs_ii(i)<=coefs_ii(i)-WRr(i)(WRr(i)'Length-1 downto KKK);
                 	coefs_qq(i)<=coefs_qq(i)+WIi(i)(WIi(i)'Length-1 downto KKK);
 
