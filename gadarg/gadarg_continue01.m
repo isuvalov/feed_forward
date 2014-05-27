@@ -49,6 +49,7 @@ t=0:1/fd:15/fd-1/fd;
 
 
 HS = [0.2 1 0.4];      
+HS=1;
 
    
 SF=conv(S1,HS); %отсчеты сигнала после канала
@@ -61,8 +62,8 @@ AS=zeros(1,L);
 SF=[AS SF];
 SF=[AS SF];
 SF=[AS SF];
-%   save_dat_files;
-
+   save_dat_files;
+break;
 % SF2=SF; % отсчеты для графика
 PS=sum(abs(SF).^2)/NS;  %  This is power of average stardot of signal
 RM=1.34*PS;
