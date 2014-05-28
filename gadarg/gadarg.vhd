@@ -34,11 +34,18 @@ constant FILTER_LEN:natural:=8;
 constant FILTER_COEF_WIDTH:natural:=16;
 constant FILTER_ACUM_WIDTH:natural:=32;
 constant FILTER_WORK_WIDTH:natural:=FILTER_ACUM_WIDTH/2;
-constant MULSUM_LATENCY:natural:=6-1;
+constant MULSUM_LATENCY:natural:=6-2;
 constant COPY_STEP:natural:=80;
 
 
+
+
+
 constant FILTER_ADDER_SHIFT:natural:=FILTER_WORK_WIDTH-2;
+
+type Tlatency_delay is array(MULSUM_LATENCY-1 downto 0) of std_logic_vector(i_sampleI'Length-1 downto 0);
+signal latency_delay_re,latency_delay_im:Tlatency_delay:=(others=>(others=>'0'));
+
 
 
 type Tdelay_line_with_step is array(1+MULSUM_LATENCY+1+FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
@@ -96,8 +103,18 @@ begin
 --			delay_line_I<=(others=>(others=>'0'));
 --			delay_line_Q<=(others=>(others=>'0'));
 		if i_ce='1' then
-			delay_line_I(0)<=i_sampleI;
-			delay_line_Q(0)<=i_sampleQ;
+			delay_line_I(0)<=latency_delay_re(MULSUM_LATENCY-1);--i_sampleI;
+			delay_line_Q(0)<=latency_delay_im(MULSUM_LATENCY-1);
+
+
+			latency_delay_re(0)<=i_sampleI;
+			latency_delay_im(0)<=i_sampleQ;
+			for i in 0 to MULSUM_LATENCY-2 loop
+				latency_delay_re(i+1)<=latency_delay_re(i);
+				latency_delay_im(i+1)<=latency_delay_im(i);			
+			end loop;
+
+
 			delay_line_with_step_i(0)<=signed(i_sampleI)*signed(conv_std_logic_vector(STEP,16));
 			delay_line_with_step_q(0)<=signed(i_sampleQ)*signed(conv_std_logic_vector(STEP,16));
 			for i in 0 to MULSUM_LATENCY+1+FILTER_LEN-1 loop

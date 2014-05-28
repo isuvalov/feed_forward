@@ -77,7 +77,7 @@ signal sampleI_tx,sampleQ_tx:std_logic_vector(15 downto 0);
 signal sampleI_tx_sh,sampleQ_tx_sh:std_logic_vector(15 downto 0);
 signal sampleI_tx0,sampleQ_tx0:std_logic_vector(15 downto 0);
 signal pilot_start:std_logic;
-signal sampleI_tx2,sampleQ_tx2:std_logic_vector(15 downto 0);
+signal out_sampleQ,out_sampleI,sampleI_tx2,sampleQ_tx2:std_logic_vector(15 downto 0);
 
 signal rd_req:std_logic;
 signal bits_gen:std_logic_vector(1 downto 0):=(others=>'0');
@@ -136,11 +136,33 @@ gadarg_i: entity work.gadarg
 		i_sampleQ=>adc_im,
 		i_ce=>reset_n,
 
-		o_sampleI=>open,
-		o_sampleQ=>open
+		o_sampleI=>out_sampleI,
+		o_sampleQ=>out_sampleQ
 		);
 
 
+ToTextFile01i: entity work.ToTextFile
+	generic map(BitLen =>16,
+			WriteHex=>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile=>"with_channel\test_re.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>reset_n,
+		 block_marker =>'0',
+		 DataToSave =>out_sampleI
+	     );
+
+
+ToTextFile02i: entity work.ToTextFile
+	generic map(BitLen =>16,
+			WriteHex=>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile=>"with_channel\test_im.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>reset_n,
+		 block_marker =>'0',
+		 DataToSave =>out_sampleQ
+	     );
 
 end tb;
 
