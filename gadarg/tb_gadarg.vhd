@@ -104,7 +104,7 @@ end process;
 ADC_EMUL_re:entity work.FromTextFile
 	generic map(BitLen =>16,
 			IsSigned=>1, -- you can choose signed or unsigned value you have in text file
-			NameOfFile =>"gadarg_signal_re.txt")
+			NameOfFile =>"with_channel/gadarg_signal_re.txt")
 	 port map(
 		 clk =>clk,
 		 CE =>'1',
@@ -114,7 +114,7 @@ ADC_EMUL_re:entity work.FromTextFile
 ADC_EMUL_im:entity work.FromTextFile
 	generic map(BitLen =>16,
 			IsSigned=>1, -- you can choose signed or unsigned value you have in text file
-			NameOfFile =>"gadarg_signal_im.txt")
+			NameOfFile =>"with_channel/gadarg_signal_im.txt")
 	 port map(
 		 clk =>clk,
 		 CE =>'1',
@@ -144,7 +144,7 @@ gadarg_i: entity work.gadarg
 ToTextFile01i: entity work.ToTextFile
 	generic map(BitLen =>16,
 			WriteHex=>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
-			NameOfFile=>"with_channel\test_re.txt")
+			NameOfFile=>"test_re.txt")
 	 port map(
 		 clk =>clk,
 		 CE =>reset_n,
@@ -156,7 +156,7 @@ ToTextFile01i: entity work.ToTextFile
 ToTextFile02i: entity work.ToTextFile
 	generic map(BitLen =>16,
 			WriteHex=>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
-			NameOfFile=>"with_channel\test_im.txt")
+			NameOfFile=>"test_im.txt")
 	 port map(
 		 clk =>clk,
 		 CE =>reset_n,
