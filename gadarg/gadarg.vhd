@@ -42,7 +42,7 @@ constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):="01010010001101
 
 
 
-constant FILTER_ADDER_SHIFT:natural:=5;--FILTER_WORK_WIDTH;
+constant FILTER_ADDER_SHIFT:natural:=0;--FILTER_WORK_WIDTH;
 
 type Tlatency_delay is array(MULSUM_LATENCY downto 0) of std_logic_vector(i_sampleI'Length-1 downto 0);
 signal latency_delay_re,latency_delay_im:Tlatency_delay:=(others=>(others=>'0'));
@@ -70,7 +70,8 @@ conv_std_logic_vector(0,FILTER_ACUM_WIDTH)
 );
 
 
-signal coefs_work,coefs_ii,coefs_qq,coefs_iq,coefs_qi:Tcoefs:=DEFAULT_COEFS;
+signal coefs_work,coefs_qq,coefs_iq,coefs_qi:Tcoefs:=DEFAULT_COEFS;
+signal coefs_ii:Tcoefs:=DEFAULT_COEFS;
 
 type Tc_mul is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
 signal c_mul_i,c_mul_q:Tc_mul:=(others=>(others=>'0'));
@@ -86,10 +87,10 @@ signal vr2r,vr3r,vi2r:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):=(others=>'
 signal vr2i,vr3i,vi3r,vi2i,vi3i:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):=(others=>'0');
 
 
-type TWx0_norm is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
+type TWx0_norm is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_WORK_WIDTH-1 downto 0);
 
 type TWx0_div is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH-1 downto 0);
-type TWx_div is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH-1 downto 0);
+type TWx_div is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
 signal WR0r_div,WR0i_div,WI0r_div,WI0i_div:TWx0_div:=(others=>(others=>'0'));
 --signal WR0r_div_1w,WR0i_div_1w,WI0r_div_1w,WI0i_div_1w:TWx0_div:=(others=>(others=>'0'));
 signal WR0r_div_1w,WR0i_div_1w,WI0r_div_1w,WI0i_div_1w:TWx0_norm:=(others=>(others=>'0'));
@@ -178,13 +179,12 @@ begin
 	        
 				--# (3)sum of sums, result of this have latency=4
 				c_mul_sum_i(6)<=c_mul_sum_i(4)+c_mul_sum_i(5);
---				c_mul_sum_i(7)<=c_mul_sum_i(7);
 				
 				--# (4)sum of sums, result of this have latency=5
 				c_mul_sum_i(10)<=c_mul_sum_i(6);
 	        
 				--# (5)cut of sum and make trigger of it, result of this have latency=6 ==> MULSUM_LATENCY=6
-				sumed_muls_i<=c_mul_sum_i(10)(FILTER_ACUM_WIDTH-1 downto FILTER_ACUM_WIDTH-FILTER_WORK_WIDTH); 		--# sumed_muls =I(k)
+				sumed_muls_i<=c_mul_sum_i(10)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH); 		--# sumed_muls =I(k)
 				-------------------
 
 				--# (1)sum of sums, result of this have latency=2
@@ -196,11 +196,9 @@ begin
 				--# (2)sum of sums, result of this have latency=3
 				c_mul_sum_q(4)<=c_mul_sum_q(0)+c_mul_sum_q(1);
 				c_mul_sum_q(5)<=c_mul_sum_q(2)+c_mul_sum_q(3);
---				c_mul_sum_q(7)<=c_mul_sum_q(4);
 	        
 				--# (3)sum of sums, result of this have latency=4
 				c_mul_sum_q(6)<=c_mul_sum_q(4)+c_mul_sum_q(5);
---				c_mul_sum_q(9)<=c_mul_sum_q(7);
 				
 				--# (4)sum of sums, result of this have latency=5
 				c_mul_sum_q(10)<=c_mul_sum_q(6);--+c_mul_sum_q(9);
@@ -216,8 +214,8 @@ begin
 
 --                o_sampleI<=sumed_muls_i(FILTER_WORK_WIDTH-1 downto FILTER_WORK_WIDTH-o_sampleI'Length);
 --                o_sampleQ<=sumed_muls_q(FILTER_WORK_WIDTH-1 downto FILTER_WORK_WIDTH-o_sampleI'Length);
-				  o_sampleI<=c_mul_sum_i(10)(FILTER_ACUM_WIDTH-1-FILTER_ADDER_SHIFT-2 downto FILTER_WORK_WIDTH-FILTER_ADDER_SHIFT-2);
-				  o_sampleQ<=c_mul_sum_q(10)(FILTER_ACUM_WIDTH-1-FILTER_ADDER_SHIFT-2 downto FILTER_WORK_WIDTH-FILTER_ADDER_SHIFT-2);
+				  o_sampleI<=c_mul_sum_i(10)(FILTER_ACUM_WIDTH-1-FILTER_ADDER_SHIFT downto FILTER_WORK_WIDTH-FILTER_ADDER_SHIFT);
+				  o_sampleQ<=c_mul_sum_q(10)(FILTER_ACUM_WIDTH-1-FILTER_ADDER_SHIFT downto FILTER_WORK_WIDTH-FILTER_ADDER_SHIFT);
 --                o_sampleI<=sq_sumed_muls_i(o_sampleI'Length-1+FILTER_ADDER_SHIFT/2 downto 0+FILTER_ADDER_SHIFT/2);
 --                o_sampleQ<=sq_sumed_muls_q(o_sampleI'Length-1+FILTER_ADDER_SHIFT/2 downto 0+FILTER_ADDER_SHIFT/2);
 
@@ -232,23 +230,21 @@ begin
 				--# because max latency=8 =>use (8-1)=7
 				for i in 0 to FILTER_LEN-1 loop 
 					--# MULSUM_LATENCY+2 because have addition square and minus
-					WR0r_div(i)<=signed(vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_with_step_i(2+MULSUM_LATENCY+i));
-					WR0r_div_1w(i)<=WR0r_div(i)(WR0r_div(i)'Length-1 downto FILTER_WORK_WIDTH);
+					WR0r_div(i)<=signed(vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_with_step_i(i));
+--					WR0r_div_1w(i)<=WR0r_div(i)(WR0r_div(i)'Length-1 downto FILTER_ACUM_WIDTH);
+					WR0r_div_1w(i)<=WR0r_div(i)(FILTER_ACUM_WIDTH-1+KKK-IT_SCALE downto FILTER_WORK_WIDTH+KKK-IT_SCALE);
 					--# but may be it can be cut... because we have some KKK  ... !!!!!!!!!!!!!!!!!!!!!!
-					WRr(i)<=signed(WR0r_div_1w(i))*signed(vr3r(FILTER_ACUM_WIDTH-1-IT_SCALE downto FILTER_WORK_WIDTH-IT_SCALE));
+					WRr(i)<=signed(WR0r_div_1w(i))*signed(vr3r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH));
 				end loop;
 				-------------------
 				--#===============================
---				if step_cnt=0 then
+--				if step_cnt=8 then
 			 	for i in 0 to FILTER_LEN-1 loop 
 --				  coefs_work(i)<=coefs_ii(i)-SXT(WRr(i)(coefs_work(i)'Length-1+KKK downto KKK),FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH);
-				  coefs_work(i)<=coefs_ii(i)-WRr(i)(WRr(i)'Length-1-KKK downto WRr(i)'Length-coefs_work(i)'Length-KKK);
+--				  coefs_work(i)<=coefs_ii(i)-SXT(WRr(i)(WRr(i)'Length-1 downto WRr(i)'Length-coefs_work(i)'Length+KKK),coefs_work(i)'Length);
+		  coefs_work(i)<=coefs_work(i)-SXT(WRr(i)(WRr(i)'Length-1 downto 14-KKK),FILTER_ACUM_WIDTH);
+		  coefs_ii(i)<=SXT(WRr(i)(WRr(i)'Length-1 downto 14-KKK),FILTER_ACUM_WIDTH);
 
---                	coefs_ii(i)<=coefs_ii(i)-SXT(WRr(i)(coefs_ii(i)'Length-1+KKK downto KKK),FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH);
---                	coefs_qq(i)<=coefs_qq(i)+SXT(WIi(i)(coefs_qq(i)'Length-1+KKK downto KKK),FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH);
-
---                	coefs_qi(i)<=coefs_qi(i)-SXT(WIr(i)(coefs_qi(i)'Length-1+KKK downto KKK),FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH);
---                	coefs_iq(i)<=coefs_iq(i)+SXT(WRi(i)(coefs_iq(i)'Length-1+KKK downto KKK),FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH);
 				end loop;
 --			end if;	
 			end if; --# i_ce

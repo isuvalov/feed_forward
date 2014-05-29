@@ -18,7 +18,7 @@ sums_2(2)=sums_1(3) + sums_1(4);
 sums_3=zeros(1,2);
 sums_3(1)=sums_2(1) + sums_2(2);
 
-res=floor(sums_3(1)/2^16);
+res=floor(sums_3(1)/DDD);
 
         if (abs(res)>0) 
 %                     fprintf('(%i,%i)\n',real(res),imag(res));
