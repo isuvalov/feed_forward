@@ -6,10 +6,11 @@ datalen=200000*2;
 Step=1000*8;
 AcumLen=BitsInADC*2;
 
-IT_SCALE=2;
+IT_SCALE=1;
 
 
 AcumSize=(2^(AcumLen-1));
+WorkSize=2^AcumLen;
 
 
 
@@ -85,7 +86,9 @@ c=zeros(1,L); % вектор 1*15 весовых коэффициентов ТФ
 % c(round(L/2))=floor(c_big/256); % начальное задание центрального отвода ТФ
 %   c(round(L/2)+1)=floor(c_big/256); % начальное задание центрального отвода ТФ
 %   c(round(L/2)-1)=floor(c_big/256); % начальное задание центрального отвода ТФ
-c(round(L/2))=floor(AcumSize/256); % начальное задание центрального отвода ТФ
+ c(round(L/2))=floor(AcumSize/256); % начальное задание центрального отвода ТФ
+% c=ones(1,L)*floor(AcumSize/256); % начальное задание центрального отвода ТФ
+c_def=c;
 
 dt=2^(BitsInADC*2+4)/(PS^2); % шаг адаптации  Define speed and acurasity of mesure, must be tune value +4
 % dt=(3.1954e-018)*2^4*2^(BitsInADC*2)  = 29.47*2^4=471.5578
@@ -140,8 +143,14 @@ WR_tmp=zeros(L,1);
 WR_a=zeros(NS/Step,L);
 cre=zeros(L,1);
 
+SHIFT_N=16;
+c_re_shift_array=zeros(SHIFT_N,L);
+for z=1:SHIFT_N 
+    c_re_shift_array(z,:)=c_def;
+end;
 
 
+z_pos=1;
 c_old=c;
 for interation=1:2
 
@@ -156,8 +165,8 @@ for interation=1:2
 			r_vr2(tk)=vr2r;
 			r_vr3(tk)=vr3r;
 
-			i_vr2(tk)=vi2i;
-			i_vr3(tk)=vi3i;
+% 			i_vr2(tk)=vi2i;
+% 			i_vr3(tk)=vi3i;
 
 			cc_re_re_a(tk,:)=cc_re_re;
 
@@ -175,54 +184,35 @@ for interation=1:2
 			tk=tk+1;
     	end;
 
-% 		az=SF1(:,1:800);
-% 		azz=SF1(:,k);
 %  		I(k)=floor(c*SF1(:,k)./(AcumSize));
-         I(k)=int_filt_8tabs(c,SF1(:,k));
-        if (abs(I(k))>0) 
-                 fprintf('(%i,%i)',real(I(k)),imag(I(k)));
-        end;
+        I(k)=int_filt_8tabs(c,SF1(:,k));
 	    realIKsq=floor( ((real(I(k))^2)) );
     	imagIKsq=floor( ((imag(I(k))^2)) );
       
 		vr1r=floor(AcumSize_dt1*real(SF1(:,k)).');
 		vr2r=floor(AcumSize_dt1*real(I(k)));
-		vr3r=floor(AcumSize_dt1*( floor(4*realIKsq/kkk) - RM));
-%         vr3r=floor(vr3r/(2^IT_SCALE));
-		WR0r=floor((vr1r.*vr2r));
-		WRr=floor(round(WR0r/floor(AcumSize)).*round(vr3r/floor(AcumSize)));
-
-		vr1i=floor(AcumSize_dt1*imag(SF1(:,k)).');
-		vr2i=floor(AcumSize_dt1*real(I(k)));
-		vr3i=floor(AcumSize_dt1*( floor(4*realIKsq/kkk) - RM));
-%         vr3i=floor(vr3i/2);
-		WR0i=floor((vr1i.*vr2i));
-		WRi=floor(floor(WR0i/floor(AcumSize/2)).*floor(vr3i/floor(AcumSize/2)));
-
-		vi1r=floor(AcumSize_dt1*real(SF1(:,k)).');
-		vi2r=floor(AcumSize_dt1*imag(I(k)));
-		vi3r=floor(AcumSize_dt1*( floor(4*imagIKsq/kkk) - RM));
-%         vi3r=floor(vi3r/2);        
-		WI0r=floor((vi1r.*vi2r));
-		WIr=floor(floor(WI0r/floor(AcumSize/2)).*floor(vi3r/floor(AcumSize/2)));
-
-		vi1i=floor(AcumSize_dt1*imag(SF1(:,k).'));
-		vi2i=floor(AcumSize_dt1*imag(I(k)));
-		vi3i=floor(AcumSize_dt1*( floor(4*imagIKsq/kkk) - RM));
-%         vi3i=floor(vi3i/2);        
-		WI0i=floor((vi1i.*vi2i));
-		WIi=floor(floor(WI0i/floor(AcumSize/2)).*floor(vi3i/floor(AcumSize/2)));
-   
+ 		vr3r=floor(AcumSize_dt1*( floor(4*realIKsq/kkk) - RM));
+        vr3r=floor(vr3r/(2^IT_SCALE));
+%  		WR0r=floor(vr1r.*vr2r/AcumSize);
+ 		WR0r=floor(floor(vr1r/WorkSize).*floor(vr2r/1));
+        
+		WRr=floor((2^IT_SCALE)*WR0r*floor(vr3r/floor(AcumSize)));
     
-    	cc_re_re=(cc_re_re-kkk*WRr);
-    	cc_im_im=(cc_im_im+kkk*WIi);    
-    
-    	cc_im_re=(cc_im_re-kkk*WIr);
-    	cc_re_im=(cc_re_im+kkk*WRi);
 
-%  		c=floor(cc_re_re./(2^15));
-%         cc_re_re=floor(cc_re_re./(2^15));
-  		c=cc_re_re;
+%         if (mod(z_pos,L)==0)
+%         for sz=SHIFT_N:-1:2
+%             c_re_shift_array(sz,:)=c_re_shift_array(sz-1,:);
+%         end;
+%         c_re_shift_array(1,:)=(cc_re_re-kkk*WRr);
+            cc_re_re=(cc_re_re-kkk*WRr);                  
+%         cc_re_re=c_re_shift_array(SHIFT_N,:);
+            c=cc_re_re;
+        if (abs(I(k))>0) 
+%                       fprintf('(%i,%i)',real(I(k)),imag(I(k)));
+        end;
+            
+%         end;
+        z_pos=z_pos+1;
 	end
 end; % interation
 

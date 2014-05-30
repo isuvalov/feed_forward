@@ -36,7 +36,7 @@ constant FILTER_ACUM_WIDTH:natural:=32;
 constant FILTER_WORK_WIDTH:natural:=FILTER_ACUM_WIDTH/2;
 constant MULSUM_LATENCY:natural:=9-2;
 constant IT_SCALE:natural:=1; --# inner scale for make constant in range
-constant COPY_STEP:natural:=80;
+constant COPY_STEP:natural:=20;
 
 constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):="01010010001101001010111010111111";
 
@@ -49,7 +49,7 @@ signal latency_delay_re,latency_delay_im:Tlatency_delay:=(others=>(others=>'0'))
 
 
 
-type Tdelay_line_with_step is array(1+MULSUM_LATENCY+1+FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
+type Tdelay_line_with_step is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
 signal delay_line_with_step_i,delay_line_with_step_q:Tdelay_line_with_step:=(others=>(others=>'0'));
 
 type Tdelay_line is array(FILTER_LEN-1 downto 0) of std_logic_vector(i_sampleI'Length-1 downto 0);
@@ -58,6 +58,7 @@ signal delay_line_I,delay_line_Q:Tdelay_line:=(others=>(others=>'0'));
 type Tcoefs is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
 
 
+--constant DEFAULT_COEFS:Tcoefs:=(others=>conv_std_logic_vector(8388608,FILTER_ACUM_WIDTH));
 constant DEFAULT_COEFS:Tcoefs:=(
 conv_std_logic_vector(0,FILTER_ACUM_WIDTH),
 conv_std_logic_vector(0,FILTER_ACUM_WIDTH),
@@ -86,10 +87,12 @@ signal sq_sumed_muls_i,sq_sumed_muls_q:std_logic_vector(FILTER_ACUM_WIDTH-1 down
 signal vr2r,vr3r,vi2r:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):=(others=>'0');
 signal vr2i,vr3i,vi3r,vi2i,vi3i:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):=(others=>'0');
 
+type Tshort_array is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_WORK_WIDTH-1 downto 0);
+signal short_array,short_array0:Tshort_array;
 
-type TWx0_norm is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_WORK_WIDTH-1 downto 0);
+type TWx0_norm is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
 
-type TWx0_div is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH-1 downto 0);
+type TWx0_div is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
 type TWx_div is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
 signal WR0r_div,WR0i_div,WI0r_div,WI0i_div:TWx0_div:=(others=>(others=>'0'));
 --signal WR0r_div_1w,WR0i_div_1w,WI0r_div_1w,WI0i_div_1w:TWx0_div:=(others=>(others=>'0'));
@@ -98,8 +101,48 @@ signal WRr,WRi,WIr,WIi:TWx_div:=(others=>(others=>'0'));
 
 signal vr2r_mul,vi2r_mul,vr2i_mul,vi2i_mul:std_logic_vector(FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH-1 downto 0):=(others=>'0');
 
+type Tstm is (GET_SAMPLES,WORKING,COPING);
+signal stm:Tstm;
+signal sampl_cnt:std_logic_vector(log2roundup(FILTER_LEN+MULSUM_LATENCY) downto 0);
+signal work_cnt:std_logic_vector(log2roundup(FILTER_LEN+MULSUM_LATENCY) downto 0);
+
+
 begin
 
+
+process (clk) is
+begin		
+	if rising_edge(clk) then
+		if reset='1' then
+			stm<=GET_SAMPLES;
+			sampl_cnt<=(others=>'0');
+		else --# reset			
+			case stm is
+			when GET_SAMPLES=>
+				if i_ce='1' then
+					if unsigned(sampl_cnt)<FILTER_LEN+MULSUM_LATENCY then
+						sampl_cnt<=sampl_cnt+1;
+					else
+						stm<=WORKING;
+					end if;
+				end if;
+				work_cnt<=(others=>'0');
+			when WORKING=>
+				if i_ce='1' then
+					if unsigned(work_cnt)<MULSUM_LATENCY+4 then
+						work_cnt<=work_cnt+1;
+					else
+						stm<=COPING;
+					end if;
+				end if;
+				sampl_cnt<=(others=>'0');
+			when COPING=>
+	           stm<=GET_SAMPLES;
+			when others=>
+			end case;
+		end if; --# reset
+	end if;
+end process;
 
 
 process (clk) is
@@ -110,7 +153,7 @@ begin
 --			delay_line_with_step_q<=(others=>(others=>'0'));
 --			delay_line_I<=(others=>(others=>'0'));
 --			delay_line_Q<=(others=>(others=>'0'));
-		if i_ce='1' then
+		if i_ce='1' then --and stm=GET_SAMPLES then
 			delay_line_I(0)<=i_sampleI;--latency_delay_re(MULSUM_LATENCY-1);--i_sampleI;
 			delay_line_Q(0)<=i_sampleQ;--latency_delay_im(MULSUM_LATENCY-1);
 
@@ -124,7 +167,7 @@ begin
 
 			delay_line_with_step_i(0)<=signed(latency_delay_re(MULSUM_LATENCY-1))*signed(conv_std_logic_vector(STEP,16));
 			delay_line_with_step_q(0)<=signed(latency_delay_im(MULSUM_LATENCY-1))*signed(conv_std_logic_vector(STEP,16));
-			for i in 0 to MULSUM_LATENCY+1+FILTER_LEN-1 loop
+			for i in 0 to FILTER_LEN-2 loop
 				delay_line_with_step_i(i+1)<=delay_line_with_step_i(i);
 				delay_line_with_step_q(i+1)<=delay_line_with_step_q(i);			
 			end loop;
@@ -230,28 +273,40 @@ begin
 				--# because max latency=8 =>use (8-1)=7
 				for i in 0 to FILTER_LEN-1 loop 
 					--# MULSUM_LATENCY+2 because have addition square and minus
-					WR0r_div(i)<=signed(vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_with_step_i(i));
+					WR0r_div(i)<=signed(vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_with_step_i(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vr2r*vr1r
+					short_array0(i)<=vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH);
 --					WR0r_div_1w(i)<=WR0r_div(i)(WR0r_div(i)'Length-1 downto FILTER_ACUM_WIDTH);
-					WR0r_div_1w(i)<=WR0r_div(i)(FILTER_ACUM_WIDTH-1+KKK-IT_SCALE downto FILTER_WORK_WIDTH+KKK-IT_SCALE);
+					WR0r_div_1w(i)<=WR0r_div(i);--(FILTER_ACUM_WIDTH-1+KKK-IT_SCALE downto FILTER_WORK_WIDTH+KKK-IT_SCALE);
 					--# but may be it can be cut... because we have some KKK  ... !!!!!!!!!!!!!!!!!!!!!!
-					WRr(i)<=signed(WR0r_div_1w(i))*signed(vr3r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH));
+				    if signed(vr3r)>0 then
+						WRr(i)<=SXT(WR0r_div_1w(i)(FILTER_ACUM_WIDTH-1-KKK-IT_SCALE downto 0)&EXT("0",KKK+IT_SCALE),FILTER_ACUM_WIDTH);
+					else
+						WRr(i)<=0-SXT(WR0r_div_1w(i)(FILTER_ACUM_WIDTH-1-KKK-IT_SCALE downto 0)&EXT("0",KKK+IT_SCALE),FILTER_ACUM_WIDTH);
+					end if;
+--					WRr(i)<=signed(WR0r_div_1w(i))*signed(vr3r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH));
+					short_array(i)<=vr3r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH);
 				end loop;
 				-------------------
 				--#===============================
---				if step_cnt=8 then
+				if step_cnt=0 then
+--				if stm=COPING then
 			 	for i in 0 to FILTER_LEN-1 loop 
 --				  coefs_work(i)<=coefs_ii(i)-SXT(WRr(i)(coefs_work(i)'Length-1+KKK downto KKK),FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH);
 --				  coefs_work(i)<=coefs_ii(i)-SXT(WRr(i)(WRr(i)'Length-1 downto WRr(i)'Length-coefs_work(i)'Length+KKK),coefs_work(i)'Length);
-		  coefs_work(i)<=coefs_work(i)-SXT(WRr(i)(WRr(i)'Length-1 downto 14-KKK),FILTER_ACUM_WIDTH);
-		  coefs_ii(i)<=SXT(WRr(i)(WRr(i)'Length-1 downto 14-KKK),FILTER_ACUM_WIDTH);
+		  coefs_work(i)<=coefs_work(i)-SXT(WRr(i)(WRr(i)'Length-1 downto 0),FILTER_ACUM_WIDTH);
+		  coefs_ii(i)<=SXT(WRr(i)(WRr(i)'Length-1 downto 0),FILTER_ACUM_WIDTH);
+
+--		  coefs_work(i)<=coefs_work(i)-SXT(WRr(i)(WRr(i)'Length-1 downto 14-KKK-5),FILTER_ACUM_WIDTH);
+--		  coefs_ii(i)<=SXT(WRr(i)(WRr(i)'Length-1 downto 14-KKK-5),FILTER_ACUM_WIDTH);
+
 
 				end loop;
---			end if;	
+			end if;	
 			end if; --# i_ce
 
 		end if;  --# reset
 
-
+		
 
 
 		if i_ce='1' then
