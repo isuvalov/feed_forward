@@ -37,7 +37,7 @@ constant FILTER_WORK_WIDTH:natural:=FILTER_ACUM_WIDTH/2;
 --constant MULSUM_LATENCY:natural:=9-2;
 constant MULSUM_LATENCY:natural:=4;
 constant IT_SCALE:natural:=0; --# inner scale for make constant in range
-constant COPY_STEP:natural:=5;
+constant COPY_STEP:natural:=6;
 
 --constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):="01010010001101001010111010111111"; --# for IT_SCALE=1
 --constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):="00101001000110100101011101011111"; --# for IT_SCALE=2
@@ -277,7 +277,7 @@ begin
 				end loop;
 				-------------------
 				--#===============================
---				if step_cnt=COPY_STEP-1 then
+				if step_cnt=COPY_STEP-1 then
 --				if stm=COPING then
 			 	for i in 0 to FILTER_LEN-1 loop 
 --				  coefs_work(i)<=coefs_ii(i)-SXT(WRr(i)(coefs_work(i)'Length-1+KKK downto KKK),FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH);
@@ -290,7 +290,7 @@ begin
 
 
 				end loop;
---			end if;	
+			end if;	
 			end if; --# i_ce
 
 		end if;  --# reset
