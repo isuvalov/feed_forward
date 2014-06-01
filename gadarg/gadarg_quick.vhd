@@ -9,7 +9,7 @@ use work.feedf_consts_pack.all;
 
 entity gadarg is
 	generic(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
-		RM:integer:=5856428;     --# RM=1.34*PS/(4*KKK)
+		RM:integer:=5856428;     --# RM=1.34*PS/(4*KKK) , like target maximum of signal
 		STEP:integer:=471; --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
 		KKK:integer:=5   --# ceil(log2(STEP)/2) , must be more or equal than 2
 	);
@@ -30,16 +30,20 @@ end gadarg;
 
 architecture gadarg of gadarg is
 
-constant FILTER_LEN:natural:=8;
+constant FILTER_LEN:natural:=4;
 constant FILTER_COEF_WIDTH:natural:=16;
 constant FILTER_ACUM_WIDTH:natural:=32;
 constant FILTER_WORK_WIDTH:natural:=FILTER_ACUM_WIDTH/2;
-constant MULSUM_LATENCY:natural:=9-2;
-constant IT_SCALE:natural:=1; --# inner scale for make constant in range
-constant COPY_STEP:natural:=17;
+--constant MULSUM_LATENCY:natural:=9-2;
+constant MULSUM_LATENCY:natural:=4;
+constant IT_SCALE:natural:=0; --# inner scale for make constant in range
+constant COPY_STEP:natural:=5;
 
-constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):="01010010001101001010111010111111"; --# for IT_SCALE=1
-
+--constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):="01010010001101001010111010111111"; --# for IT_SCALE=1
+--constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):="00101001000110100101011101011111"; --# for IT_SCALE=2
+--  constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):="00001010010001101001010111010111"; --# for IT_SCALE=2  div 4
+  constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH downto 0):="0"&x"01000000"; --# for IT_SCALE=2  div 4
+   
 
 
 constant FILTER_ADDER_SHIFT:natural:=0;--FILTER_WORK_WIDTH;
@@ -63,11 +67,7 @@ type Tcoefs is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDT
 constant DEFAULT_COEFS:Tcoefs:=(
 conv_std_logic_vector(0,FILTER_ACUM_WIDTH),
 conv_std_logic_vector(0,FILTER_ACUM_WIDTH),
-conv_std_logic_vector(0,FILTER_ACUM_WIDTH),
-conv_std_logic_vector(0,FILTER_ACUM_WIDTH),
 conv_std_logic_vector(8388608,FILTER_ACUM_WIDTH),
-conv_std_logic_vector(0,FILTER_ACUM_WIDTH),
-conv_std_logic_vector(0,FILTER_ACUM_WIDTH),
 conv_std_logic_vector(0,FILTER_ACUM_WIDTH)
 );
 
@@ -83,10 +83,11 @@ signal step_cnt:std_logic_vector(log2roundup(COPY_STEP)-1 downto 0);
 
 type Tc_mul_sum is array(2*FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0);
 signal c_mul_sum_i,c_mul_sum_q:Tc_mul_sum:=(others=>(others=>'0'));
-signal sumed_muls_i,sumed_muls_q:std_logic_vector(FILTER_WORK_WIDTH-1 downto 0):=(others=>'0');
+signal sumed_muls_i_1w,sumed_muls_i,sumed_muls_q:std_logic_vector(FILTER_WORK_WIDTH-1 downto 0):=(others=>'0');
 signal sumed_muls_i_copy,sumed_muls_q_copy:std_logic_vector(FILTER_WORK_WIDTH-1 downto 0):=(others=>'0');
 signal sq_sumed_muls_i,sq_sumed_muls_q:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):=(others=>'0');
-signal vr2r,vr3r,vi2r:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):=(others=>'0');
+signal vr3r:std_logic_vector(FILTER_ACUM_WIDTH downto 0):=(others=>'0');
+signal vr2r,vi2r:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):=(others=>'0');
 signal vr2i,vr3i,vi3r,vi2i,vi3i:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):=(others=>'0');
 
 type Tshort_array is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_WORK_WIDTH-1 downto 0);
@@ -180,10 +181,10 @@ begin
 			end loop;
 
 
---			delay_line_with_step_i(0)<=signed(latency_delay_re(MULSUM_LATENCY-1))*signed(conv_std_logic_vector(STEP,16));
---			delay_line_with_step_q(0)<=signed(latency_delay_im(MULSUM_LATENCY-1))*signed(conv_std_logic_vector(STEP,16));
-			delay_line_with_step_i(0)<=signed(i_sampleI)*signed(conv_std_logic_vector(STEP,16));
-			delay_line_with_step_q(0)<=signed(i_sampleQ)*signed(conv_std_logic_vector(STEP,16));
+			delay_line_with_step_i(0)<=signed(latency_delay_re(MULSUM_LATENCY-1))*signed(conv_std_logic_vector(STEP,16));
+			delay_line_with_step_q(0)<=signed(latency_delay_im(MULSUM_LATENCY-1))*signed(conv_std_logic_vector(STEP,16));
+--			delay_line_with_step_i(0)<=signed(i_sampleI)*signed(conv_std_logic_vector(STEP,16));
+--			delay_line_with_step_q(0)<=signed(i_sampleQ)*signed(conv_std_logic_vector(STEP,16));
 
 			for i in 0 to FILTER_LEN-2 loop
 				delay_line_with_step_i(i+1)<=delay_line_with_step_i(i);
@@ -198,12 +199,15 @@ begin
 	end if;
 end process;
 
-vr2i<=vr2r;
-vr3i<=vr3r;
-vi2i<=vi2r;
-vi3i<=vi3r;
+--vr2i<=vr2r;
+--vr3i<=vr3r;
+--vi2i<=vi2r;
+--vi3i<=vi3r;
 
 process (clk) is
+variable v_sumed_muls_i,v_sumed_muls_q:std_logic_vector(c_mul_i(0)'Length-1 downto 0);
+variable v_vr2r_mul:std_logic_vector(vr2r_mul'Length-1 downto 0);
+variable v_WRr:TWx_div:=(others=>(others=>'0'));
 begin		
 	if rising_edge(clk) then
 		if reset='1' then
@@ -221,106 +225,72 @@ begin
 				end if;
 			
 				for i in 0 to FILTER_LEN-1 loop
-					c_mul_i(i)<=signed(coefs_work(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_I_copy(i));
-					c_mul_q(i)<=signed(coefs_work(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_Q_copy(i));
+					c_mul_i(i)<=signed(coefs_work(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_I(i));
+					c_mul_q(i)<=signed(coefs_work(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_Q(i));
 				end loop;
-				--# to-do: Надо засумировать каждую с  c_mul_i и c_mul_q
-
-
-
-				--# (1)sum of sums, result of this have latency=2
-				c_mul_sum_i(0)<=c_mul_i(0)+c_mul_i(1);
-				c_mul_sum_i(1)<=c_mul_i(2)+c_mul_i(3);
-				c_mul_sum_i(2)<=c_mul_i(4)+c_mul_i(5);
-				c_mul_sum_i(3)<=c_mul_i(6)+c_mul_i(7);
-	        	        
-				--# (2)sum of sums, result of this have latency=3
-				c_mul_sum_i(4)<=c_mul_sum_i(0)+c_mul_sum_i(1);
-				c_mul_sum_i(5)<=c_mul_sum_i(2)+c_mul_sum_i(3);
-	        
-				--# (3)sum of sums, result of this have latency=4
-				c_mul_sum_i(6)<=c_mul_sum_i(4)+c_mul_sum_i(5);
-				
-				--# (4)sum of sums, result of this have latency=5
-				c_mul_sum_i(10)<=c_mul_sum_i(6);
-	        
-				--# (5)cut of sum and make trigger of it, result of this have latency=6 ==> MULSUM_LATENCY=6
-				sumed_muls_i<=c_mul_sum_i(10)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH); 		--# sumed_muls =I(k)
+                v_sumed_muls_i:=c_mul_i(0)+c_mul_i(1)+c_mul_i(2)+c_mul_i(3);
+                v_sumed_muls_q:=c_mul_q(0)+c_mul_q(1)+c_mul_q(2)+c_mul_q(3);
+				sumed_muls_i<=v_sumed_muls_i(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH); --# sumed_muls =I(k)
+				sumed_muls_q<=v_sumed_muls_q(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH); --# sumed_muls =I(k)
 				-------------------
-
-				--# (1)sum of sums, result of this have latency=2
-				c_mul_sum_q(0)<=c_mul_q(0)+c_mul_q(1);
-				c_mul_sum_q(1)<=c_mul_q(2)+c_mul_q(3);
-				c_mul_sum_q(2)<=c_mul_q(4)+c_mul_q(5);
-				c_mul_sum_q(3)<=c_mul_q(6)+c_mul_q(7);
-	        
-				--# (2)sum of sums, result of this have latency=3
-				c_mul_sum_q(4)<=c_mul_sum_q(0)+c_mul_sum_q(1);
-				c_mul_sum_q(5)<=c_mul_sum_q(2)+c_mul_sum_q(3);
-	        
-				--# (3)sum of sums, result of this have latency=4
-				c_mul_sum_q(6)<=c_mul_sum_q(4)+c_mul_sum_q(5);
-				
-				--# (4)sum of sums, result of this have latency=5
-				c_mul_sum_q(10)<=c_mul_sum_q(6);--+c_mul_sum_q(9);
-	        
-				--# (5)cut of sum and make trigger of it, result of this have latency=6 ==> MULSUM_LATENCY=6
-				sumed_muls_q<=c_mul_sum_q(10)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH); 		--# sumed_muls =I(k)
-
 
 				-------------------
 				--# result latency=7 from signal
-				sq_sumed_muls_i<=signed(sumed_muls_i_copy)*signed(sumed_muls_i_copy);
-				sq_sumed_muls_q<=signed(sumed_muls_q_copy)*signed(sumed_muls_q_copy);
+				sq_sumed_muls_i<=signed(sumed_muls_i)*signed(sumed_muls_i);
+				sq_sumed_muls_q<=signed(sumed_muls_q)*signed(sumed_muls_q);
 
 --                o_sampleI<=sumed_muls_i(FILTER_WORK_WIDTH-1 downto FILTER_WORK_WIDTH-o_sampleI'Length);
 --                o_sampleQ<=sumed_muls_q(FILTER_WORK_WIDTH-1 downto FILTER_WORK_WIDTH-o_sampleI'Length);
-				  o_sampleI<=c_mul_sum_i(10)(FILTER_ACUM_WIDTH-1-FILTER_ADDER_SHIFT downto FILTER_WORK_WIDTH-FILTER_ADDER_SHIFT);
-				  o_sampleQ<=c_mul_sum_q(10)(FILTER_ACUM_WIDTH-1-FILTER_ADDER_SHIFT downto FILTER_WORK_WIDTH-FILTER_ADDER_SHIFT);
+--				  o_sampleI<=sumed_muls_i(FILTER_ACUM_WIDTH-1-FILTER_ADDER_SHIFT downto FILTER_WORK_WIDTH-FILTER_ADDER_SHIFT);
+--				  o_sampleQ<=sumed_muls_i(FILTER_ACUM_WIDTH-1-FILTER_ADDER_SHIFT downto FILTER_WORK_WIDTH-FILTER_ADDER_SHIFT);
+				  o_sampleI<=sumed_muls_i(FILTER_WORK_WIDTH-1 downto 0);
+				  o_sampleQ<=sumed_muls_q(FILTER_WORK_WIDTH-1 downto 0);
+
 --                o_sampleI<=sq_sumed_muls_i(o_sampleI'Length-1+FILTER_ADDER_SHIFT/2 downto 0+FILTER_ADDER_SHIFT/2);
 --                o_sampleQ<=sq_sumed_muls_q(o_sampleI'Length-1+FILTER_ADDER_SHIFT/2 downto 0+FILTER_ADDER_SHIFT/2);
 
 				-------------------
 				--# result of this have latency=7
-				vr2r<=signed(sumed_muls_i)*signed(conv_std_logic_vector(STEP,16));
+				sumed_muls_i_1w<=sumed_muls_i;
+				vr2r<=signed(sumed_muls_i_1w)*signed(conv_std_logic_vector(STEP,16));
 
 				--# result latency=8 from signal
-				vr2r_mul<=signed(SXT(sq_sumed_muls_i(sq_sumed_muls_i'Length-1 downto 0),FILTER_ACUM_WIDTH))*signed(conv_std_logic_vector(STEP,16));
-                vr3r<=SXT(vr2r_mul(FILTER_ACUM_WIDTH-1 downto KKK-2+IT_SCALE),FILTER_ACUM_WIDTH)-RM_STEP;
+--				v_vr2r_mul:=signed(SXT(sq_sumed_muls_i(sq_sumed_muls_i'Length-1 downto 0),FILTER_ACUM_WIDTH))*signed(conv_std_logic_vector(STEP,16));
+                vr3r<=SXT(sq_sumed_muls_i,FILTER_ACUM_WIDTH+1)-RM_STEP;
 
 				--# because max latency=8 =>use (8-1)=7
 				for i in 0 to FILTER_LEN-1 loop 
 					--# MULSUM_LATENCY+2 because have addition square and minus
-					WR0r_div(i)<=signed(vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_with_step_i_copy(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vr2r*vr1r
+					WR0r_div(i)<=signed(vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_with_step_i(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vr2r*vr1r
 
 					short_array0(i)<=vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH);
 --					WR0r_div_1w(i)<=WR0r_div(i)(WR0r_div(i)'Length-1 downto FILTER_ACUM_WIDTH);
 					WR0r_div_1w(i)<=WR0r_div(i);--(FILTER_ACUM_WIDTH-1+KKK-IT_SCALE downto FILTER_WORK_WIDTH+KKK-IT_SCALE);
 					--# but may be it can be cut... because we have some KKK  ... !!!!!!!!!!!!!!!!!!!!!!
 				    if signed(vr3r)>0 then
-						WRr(i)<=SXT(WR0r_div_1w(i)(FILTER_ACUM_WIDTH-1-KKK-IT_SCALE downto 0)&EXT("0",KKK+IT_SCALE),FILTER_ACUM_WIDTH);
+						v_WRr(i):=SXT(WR0r_div(i)(FILTER_ACUM_WIDTH-1-KKK-IT_SCALE downto 0)&EXT("0",KKK+IT_SCALE),FILTER_ACUM_WIDTH);
 					else
-						WRr(i)<=0-SXT(WR0r_div_1w(i)(FILTER_ACUM_WIDTH-1-KKK-IT_SCALE downto 0)&EXT("0",KKK+IT_SCALE),FILTER_ACUM_WIDTH);
+						v_WRr(i):=0-SXT(WR0r_div(i)(FILTER_ACUM_WIDTH-1-KKK-IT_SCALE downto 0)&EXT("0",KKK+IT_SCALE),FILTER_ACUM_WIDTH);
 					end if;
 --					WRr(i)<=signed(WR0r_div_1w(i))*signed(vr3r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH));
 					short_array(i)<=vr3r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH);
 				end loop;
 				-------------------
 				--#===============================
-				if step_cnt=COPY_STEP-1 then
+--				if step_cnt=COPY_STEP-1 then
 --				if stm=COPING then
 			 	for i in 0 to FILTER_LEN-1 loop 
 --				  coefs_work(i)<=coefs_ii(i)-SXT(WRr(i)(coefs_work(i)'Length-1+KKK downto KKK),FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH);
 --				  coefs_work(i)<=coefs_ii(i)-SXT(WRr(i)(WRr(i)'Length-1 downto WRr(i)'Length-coefs_work(i)'Length+KKK),coefs_work(i)'Length);
-		  coefs_work(i)<=coefs_work(i)-SXT(WRr(i)(WRr(i)'Length-1 downto 0),FILTER_ACUM_WIDTH);
-		  coefs_ii(i)<=SXT(WRr(i)(WRr(i)'Length-1 downto 0),FILTER_ACUM_WIDTH);
+		  coefs_work(i)<=coefs_work(i)-v_WRr(i);
+		  coefs_ii(i)<=v_WRr(i);
 
 --		  coefs_work(i)<=coefs_work(i)-SXT(WRr(i)(WRr(i)'Length-1 downto 14-KKK-5),FILTER_ACUM_WIDTH);
 --		  coefs_ii(i)<=SXT(WRr(i)(WRr(i)'Length-1 downto 14-KKK-5),FILTER_ACUM_WIDTH);
 
 
 				end loop;
-			end if;	
+--			end if;	
 			end if; --# i_ce
 
 		end if;  --# reset

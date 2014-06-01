@@ -22,6 +22,7 @@ constant CLK_PERIOD_clkq: TIME := 100 ns; --# < 1/(125e6*(9/8)*(204/186))
 constant FRAME_LEN:natural:=204;
 constant CE_LEN:natural:=188;
 
+constant DataLen:natural:=16;
 
 constant SHFT:integer:=8;
 component mult31_25
@@ -61,6 +62,7 @@ END LOOP;
 RETURN (pol_int);
 END gen_lfsr;
 
+signal cnt_ce:std_logic_vector(1 downto 0):=(others=>'0');
 
 signal adc_im,adc_re:std_logic_vector(15 downto 0):=(others=>'0');
 
@@ -86,7 +88,7 @@ signal bits_gen:std_logic_vector(1 downto 0):=(others=>'0');
 signal bit_value_rx_ce,bit_value_rx_ce_1w,ce_all,error:std_logic;
 signal bit_value_rx:std_logic_vector(1 downto 0);
 
-signal test_bits_ce,reset_n: std_logic;
+signal test_bits_ce,reset_n,local_ce: std_logic;
 signal test_bits: std_logic_vector(1 downto 0);
 
 
@@ -98,6 +100,22 @@ reset_n<=not reset;
 CLK_GEN125: process(clk)
 begin
 	clk<= not clk after CLK_PERIOD_clk125/2; 
+end process;
+
+process(clk) is
+begin
+	if rising_edge(clk) then
+		if reset='0' then
+			cnt_ce<=cnt_ce+1;
+			local_ce<='0';
+		end if;
+		if cnt_ce=3 then
+			local_ce<='1';
+		else
+			local_ce<='0';
+		end if;			
+		
+	end if;
 end process;
 
 
@@ -138,8 +156,35 @@ gadarg_i: entity work.gadarg
 
 		o_sampleI=>out_sampleI,
 		o_sampleQ=>out_sampleQ
+--		o_sampleI=>open,
+--		o_sampleQ=>open
+
 		);
 
+--GadargLoop_i: entity work.GadargLoop
+--generic map(			  	
+--		NumberOfTaps=>7, -- количество коэффициентов фильтра = NumOfPosl*NumberOfMultInT	
+--		 -- разрядность коэффициентов фильтра
+--		DataLen =>DataLen -- разрядность
+--	)
+--	 port map(
+--		 clk =>clk,
+--		 ce =>'1',
+--		 reset =>reset,
+--		 OverflowPin =>open,
+--		 mu =>conv_std_logic_vector(471,DataLen),	  -- = (2**16)*RM/(16/(2**(-17)))
+--		 --(32767^2-10000)/(16/(2^(-17)))
+--		 RM =>"00000000010110010101110010011001",--conv_std_logic_vector(5856409,2*DataLen), -- пропорционально мощьности сигнала
+--		 SampleRe =>adc_re,
+--		 SampleIm =>adc_im,
+--		 error_Im =>open,
+--		 error_Re =>open,
+----		 DataOut_Re =>open,
+----		 DataOut_Im =>open
+--		 DataOut_Re =>out_sampleI,
+--		 DataOut_Im =>out_sampleQ
+--	     );
+--
 
 ToTextFile01i: entity work.ToTextFile
 	generic map(BitLen =>16,
@@ -163,6 +208,9 @@ ToTextFile02i: entity work.ToTextFile
 		 block_marker =>'0',
 		 DataToSave =>out_sampleQ
 	     );
+
+
+
 
 end tb;
 

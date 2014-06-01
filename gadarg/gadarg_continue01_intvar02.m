@@ -6,7 +6,7 @@ datalen=200000*2;
 Step=1000*8;
 AcumLen=BitsInADC*2;
 
-IT_SCALE=2;
+IT_SCALE=1;
 
 
 AcumSize=(2^(AcumLen-1));
@@ -33,7 +33,7 @@ qdB=200; % С/Ш в каждом канале
 kdB=-20; %коэффициент просачивания
 q=10^(qdB/20); k=10^(kdB/20);
 NS=datalen; % размер массивов сигнальных отсчетов S1P и S2P
-L=4; % длина ТФ - число ячеек в векторе C весовых коэффициентов
+L=8; % длина ТФ - число ячеек в векторе C весовых коэффициентов
 dt=0.0041*3;% шаг адаптации
  
 S1P=zeros(1,NS);
@@ -149,8 +149,8 @@ for z=1:SHIFT_N
     c_re_shift_array(z,:)=c_def;
 end;
 
-%I_work=0;
-
+I_work=0;
+SF1_work=zeros(L,1);
 z_pos=1;
 c_old=c;
 for interation=1:4
@@ -185,36 +185,33 @@ for interation=1:4
 			tk=tk+1;
     	end;
 
-%   		I(k)=floor(c*SF1(:,k)./(AcumSize));
-         I(k)=int_filt_4tabs(c,SF1(:,k));
+%  		I(k)=floor(c*SF1(:,k)./(AcumSize));
+        I(k)=int_filt_8tabs(c,SF1(:,k));
         
-         
-            realIKsq=floor( real(I(k))^2 );
-            imagIKsq=floor( imag(I(k))^2 );
+        if (mod(z_pos,20)==0)        
+            I_work=I(k);
+            SF1_work=SF1(:,k);
+        end;            
+            realIKsq=floor( real(I_work)^2 );
+            imagIKsq=floor( imag(I_work)^2 );
 
-            vr1r=floor(AcumSize_dt1*real(SF1(:,k)).');
-            vr2r=floor(AcumSize_dt1*real(I(k)));
-%            vr3r=floor(AcumSize_dt1*( floor(4*realIKsq/kkk) - RM));
-%            vr3r=floor(AcumSize_dt1*( floor(4*realIKsq) - RM*kkk));
-            vr3r=floor(AcumSize_dt1*( floor(4*realIKsq) - (2^30) ));
-            
-            if (abs(vr3r)>2^31)
-                fprintf('Over
-            
-%             vr3r=floor(vr3r/(2^IT_SCALE));
+            vr1r=floor(AcumSize_dt1*real(SF1_work).');
+            vr2r=floor(AcumSize_dt1*real(I_work));
+            vr3r=floor(AcumSize_dt1*( floor(4*realIKsq/kkk) - RM));
+            vr3r=floor(vr3r/(2^IT_SCALE));
             WR0r=floor(floor(vr1r/WorkSize).*floor(vr2r/WorkSize));
-            WRr=floor((2^IT_SCALE)*WR0r*sign(vr3r));  % it comes from:  WRr=floor((2^IT_SCALE)*WR0r*floor(vr3r/floor(AcumSize)));
-            WRr_KKK=WRr*kkk;
+            WRr=floor((2^IT_SCALE)*WR0r*floor(vr3r/floor(AcumSize)));
+            WRr_KKK=WRr*kkk*4;
 
 
 %         if (mod(z_pos,L)==0)
-%         for sz=SHIFT_N:-1:2
-%             c_re_shift_array(sz,:)=c_re_shift_array(sz-1,:);
-%         end;
-%         c_re_shift_array(1,:)=(cc_re_re-WRr_KKK);
-             cc_re_re=(cc_re_re-WRr_KKK);                  
+         for sz=SHIFT_N:-1:2
+             c_re_shift_array(sz,:)=c_re_shift_array(sz-1,:);
+         end;
+         c_re_shift_array(1,:)=(cc_re_re-WRr_KKK);
+%             cc_re_re=(cc_re_re-WRr_KKK);                  
 %         if (mod(z_pos,20)==0)
-%            cc_re_re=c_re_shift_array(SHIFT_N,:);
+            cc_re_re=c_re_shift_array(SHIFT_N,:);
             c=cc_re_re;
 %         end;            
         if (abs(I(k))>0) 
