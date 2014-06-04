@@ -36,14 +36,10 @@ vcom remove_zero.vhd
 vcom pilot_sync_every_time.vhd 
 vcom complex_normalizer.vhd
 
-vlog pam_demodulation/cordic_v/cordic.v
-vcom pam_demodulation/cordic_v/cordic_wrapper.vhd 
 vcom pam_demodulation/assert_pack.vhd 
-vlog pam_demodulation/table_phaseerrors.v
 vcom pam_demodulation/pam_demod.vhd
-vcom pam_demodulation/short_lf_filter_ver2.vhd
-vcom pam_demodulation/itertive_demod.vhd
-vcom pam_demodulation/pam_demod_by_phase.vhd
+
+vcom gadarg/gadarg_quick.vhd
 
 vcom modem_rx_top.vhd 
 

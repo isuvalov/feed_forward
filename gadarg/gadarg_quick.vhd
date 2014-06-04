@@ -109,6 +109,7 @@ signal stm:Tstm;
 signal sampl_cnt:std_logic_vector(log2roundup(FILTER_LEN+MULSUM_LATENCY) downto 0);
 signal work_cnt:std_logic_vector(log2roundup(FILTER_LEN+MULSUM_LATENCY) downto 0);
 
+signal reset_local,reset_reg:std_logic:='1';
 
 begin
 
@@ -117,6 +118,15 @@ process (clk) is
 begin		
 	if rising_edge(clk) then
 		if reset='1' then
+			reset_reg<='1';
+		else
+			if i_ce='1' then
+				reset_reg<='0';
+			end if;			
+		end if;
+		reset_local<=reset_reg;
+
+		if reset_local='1' then
 			stm<=GET_SAMPLES;
 			sampl_cnt<=(others=>'0');
 		else --# reset			
@@ -169,12 +179,12 @@ begin
 --			delay_line_with_step_q<=(others=>(others=>'0'));
 --			delay_line_I<=(others=>(others=>'0'));
 --			delay_line_Q<=(others=>(others=>'0'));
-		if i_ce='1' then --and stm=GET_SAMPLES then
-			delay_line_I(0)<=i_sampleI;--latency_delay_re(MULSUM_LATENCY-1);--i_sampleI;
-			delay_line_Q(0)<=i_sampleQ;--latency_delay_im(MULSUM_LATENCY-1);
+		if i_ce='1' and reset_local='0' then --and stm=GET_SAMPLES then
+			delay_line_I(0)<=rats(i_sampleI);--latency_delay_re(MULSUM_LATENCY-1);--i_sampleI;
+			delay_line_Q(0)<=rats(i_sampleQ);--latency_delay_im(MULSUM_LATENCY-1);
 
-			latency_delay_re(0)<=i_sampleI;
-			latency_delay_im(0)<=i_sampleQ;
+			latency_delay_re(0)<=rats(i_sampleI);
+			latency_delay_im(0)<=rats(i_sampleQ);
 			for i in 0 to MULSUM_LATENCY-1 loop
 				latency_delay_re(i+1)<=latency_delay_re(i);
 				latency_delay_im(i+1)<=latency_delay_im(i);			

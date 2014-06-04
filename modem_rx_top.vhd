@@ -110,8 +110,10 @@ signal s_demod_phase_minus,s_demod_phase :std_logic_vector(15 downto 0);
 signal s_demod_phase_ce,s_demod_phase_ce_1w : std_logic;
 signal s_sync_find,print_event: std_logic;
 
-signal bit_value_rx_ce:std_logic;
-signal bit_value_rx:std_logic_vector(1 downto 0);
+signal bit_value_rx_ce,bit_value_rx_ce_1p,reset_with_s_sync_find:std_logic;
+signal bit_value_rx_1p,bit_value_rx:std_logic_vector(1 downto 0);
+
+signal demod_sampleI,demod_sampleQ:std_logic_vector(15 downto 0);
 
 begin
 
@@ -401,6 +403,7 @@ end process;
 
 moveB: entity work.complex_mult
 	generic map(
+		SHIFT_MUL=>2,
 		NOT_USE_IT=>0,--GLOBAL_DEBUG,
 		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
@@ -562,35 +565,49 @@ scalar_mult_inst: entity work.scalar_mult
 --		);
 
 
-itertive_demod_inst: entity work.itertive_demod
+gadarg_i: entity work.gadarg
+	generic map(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
+--		RM=>5856428,     --# RM=1.34*PS/(4*KKK)
+--		STEP=>471, --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
+--		KKK=>5   --# ceil(log2(STEP)/2)
+		RM=>435231,
+		KKK=>7,
+		STEP=>5336
+	)
 	port map(
 		clk =>clk,
-		reset =>reset,
-		after_pilot_start =>start_rotate_ce_W(15),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
---		after_pilot_start =>start_rotate_ce_W(14),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
---		after_pilot_start =>start_rotate_ce,--# он должен быть над первым i_ce
-		i_ce =>down_ce,--sampleQ_moveback_ce,
---		i_samplesI =>sampleI_to_demod,--sampleI_to_demod_W(7),--sampleI_to_demod_1w,
---		i_samplesQ =>sampleQ_to_demod,--sampleQ_to_demod_W(7),--sampleQ_to_demod_1w,
+		reset =>reset_with_s_sync_find,
 
-		i_samplesI =>sampleI_to_demod_W(2*4-2+11+26),--sampleI_to_demod_1w,
-		i_samplesQ =>sampleQ_to_demod_W(2*4-2+11+26),--sampleQ_to_demod_1w,
+		i_sampleI=>sampleI_to_demod_W(0),
+		i_sampleQ=>sampleQ_to_demod_W(0),
+		i_ce=>'1',--down_ce,
 
-
-
-
-		i_init_phaseI=>start_rotate_I,
-		i_init_phaseQ=>start_rotate_Q,
-
-
-		o_samples_phase=>s_demod_phase,
-		out_ce=>s_demod_phase_ce
+		o_sampleI=>demod_sampleI,
+		o_sampleQ=>demod_sampleQ
 		);
 
-		start_rotate_ce<=scalar_sum_ce;
+
+pam_demod_i: entity work.pam_demod
+	port map(
+		clk =>clk,
+		i_ce =>down_ce,
+		i_samplesI =>demod_sampleI,
+		i_samplesQ =>demod_sampleQ,
+
+		bit_value=>bit_value_rx_1p,
+		out_ce=>bit_value_rx_ce_1p
+		);
+
+
+	start_rotate_ce<=scalar_sum_ce;
+
 process(clk) is
 begin
 	if rising_edge(clk) then
+        reset_with_s_sync_find<=reset or not(s_sync_find);
+		bit_value_rx<=bit_value_rx_1p;
+		bit_value_rx_ce<=bit_value_rx_ce_1p;
+
 		demod_phase<=s_demod_phase;
 		demod_phase_ce<=s_demod_phase_ce;
 
@@ -624,19 +641,6 @@ begin
 	end if;
 end process;
 
---		sampleI_to_demod<=sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
---        sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
-
-
-pam_demod_by_phase_i: entity work.pam_demod_by_phase
-	port map(
-		clk =>clk,
-		i_ce =>s_demod_phase_ce_1w,
-		i_phase =>s_demod_phase_minus (9 downto 0),
-
-		bit_value=>bit_value_rx,
-		out_ce=>bit_value_rx_ce
-		);
 
 
 end modem_rx_top;

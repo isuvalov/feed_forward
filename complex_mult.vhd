@@ -8,6 +8,7 @@ use work.feedf_consts_pack.all;
 
 entity complex_mult is
 	generic (
+		SHIFT_MUL:integer:=0;
 		NOT_USE_IT:integer:=1;
 		CONJUGATION:std_logic:='1' --# умножение на сопряженное число, если '1' - то сопрягать
 	);
@@ -65,11 +66,11 @@ begin
 		end if;
 --		if ce_1w='1' then
 			if CONJUGATION='0' then
-				ACmBD<=SXT(AC(AC'Length-1 downto AC'Length-16),17)-SXT(BD(BD'Length-1 downto BD'Length-16),17);
-				ADpBC<=SXT(AD(AD'Length-1 downto AD'Length-16),17)+SXT(BC(BC'Length-1 downto BC'Length-16),17);
+				ACmBD<=SXT(AC(AC'Length-1-SHIFT_MUL downto AC'Length-16-SHIFT_MUL),17)-SXT(BD(BD'Length-1-SHIFT_MUL downto BD'Length-16-SHIFT_MUL),17);
+				ADpBC<=SXT(AD(AD'Length-1-SHIFT_MUL downto AD'Length-16-SHIFT_MUL),17)+SXT(BC(BC'Length-1-SHIFT_MUL downto BC'Length-16-SHIFT_MUL),17);
 		    else
-				ACpBD<=SXT(AC(AC'Length-1 downto AC'Length-16),17)+SXT(BD(BD'Length-1 downto BD'Length-16),17);
-				BCmAD<=SXT(BC(BC'Length-1 downto BC'Length-16),17)-SXT(AD(AD'Length-1 downto AD'Length-16),17);
+				ACpBD<=SXT(AC(AC'Length-1-SHIFT_MUL downto AC'Length-16-SHIFT_MUL),17)+SXT(BD(BD'Length-1-SHIFT_MUL downto BD'Length-16-SHIFT_MUL),17);
+				BCmAD<=SXT(BC(BC'Length-1-SHIFT_MUL downto BC'Length-16-SHIFT_MUL),17)-SXT(AD(AD'Length-1-SHIFT_MUL downto AD'Length-16-SHIFT_MUL),17);
 			end if;
 --		end if;
 
