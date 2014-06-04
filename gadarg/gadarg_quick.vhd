@@ -35,14 +35,14 @@ constant FILTER_COEF_WIDTH:natural:=16;
 constant FILTER_ACUM_WIDTH:natural:=32;
 constant FILTER_WORK_WIDTH:natural:=FILTER_ACUM_WIDTH/2;
 --constant MULSUM_LATENCY:natural:=9-2;
-constant MULSUM_LATENCY:natural:=4;
+constant MULSUM_LATENCY:natural:=2;
 constant IT_SCALE:natural:=0; --# inner scale for make constant in range
-constant COPY_STEP:natural:=6;
+constant COPY_STEP:natural:=4;
 
 --constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):="01010010001101001010111010111111"; --# for IT_SCALE=1
 --constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):="00101001000110100101011101011111"; --# for IT_SCALE=2
 --  constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH-1 downto 0):="00001010010001101001010111010111"; --# for IT_SCALE=2  div 4
-  constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH downto 0):="0"&x"01000000"; --# for IT_SCALE=2  div 4
+  constant RM_STEP:std_logic_vector(FILTER_ACUM_WIDTH downto 0):="0"&x"00595CAC"; --# for IT_SCALE=2 
    
 
 
@@ -204,10 +204,22 @@ end process;
 --vi2i<=vi2r;
 --vi3i<=vi3r;
 
-process (clk) is
+vr2r<=signed(sumed_muls_i)*signed(conv_std_logic_vector(STEP,16));
+vr3r<=SXT(sq_sumed_muls_i,FILTER_ACUM_WIDTH+1)-RM*4;--RM_STEP;
+
+www: for i in 0 to FILTER_LEN-1 generate
+	WRr(i)<=SXT(WR0r_div(i)(FILTER_ACUM_WIDTH-1-KKK-IT_SCALE downto 0)&EXT("0",KKK+IT_SCALE),FILTER_ACUM_WIDTH) when signed(vr3r)>0 else
+			0-SXT(WR0r_div(i)(FILTER_ACUM_WIDTH-1-KKK-IT_SCALE downto 0)&EXT("0",KKK+IT_SCALE),FILTER_ACUM_WIDTH);
+end generate;
+
+
+mainloop: process (clk) is
 variable v_sumed_muls_i,v_sumed_muls_q:std_logic_vector(c_mul_i(0)'Length-1 downto 0);
 variable v_vr2r_mul:std_logic_vector(vr2r_mul'Length-1 downto 0);
 variable v_WRr:TWx_div:=(others=>(others=>'0'));
+variable v_vr2r:std_logic_vector(vr2r'Length-1 downto 0);
+variable v_vr3r:std_logic_vector(FILTER_ACUM_WIDTH downto 0):=(others=>'0');
+variable v_WR0r_div:TWx0_div:=(others=>(others=>'0'));
 begin		
 	if rising_edge(clk) then
 		if reset='1' then
@@ -252,37 +264,37 @@ begin
 				-------------------
 				--# result of this have latency=7
 				sumed_muls_i_1w<=sumed_muls_i;
-				vr2r<=signed(sumed_muls_i_1w)*signed(conv_std_logic_vector(STEP,16));
+--				v_vr2r:=signed(sumed_muls_i)*signed(conv_std_logic_vector(STEP,16));
 
 				--# result latency=8 from signal
 --				v_vr2r_mul:=signed(SXT(sq_sumed_muls_i(sq_sumed_muls_i'Length-1 downto 0),FILTER_ACUM_WIDTH))*signed(conv_std_logic_vector(STEP,16));
-                vr3r<=SXT(sq_sumed_muls_i,FILTER_ACUM_WIDTH+1)-RM_STEP;
+--                v_vr3r:=SXT(sq_sumed_muls_i,FILTER_ACUM_WIDTH+1)-RM*4;--RM_STEP;
 
 				--# because max latency=8 =>use (8-1)=7
 				for i in 0 to FILTER_LEN-1 loop 
 					--# MULSUM_LATENCY+2 because have addition square and minus
+					--v_WR0r_div(i):=signed(vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_with_step_i(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vr2r*vr1r
 					WR0r_div(i)<=signed(vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_with_step_i(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vr2r*vr1r
-
 					short_array0(i)<=vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH);
 --					WR0r_div_1w(i)<=WR0r_div(i)(WR0r_div(i)'Length-1 downto FILTER_ACUM_WIDTH);
 					WR0r_div_1w(i)<=WR0r_div(i);--(FILTER_ACUM_WIDTH-1+KKK-IT_SCALE downto FILTER_WORK_WIDTH+KKK-IT_SCALE);
 					--# but may be it can be cut... because we have some KKK  ... !!!!!!!!!!!!!!!!!!!!!!
-				    if signed(vr3r)>0 then
-						v_WRr(i):=SXT(WR0r_div(i)(FILTER_ACUM_WIDTH-1-KKK-IT_SCALE downto 0)&EXT("0",KKK+IT_SCALE),FILTER_ACUM_WIDTH);
-					else
-						v_WRr(i):=0-SXT(WR0r_div(i)(FILTER_ACUM_WIDTH-1-KKK-IT_SCALE downto 0)&EXT("0",KKK+IT_SCALE),FILTER_ACUM_WIDTH);
-					end if;
+				    --if signed(vr3r)>0 then
+					--	v_WRr(i):=SXT(WR0r_div(i)(FILTER_ACUM_WIDTH-1-KKK-IT_SCALE downto 0)&EXT("0",KKK+IT_SCALE),FILTER_ACUM_WIDTH);
+					--else
+					--	v_WRr(i):=0-SXT(WR0r_div(i)(FILTER_ACUM_WIDTH-1-KKK-IT_SCALE downto 0)&EXT("0",KKK+IT_SCALE),FILTER_ACUM_WIDTH);
+					--end if;
 --					WRr(i)<=signed(WR0r_div_1w(i))*signed(vr3r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH));
 					short_array(i)<=vr3r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH);
 				end loop;
 				-------------------
 				--#===============================
-				if step_cnt=COPY_STEP-1 then
+--				if step_cnt=COPY_STEP-1 then
 --				if stm=COPING then
 			 	for i in 0 to FILTER_LEN-1 loop 
 --				  coefs_work(i)<=coefs_ii(i)-SXT(WRr(i)(coefs_work(i)'Length-1+KKK downto KKK),FILTER_WORK_WIDTH+FILTER_ACUM_WIDTH);
 --				  coefs_work(i)<=coefs_ii(i)-SXT(WRr(i)(WRr(i)'Length-1 downto WRr(i)'Length-coefs_work(i)'Length+KKK),coefs_work(i)'Length);
-		  coefs_work(i)<=coefs_work(i)-v_WRr(i);
+		  coefs_work(i)<=coefs_work(i)-WRr(i);
 		  coefs_ii(i)<=v_WRr(i);
 
 --		  coefs_work(i)<=coefs_work(i)-SXT(WRr(i)(WRr(i)'Length-1 downto 14-KKK-5),FILTER_ACUM_WIDTH);
@@ -290,7 +302,7 @@ begin
 
 
 				end loop;
-			end if;	
+--			end if;	
 			end if; --# i_ce
 
 		end if;  --# reset

@@ -197,7 +197,8 @@ for interation=1:4
 %            vr3r=floor(AcumSize_dt1*( floor(4*realIKsq/kkk) - RM));
 %            vr3r=floor(AcumSize_dt1*( floor(4*realIKsq) - RM*kkk));
 %            vr3r=floor(AcumSize_dt1*( floor(4*realIKsq) - (2^20) ));
-            vr3r=floor( floor(realIKsq) - (2^30) );
+%             vr3r=floor( floor(realIKsq) - (2^30) );
+            vr3r=floor( floor(realIKsq) - RM*4 );
             
             if (abs(vr3r)>2^31)
 %                 fprintf('Overflow!\n');
