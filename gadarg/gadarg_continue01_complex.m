@@ -111,7 +111,7 @@ kkk=2^(kkk_log2);
 kkk=1;
 
 RM=floor(RM/kkk);
-RM=floor(RM/4);
+RM=floor(RM/1);
 
 
 vhd_val01=floor(AcumSize_dt1*RM/(2^IT_SCALE));
@@ -198,14 +198,14 @@ for interation=1:10
     	end;
 
    		I(k)=floor(c*SF1(:,k)./(AcumSize));
-         
+                
         realIKsq=floor( real(I(k))^2 );
         imagIKsq=floor( imag(I(k))^2 );
 
         vr1r=floor(AcumSize_dt1*real(SF1(:,k)).');
         vr2r=floor(AcumSize_dt1*real(I(k)));
-        vr3r=floor( floor(realIKsq) - RM*4 );
-            
+        vr3r=floor( floor(realIKsq) - RM );
+
         WR0r=floor(floor(vr1r/WorkSize).*floor(vr2r/WorkSize));
         WRr=floor((2^IT_SCALE)*WR0r*sign(vr3r));  % it comes from:  WRr=floor((2^IT_SCALE)*WR0r*floor(vr3r/floor(AcumSize)));
         WRr_KKK=WRr*kkk;
@@ -213,7 +213,7 @@ for interation=1:10
 %%%%%%%%%%%%%%
         vr1i=floor(AcumSize_dt1*imag(SF1(:,k)).');
         vr2i=floor(AcumSize_dt1*real(I(k)));
-        vr3i=floor( floor(realIKsq) - RM*4 );
+        vr3i=floor( floor(realIKsq) - RM );
             
         WR0i=floor(floor(vr1i/WorkSize).*floor(vr2i/WorkSize));
         WRi=floor((2^IT_SCALE)*WR0i*sign(vr3i));  % it comes from:  WRr=floor((2^IT_SCALE)*WR0r*floor(vr3r/floor(AcumSize)));
@@ -222,8 +222,8 @@ for interation=1:10
 %%%%%%%%%%%%%%
         vi1r=floor(AcumSize_dt1*real(SF1(:,k)).');
         vi2r=floor(AcumSize_dt1*imag(I(k)));
-        vi3r=floor( floor(imagIKsq) - RM*4 );
-            
+        vi3r=floor( floor(imagIKsq) - RM );
+                 
         WI0r=floor(floor(vi1r/WorkSize).*floor(vi2r/WorkSize));
         WIr=floor((2^IT_SCALE)*WI0r*sign(vi3r));  % it comes from:  WRr=floor((2^IT_SCALE)*WR0r*floor(vr3r/floor(AcumSize)));
         WIr_KKK=WIr*kkk;
@@ -231,17 +231,16 @@ for interation=1:10
 %%%%%%%%%%%%%%
         vi1i=floor(AcumSize_dt1*imag(SF1(:,k)).');
         vi2i=floor(AcumSize_dt1*imag(I(k)));
-        vi3i=floor( floor(imagIKsq) - RM*4 );
+        vi3i=floor( floor(imagIKsq) - RM );
             
         WI0i=floor(floor(vi1i/WorkSize).*floor(vi2i/WorkSize));
         WIi=floor((2^IT_SCALE)*WI0r*sign(vi3i));  % it comes from:  WRr=floor((2^IT_SCALE)*WR0r*floor(vr3r/floor(AcumSize)));
         WIi_KKK=WIi*kkk;        
         
-        cc_re_re=cc_re_re-(WRr_KKK+WIi_KKK);
-        cc_im_im=cc_im_im-(WIr_KKK-WRi_KKK);
+        cc_re_re=cc_re_re-(WRr_KKK/1+WIi_KKK/1);
+        cc_im_im=cc_im_im-(WIr_KKK/1-WRi_KKK/1);
 
-
-
+        
         c=cc_re_re+1i*cc_im_im;
         z_pos=z_pos+1;
 	end

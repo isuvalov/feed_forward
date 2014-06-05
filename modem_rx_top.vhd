@@ -570,9 +570,9 @@ gadarg_i: entity work.gadarg
 --		RM=>5856428,     --# RM=1.34*PS/(4*KKK)
 --		STEP=>471, --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
 --		KKK=>5   --# ceil(log2(STEP)/2)
-		RM=>435231,
-		KKK=>7,
-		STEP=>5336
+		RM=>226871798/8,
+		KKK=>2,
+		STEP=>5148
 	)
 	port map(
 		clk =>clk,
@@ -580,12 +580,37 @@ gadarg_i: entity work.gadarg
 
 		i_sampleI=>sampleI_to_demod_W(0),
 		i_sampleQ=>sampleQ_to_demod_W(0),
-		i_ce=>'1',--down_ce,
+		i_ce=>down_ce,
 
 		o_sampleI=>demod_sampleI,
 		o_sampleQ=>demod_sampleQ
 		);
 
+
+ss: if SIMULATION=1 generate
+	s01: entity work.ToTextFile
+	generic map(BitLen =>demod_sampleI'Length,
+			WriteHex =>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile =>"gadarg_frame_I.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>down_ce,
+		 block_marker =>'0',
+		 DataToSave =>demod_sampleI
+	     );
+
+
+	s02: entity work.ToTextFile
+	generic map(BitLen =>demod_sampleQ'Length,
+			WriteHex =>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile =>"gadarg_frame_Q.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>down_ce,
+		 block_marker =>'0',
+		 DataToSave =>demod_sampleQ
+	     );
+end generate;
 
 pam_demod_i: entity work.pam_demod
 	port map(

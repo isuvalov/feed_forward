@@ -1,3 +1,14 @@
+%%
+
+load ../gadarg_frame_I.txt
+load ../gadarg_frame_Q.txt
+
+%  scatterplot(gadarg_frame_I(end/1.5:end)+1i*gadarg_frame_Q(end/1.5:end));
+ scatterplot(gadarg_frame_I(end-6000:end)+1i*gadarg_frame_Q(end-6000:end));
+
+
+%%
+
 load test_im.txt 
 load test_re.txt 
 

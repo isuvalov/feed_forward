@@ -59,6 +59,13 @@ SBitsInADC=(2^(BitsInADC-1)-1);
 % SBitsInADC=16384;
 SF=floor(round(  (SBitsInADC)  *real(SF)./max([real(SF) imag(SF)]))+j*round(  (SBitsInADC)  *imag(SF)./max([real(SF) imag(SF)])));
 
+load frame_Ifeedforward.txt
+load frame_Qfeedforward.txt 
+
+SF=(frame_Ifeedforward(1:4:end)+1i*frame_Qfeedforward(1:4:end))*4;
+SF=SF.';
+NS=length(SF);
+
 
 
 AS=zeros(1,L);
