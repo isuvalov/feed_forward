@@ -62,7 +62,7 @@ SF=floor(round(  (SBitsInADC)  *real(SF)./max([real(SF) imag(SF)]))+j*round(  (S
 load frame_Ifeedforward.txt
 load frame_Qfeedforward.txt 
 
-SF=(frame_I+1i*frame_Q)*4;
+SF=(frame_Ifeedforward(1:4:end)+1i*frame_Qfeedforward(1:4:end))*4;
 SF=SF.';
 NS=length(SF);
 
@@ -108,6 +108,8 @@ AcumSize_dt1=floor(AcumSize*dt1);
 kkk_log2=ceil(log2(AcumSize_dt1)/2);
 kkk=2^(kkk_log2);
 
+kkk=1;
+
 RM=floor(RM/kkk);
 RM=floor(RM/4);
 
@@ -132,9 +134,9 @@ vi2=0;
 vi3=0;
 
 cc_re_re=c;
-cc_im_im=c;
-cc_re_im=c;
-cc_im_re=c;
+cc_im_im=zeros(1,L);
+cc_re_im=zeros(1,L);
+cc_im_re=zeros(1,L);
 
 i_vr1=zeros(NS/Step,L);
 i_vr2=zeros(NS/Step,1);
@@ -162,6 +164,7 @@ end;
 
 z_pos=1;
 c_old=c;
+c=c+1i*c;
 for interation=1:10
 
 	cc_re(1,:)=real(c);
@@ -178,7 +181,7 @@ for interation=1:10
 % 			i_vr2(tk)=vi2i;
 % 			i_vr3(tk)=vi3i;
 
-			cc_re_re_a(tk,:)=cc_re_re;
+			cc_re_re_a(tk,:)=cc_im_im;%cc_re_re;
 
 			WR0_a(tk,:)=WR0;
 
@@ -195,45 +198,51 @@ for interation=1:10
     	end;
 
    		I(k)=floor(c*SF1(:,k)./(AcumSize));
-%         I(k)=int_filt_4tabs(c,SF1(:,k));
-        
          
-            realIKsq=floor( real(I(k))^2 );
-            imagIKsq=floor( imag(I(k))^2 );
+        realIKsq=floor( real(I(k))^2 );
+        imagIKsq=floor( imag(I(k))^2 );
 
-            vr1r=floor(AcumSize_dt1*real(SF1(:,k)).');
-            vr2r=floor(AcumSize_dt1*real(I(k)));
-%            vr3r=floor(AcumSize_dt1*( floor(4*realIKsq/kkk) - RM));
-%            vr3r=floor(AcumSize_dt1*( floor(4*realIKsq) - RM*kkk));
-%            vr3r=floor(AcumSize_dt1*( floor(4*realIKsq) - (2^20) ));
-%             vr3r=floor( floor(realIKsq) - (2^30) );
-            vr3r=floor( floor(realIKsq) - RM*4 );
+        vr1r=floor(AcumSize_dt1*real(SF1(:,k)).');
+        vr2r=floor(AcumSize_dt1*real(I(k)));
+        vr3r=floor( floor(realIKsq) - RM*4 );
             
-            if (abs(vr3r)>2^31)
-%                 fprintf('Overflow!\n');
-            end;
+        WR0r=floor(floor(vr1r/WorkSize).*floor(vr2r/WorkSize));
+        WRr=floor((2^IT_SCALE)*WR0r*sign(vr3r));  % it comes from:  WRr=floor((2^IT_SCALE)*WR0r*floor(vr3r/floor(AcumSize)));
+        WRr_KKK=WRr*kkk;
+
+%%%%%%%%%%%%%%
+        vr1i=floor(AcumSize_dt1*imag(SF1(:,k)).');
+        vr2i=floor(AcumSize_dt1*real(I(k)));
+        vr3i=floor( floor(realIKsq) - RM*4 );
             
-%             vr3r=floor(vr3r/(2^IT_SCALE));
-            WR0r=floor(floor(vr1r/WorkSize).*floor(vr2r/WorkSize));
-            WRr=floor((2^IT_SCALE)*WR0r*sign(vr3r));  % it comes from:  WRr=floor((2^IT_SCALE)*WR0r*floor(vr3r/floor(AcumSize)));
-            WRr_KKK=WRr*kkk;
+        WR0i=floor(floor(vr1i/WorkSize).*floor(vr2i/WorkSize));
+        WRi=floor((2^IT_SCALE)*WR0i*sign(vr3i));  % it comes from:  WRr=floor((2^IT_SCALE)*WR0r*floor(vr3r/floor(AcumSize)));
+        WRi_KKK=WRi*kkk;
+
+%%%%%%%%%%%%%%
+        vi1r=floor(AcumSize_dt1*real(SF1(:,k)).');
+        vi2r=floor(AcumSize_dt1*imag(I(k)));
+        vi3r=floor( floor(imagIKsq) - RM*4 );
+            
+        WI0r=floor(floor(vi1r/WorkSize).*floor(vi2r/WorkSize));
+        WIr=floor((2^IT_SCALE)*WI0r*sign(vi3r));  % it comes from:  WRr=floor((2^IT_SCALE)*WR0r*floor(vr3r/floor(AcumSize)));
+        WIr_KKK=WIr*kkk;
+
+%%%%%%%%%%%%%%
+        vi1i=floor(AcumSize_dt1*imag(SF1(:,k)).');
+        vi2i=floor(AcumSize_dt1*imag(I(k)));
+        vi3i=floor( floor(imagIKsq) - RM*4 );
+            
+        WI0i=floor(floor(vi1i/WorkSize).*floor(vi2i/WorkSize));
+        WIi=floor((2^IT_SCALE)*WI0r*sign(vi3i));  % it comes from:  WRr=floor((2^IT_SCALE)*WR0r*floor(vr3r/floor(AcumSize)));
+        WIi_KKK=WIi*kkk;        
+        
+        cc_re_re=cc_re_re-(WRr_KKK+WIi_KKK);
+        cc_im_im=cc_im_im-(WIr_KKK-WRi_KKK);
 
 
-%         if (mod(z_pos,L)==0)
-%         for sz=SHIFT_N:-1:2
-%             c_re_shift_array(sz,:)=c_re_shift_array(sz-1,:);
-%         end;
-%         c_re_shift_array(1,:)=(cc_re_re-WRr_KKK);
-             cc_re_re=(cc_re_re-WRr_KKK);                  
-%         if (mod(z_pos,20)==0)
-%            cc_re_re=c_re_shift_array(SHIFT_N,:);
-            c=cc_re_re;
-%         end;            
-        if (abs(I(k))>0) 
-%                        fprintf('(%i,%i)',real(I(k)),imag(I(k)));
-        end;
-            
-%         end;
+
+        c=cc_re_re+1i*cc_im_im;
         z_pos=z_pos+1;
 	end
 end; % interation

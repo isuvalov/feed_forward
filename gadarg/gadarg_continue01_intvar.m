@@ -60,6 +60,7 @@ SBitsInADC=(2^(BitsInADC-1)-1);
 SF=floor(round(  (SBitsInADC)  *real(SF)./max([real(SF) imag(SF)]))+j*round(  (SBitsInADC)  *imag(SF)./max([real(SF) imag(SF)])));
 
 
+
 AS=zeros(1,L);
 SF=[AS SF];
 SF=[AS SF];
