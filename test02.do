@@ -39,7 +39,8 @@ vcom complex_normalizer.vhd
 vcom pam_demodulation/assert_pack.vhd 
 vcom pam_demodulation/pam_demod.vhd
 
-vcom gadarg/gadarg_quick_complex.vhd
+#vcom gadarg/gadarg_quick_complex.vhd
+vcom gadarg/gadarg_quick_complex_4ce.vhd 
 
 vcom modem_rx_top.vhd 
 

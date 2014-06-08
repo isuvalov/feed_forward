@@ -113,7 +113,8 @@ signal s_sync_find,print_event: std_logic;
 signal bit_value_rx_ce,bit_value_rx_ce_1p,reset_with_s_sync_find:std_logic;
 signal bit_value_rx_1p,bit_value_rx:std_logic_vector(1 downto 0);
 
-signal demod_sampleI,demod_sampleQ:std_logic_vector(15 downto 0);
+signal demod_sampleI_1state,demod_sampleQ_1state,demod_sampleI,demod_sampleQ:std_logic_vector(15 downto 0);
+signal demod_sampleI_2state,demod_sampleQ_2state:std_logic_vector(15 downto 0);
 
 begin
 
@@ -274,7 +275,8 @@ bih_filter_integrator_inst: entity work.bih_filter_freq
 	);
 
 --freqcorr01: if SIMULATION/=1 generate
-	freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-1 downto 0),freq_val_filt'Length)-200;
+--	freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-1 downto 0),freq_val_filt'Length)-200;
+	freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-1 downto 0),freq_val_filt'Length)-0;
 --end generate;
 
 
@@ -382,6 +384,12 @@ begin
 				cnt<=(others=>'0');
 				down_ce<='1';
 			end if;
+		end if;
+
+		if cnt=2 then
+--			down_ce<='1';
+		else
+--			down_ce<='0';
 		end if;
         pilot_valid_1w<=pilot_valid;
 		pilot_valid_2w<=pilot_valid_1w;
@@ -571,8 +579,8 @@ gadarg_i: entity work.gadarg
 --		STEP=>471, --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
 --		KKK=>5   --# ceil(log2(STEP)/2)
 		RM=>226871798/8,
-		KKK=>2,
-		STEP=>5148
+		KKK=>0,
+		STEP=>5148/2
 	)
 	port map(
 		clk =>clk,
@@ -582,9 +590,31 @@ gadarg_i: entity work.gadarg
 		i_sampleQ=>sampleQ_to_demod_W(0),
 		i_ce=>down_ce,
 
-		o_sampleI=>demod_sampleI,
-		o_sampleQ=>demod_sampleQ
+		o_sampleI=>demod_sampleI,--demod_sampleI_1state,
+		o_sampleQ=>demod_sampleQ --demod_sampleQ_1state
 		);
+
+
+--gadarg_ii: entity work.gadarg
+--	generic map(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
+----		RM=>5856428,     --# RM=1.34*PS/(4*KKK)
+----		STEP=>471, --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
+----		KKK=>5   --# ceil(log2(STEP)/2)
+--		RM=>226871798/8,
+--		KKK=>0,
+--		STEP=>5148/4
+--	)
+--	port map(
+--		clk =>clk,
+--		reset =>reset_with_s_sync_find,
+--
+--		i_sampleI=>demod_sampleI_2state,
+--		i_sampleQ=>demod_sampleQ_2state,
+--		i_ce=>down_ce,
+--
+--		o_sampleI=>demod_sampleI,
+--		o_sampleQ=>demod_sampleQ
+--		);
 
 
 ss: if SIMULATION=1 generate
@@ -629,6 +659,12 @@ pam_demod_i: entity work.pam_demod
 process(clk) is
 begin
 	if rising_edge(clk) then
+
+		if down_ce='1' then
+			demod_sampleI_2state<=demod_sampleI_1state(demod_sampleI_1state'Length-1 downto 0);
+			demod_sampleQ_2state<=demod_sampleQ_1state(demod_sampleI_1state'Length-1 downto 0);
+		end if;
+
         reset_with_s_sync_find<=reset or not(s_sync_find);
 		bit_value_rx<=bit_value_rx_1p;
 		bit_value_rx_ce<=bit_value_rx_ce_1p;
@@ -652,8 +688,11 @@ begin
 		sampleI_to_demod<=sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
     	sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
 
-		sampleI_to_demod_W(0)<=sampleI_to_demod_1w;
-		sampleQ_to_demod_W(0)<=sampleQ_to_demod_1w;
+    	if down_ce='1' then
+			sampleI_to_demod_W(0)<=sampleI_to_demod_1w;
+			sampleQ_to_demod_W(0)<=sampleQ_to_demod_1w;
+		end if;
+
 		for i in 1 to 20+21+26 loop
 			sampleI_to_demod_W(i)<=sampleI_to_demod_W(i-1);
 			sampleQ_to_demod_W(i)<=sampleQ_to_demod_W(i-1);

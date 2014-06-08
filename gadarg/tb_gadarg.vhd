@@ -95,7 +95,7 @@ signal test_bits: std_logic_vector(1 downto 0);
 begin
 
 reset<='0' after 30 ns;
-reset_n<=not reset;
+reset_n<=(not reset) and local_ce;
 
 CLK_GEN125: process(clk)
 begin
@@ -125,7 +125,7 @@ ADC_EMUL_re:entity work.FromTextFile
 			NameOfFile =>"with_channel/gadarg_signal_re.txt")
 	 port map(
 		 clk =>clk,
-		 CE =>'1',
+		 CE =>local_ce,--'1',
 		 DataFromFile =>adc_re
 	     );
 
@@ -135,7 +135,7 @@ ADC_EMUL_im:entity work.FromTextFile
 			NameOfFile =>"with_channel/gadarg_signal_im.txt")
 	 port map(
 		 clk =>clk,
-		 CE =>'1',
+		 CE =>local_ce,--'1',
 		 DataFromFile =>adc_im
 	     );
 

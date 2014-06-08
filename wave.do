@@ -374,74 +374,86 @@ add wave -noupdate -group lfsr -radix hexadecimal /tb/testLFSR_i/datain
 add wave -noupdate -group lfsr -radix hexadecimal /tb/testLFSR_i/error
 add wave -noupdate -group lfsr -radix hexadecimal /tb/testLFSR_i/shift_rg
 add wave -noupdate -group lfsr -radix hexadecimal /tb/testLFSR_i/s_shift_rgM
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/clk
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/reset
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/i_sampleI
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/i_sampleQ
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/i_ce
-add wave -noupdate -expand -group gadarg -format Analog-Step -height 50 -max 25000.0 -min -25000.0 -radix decimal -childformat {{/tb/modem_rx_top_inst/gadarg_i/o_sampleI(15) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(14) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(13) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(12) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(11) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(10) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(9) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(8) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(7) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(6) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(5) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(4) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(3) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(2) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(1) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_inst/gadarg_i/o_sampleI(15) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(14) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(13) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(12) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(11) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(10) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(9) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(8) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(7) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(6) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(5) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(4) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(3) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(2) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(1) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleI(0) {-height 15 -radix decimal}} /tb/modem_rx_top_inst/gadarg_i/o_sampleI
-add wave -noupdate -expand -group gadarg -format Analog-Step -height 50 -max 25000.0 -min -25000.0 -radix decimal -childformat {{/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(15) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(14) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(13) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(12) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(11) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(10) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(9) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(8) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(7) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(6) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(5) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(4) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(3) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(2) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(1) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_inst/gadarg_i/o_sampleQ(15) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(14) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(13) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(12) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(11) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(10) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(9) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(8) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(7) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(6) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(5) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(4) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(3) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(2) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(1) {-height 15 -radix decimal} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ(0) {-height 15 -radix decimal}} /tb/modem_rx_top_inst/gadarg_i/o_sampleQ
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/latency_delay_re
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/latency_delay_im
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_with_step_i
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_with_step_q
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_with_step_i_copy
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_with_step_q_copy
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_I
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_Q
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_I_copy
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_Q_copy
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/coefs_work
-add wave -noupdate -expand -group gadarg -radix decimal -childformat {{/tb/modem_rx_top_inst/gadarg_i/coefs_i(3) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/coefs_i(2) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/coefs_i(1) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/coefs_i(0) -radix decimal}} -expand -subitemconfig {/tb/modem_rx_top_inst/gadarg_i/coefs_i(3) {-radix decimal} /tb/modem_rx_top_inst/gadarg_i/coefs_i(2) {-radix decimal} /tb/modem_rx_top_inst/gadarg_i/coefs_i(1) {-radix decimal} /tb/modem_rx_top_inst/gadarg_i/coefs_i(0) {-radix decimal}} /tb/modem_rx_top_inst/gadarg_i/coefs_i
-add wave -noupdate -expand -group gadarg -radix decimal -childformat {{/tb/modem_rx_top_inst/gadarg_i/coefs_q(3) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/coefs_q(2) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/coefs_q(1) -radix decimal} {/tb/modem_rx_top_inst/gadarg_i/coefs_q(0) -radix decimal}} -expand -subitemconfig {/tb/modem_rx_top_inst/gadarg_i/coefs_q(3) {-radix decimal} /tb/modem_rx_top_inst/gadarg_i/coefs_q(2) {-radix decimal} /tb/modem_rx_top_inst/gadarg_i/coefs_q(1) {-radix decimal} /tb/modem_rx_top_inst/gadarg_i/coefs_q(0) {-radix decimal}} /tb/modem_rx_top_inst/gadarg_i/coefs_q
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/c_mul_i
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/c_mul_q
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/step_cnt
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/c_mul_sum_i
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/c_mul_sum_q
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/sumed_muls_i_1w
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/sumed_muls_i
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/sumed_muls_q
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/sumed_muls_i_copy
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/sumed_muls_q_copy
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/sq_sumed_muls_i
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/sq_sumed_muls_q
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/vr3r
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/vr2r
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/vi2r
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/vr2i
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/vr3i
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/vi3r
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/vi2i
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/vi3i
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/short_array
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/short_array0
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/WR0r_div
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/WR0i_div
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/WI0r_div
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/WI0i_div
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/WR0r_div_1w
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/WR0i_div_1w
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/WI0r_div_1w
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/WI0i_div_1w
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/WRr
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/WRi
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/WIr
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/WIi
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/vr2r_mul
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/vi2r_mul
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/vr2i_mul
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/vi2i_mul
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/stm
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/sampl_cnt
-add wave -noupdate -expand -group gadarg -radix decimal /tb/modem_rx_top_inst/gadarg_i/work_cnt
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/clk
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/reset
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/i_sampleI
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/i_sampleQ
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/i_ce
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/o_sampleI
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/o_sampleQ
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/latency_delay_re
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/latency_delay_im
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_with_step_i_1w
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_with_step_q_1w
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_with_step_i
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_with_step_q
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_with_step_i_copy
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_with_step_q_copy
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_I
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_Q
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_I_copy
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/delay_line_Q_copy
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/coefs_work
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/coefs_i
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/coefs_q
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/c_mul_i
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/c_mul_q
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/c_mul_ii
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/c_mul_qq
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/c_mul_qi
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/c_mul_iq
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/cdiv_mul_ii
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/cdiv_mul_qq
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/cdiv_mul_qi
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/cdiv_mul_iq
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/step_cnt
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/c_mul_sum_i
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/c_mul_sum_q
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/sumed_muls_i_1w
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/sumed_muls_i
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/sumed_muls_q
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/sumed_muls_i_copy
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/sumed_muls_q_copy
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/sq_sumed_muls_i
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/sq_sumed_muls_q
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/vr3r
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/vr3i
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/vi3r
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/vi3i
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/vr2r
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/vi2r
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/vr2i
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/vi2i
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/short_array
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/short_array0
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/WR0r_div
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/WR0i_div
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/WI0r_div
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/WI0i_div
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/WR0r_div_1w
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/WR0i_div_1w
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/WI0r_div_1w
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/WI0i_div_1w
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/WRr
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/WRi
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/WIr
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/WIi
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/vr2r_mul
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/vi2r_mul
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/vr2i_mul
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/vi2i_mul
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/stm
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/sampl_cnt
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/work_cnt
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/reset_local
+add wave -noupdate -expand -group gadarg_i -radix decimal /tb/modem_rx_top_inst/gadarg_i/reset_reg
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {2553900000 ps} 0}
+WaveRestoreCursors {{Cursor 1} {1051489509 ps} 0}
 quietly wave cursor active 1
-configure wave -namecolwidth 363
+configure wave -namecolwidth 283
 configure wave -valuecolwidth 94
 configure wave -justifyvalue left
-configure wave -signalnamewidth 0
+configure wave -signalnamewidth 1
 configure wave -snapdistance 10
 configure wave -datasetprefix 0
 configure wave -rowmargin 4
@@ -452,4 +464,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {2551834345 ps} {2555966106 ps}
+WaveRestoreZoom {1051352990 ps} {1051657745 ps}
