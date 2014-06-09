@@ -164,20 +164,36 @@ for z=1:N-1
 mmm_new_max=0;
 f1=[];
 
-sigg=[];
-
 %% new variant
-	 c_acum_phase=1;
+     sigg=[];
+     filt_array_x=ones(1,FILTLEN)*angle(pcp_a);
+     c_acum_phase_array=[];
+     val_array=[];
+	 c_acum_phase_all=angle(pcp_a);
      for zd=1:length(data_transfer_filtdata)
-		val=data_transfer_filtdata(zd).*conj(c_acum_phase);
+% 		val=data_transfer_filtdata(zd).*conj(exp(1i*angle(c_acum_phase)));        
+        val=data_transfer_filtdata(zd).*conj(exp(1i*c_acum_phase_all));
         sigg=[sigg val];
 
 		val_dec=demodulate(demod_engine,val); % демодулируем PAM
         mass=[mass val_dec];		
 
 		val_mod2=modulate(mod_engine,val_dec);
-		c_phase_error=(val/abs(val)).*conj(val_mod2);
-		c_acum_phase=c_acum_phase*(1-alpha2)+c_phase_error;
+        if (abs(val)==0)
+            c_phase_error=1+1i*0;
+        else            
+%             c_phase_error=(val/abs(val)).*conj(val_mod2);              
+        end
+        c_phase_error=(val).*conj(val_mod2);
+% 		c_acum_phase=c_acum_phase*(1-alpha2)+c_phase_error;
+
+    c_phase_error=exp(1i*angle(c_phase_error));
+    
+    c_acum_phase_filt=floor( sum(real(filt_array_x).*filt_x)+1i*sum(imag(filt_array_x).*filt_x) );
+    c_acum_phase_all=c_acum_phase_all+c_acum_phase_filt;
+    filt_array_x=[angle(c_phase_error) filt_array_x(1:FILTLEN-1)];
+    c_acum_phase_array=[c_acum_phase_array c_acum_phase_all];
+
 	 end % zd
 %% new var find
 
@@ -193,7 +209,10 @@ fprintf('Процент ошибки составляет %.4i, при их количестве %i на %i данных\n',ra
 fprintf('Девиация ошибки %.2f dB\n',20*log10(std(foffest_a))); 
 fprintf('Значение частот в среднем составило %.5f т.е. ошибка %.2f dB\n',mean(foffest_a),20*log10(FreqOffset-mean(foffest_a)));
 end;
-figure
+% figure
+scatterplot(sigg)
+% scatterplot(data_transfer_filtdata)
+% plot(angle(c_acum_phase_array))
 % plot(mass2);
 % hold on;
 % plot(values_all(1:length(mass2)),'r');
