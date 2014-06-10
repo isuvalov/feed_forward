@@ -1,6 +1,6 @@
 clc
 BERs=3:20;
-BERs=4;
+BERs=400;
 rats_array=[];
 fd=200;      % тактовая частота АЦП/ЦАП
 % pilot_len=250;  % длина марекера по которому определяется расстройка в черне
@@ -11,9 +11,10 @@ tdelay=10000;        % длина полезного информации которая стоит между маркерами
 % tlen=PilotsNum*(2*tdelay+pilot_len*InterpolateRate); %201000; % длина всех отсчетов
 tlen=(PilotsNum+1)*(tdelay+pilot_len); %201000; % длина всех отсчетов
 alpha1=0.2;      % коэффициент усреднения, чем он меньше тем больше усреднение
-alpha2=0.1;
+alpha2=0.01;
 % FreqOffset=1;
-FreqOffset=0;
+FreqOffset=1;
+test_freq_d=0.0005;
 M=4;
 FILTLEN=32;
 R=0.2;
@@ -135,7 +136,7 @@ for z=1:N-1
     fdo=0.9999*(1/(2*pi))*InterpolateRate*pilot_len*(1/(2*pi*Ts)) * sum(smoof_window_W(1:Mdiv2-1,Mdiv2).*angle(conj(rx_pilot_R(1:Mdiv2-1)).*rx_pilot_R(2:Mdiv2))  );        
     
     fir_acum=fir_acum*(1-alpha1)+fdo;    
-    f_offset=fdo; %fir_acum*alpha1;
+    f_offset=fdo+test_freq_d; %fir_acum*alpha1;
     
     rx_transfer_filt_cor=rx_transfer_filt((z-1)*tframelen+1:z*tframelen).*exp(-1i*2*pi*(f_offset)*t4); %% двигаем сигнал обратно на (-offset
     rx_pilot2=rx_transfer_filt_cor(1:length(pilotUP));
@@ -158,41 +159,41 @@ for z=1:N-1
     filt_array=pcp_a.*ones(1,FILTLEN);
     filt_array_x=exp(1i*pcp_a).*ones(1,FILTLEN);
 
-   save_start_values;
-   load_saved_values;
+%    save_start_values;
+%    load_saved_values;
     
 mmm_new_max=0;
 f1=[];
 
 %% new variant
      sigg=[];
-     filt_array_x=ones(1,FILTLEN)*angle(pcp_a);
+     filt_array_x=ones(1,FILTLEN)*0;
      c_acum_phase_array=[];
      val_array=[];
-	 c_acum_phase_all=angle(pcp_a);
+	 c_acum_phase_all=pcp_a;
+     c_acum_phase=1;%exp(1i*pcp_a);
+     c_acum_phase_angle=pcp_a;
      for zd=1:length(data_transfer_filtdata)
-% 		val=data_transfer_filtdata(zd).*conj(exp(1i*angle(c_acum_phase)));        
-        val=data_transfer_filtdata(zd).*conj(exp(1i*c_acum_phase_all));
+   		val=data_transfer_filtdata(zd).*conj(exp(1i*angle(c_acum_phase)));        
+%   		val=data_transfer_filtdata(zd).*conj(c_acum_phase/abs(c_acum_phase));
         sigg=[sigg val];
 
 		val_dec=demodulate(demod_engine,val); % демодулируем PAM
         mass=[mass val_dec];		
 
 		val_mod2=modulate(mod_engine,val_dec);
-        if (abs(val)==0)
-            c_phase_error=1+1i*0;
-        else            
-%             c_phase_error=(val/abs(val)).*conj(val_mod2);              
-        end
         c_phase_error=(val).*conj(val_mod2);
-% 		c_acum_phase=c_acum_phase*(1-alpha2)+c_phase_error;
+%          c=exp(1i*sign(angle(c_phase_error))*Fi_porog/4);
+%         c_phase_error_angle=angle(c_phase_error);        
+        c=0;
+        if (angle(c_phase_error)>Fi_porog/2)
+            c=+1;
+        elseif (angle(c_phase_error)<-Fi_porog/2)
+            c=-1;
+        end
 
-    c_phase_error=exp(1i*angle(c_phase_error));
-    
-    c_acum_phase_filt=floor( sum(real(filt_array_x).*filt_x)+1i*sum(imag(filt_array_x).*filt_x) );
-    c_acum_phase_all=c_acum_phase_all+c_acum_phase_filt;
-    filt_array_x=[angle(c_phase_error) filt_array_x(1:FILTLEN-1)];
-    c_acum_phase_array=[c_acum_phase_array c_acum_phase_all];
+       c_acum_phase=c_acum_phase*(1-alpha2)+c*c_phase_error; 
+       c_acum_phase_array=[c_acum_phase_array c_acum_phase];
 
 	 end % zd
 %% new var find
