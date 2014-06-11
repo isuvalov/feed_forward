@@ -1,6 +1,6 @@
 clc
 BERs=3:20;
-BERs=400;
+BERs=80;
 rats_array=[];
 fd=200;      % тактовая частота АЦП/ЦАП
 % pilot_len=250;  % длина марекера по которому определяется расстройка в черне
@@ -11,10 +11,10 @@ tdelay=10000;        % длина полезного информации которая стоит между маркерами
 % tlen=PilotsNum*(2*tdelay+pilot_len*InterpolateRate); %201000; % длина всех отсчетов
 tlen=(PilotsNum+1)*(tdelay+pilot_len); %201000; % длина всех отсчетов
 alpha1=0.2;      % коэффициент усреднения, чем он меньше тем больше усреднение
-alpha2=0.01;
+alpha2=0.1;
 % FreqOffset=1;
 FreqOffset=1;
-test_freq_d=0.0005;
+test_freq_d=0.05;
 M=4;
 FILTLEN=32;
 R=0.2;
@@ -181,19 +181,11 @@ f1=[];
 		val_dec=demodulate(demod_engine,val); % демодулируем PAM
         mass=[mass val_dec];		
 
-		val_mod2=modulate(mod_engine,val_dec);
+	    val_mod2=modulate(mod_engine,val_dec);
         c_phase_error=(val).*conj(val_mod2);
-%          c=exp(1i*sign(angle(c_phase_error))*Fi_porog/4);
-%         c_phase_error_angle=angle(c_phase_error);        
-        c=0;
-        if (angle(c_phase_error)>Fi_porog/2)
-            c=+1;
-        elseif (angle(c_phase_error)<-Fi_porog/2)
-            c=-1;
-        end
-
-       c_acum_phase=c_acum_phase*(1-alpha2)+c*c_phase_error; 
-       c_acum_phase_array=[c_acum_phase_array c_acum_phase];
+        
+        c_acum_phase=c_acum_phase.*(c_phase_error/abs(c_phase_error)); 
+        c_acum_phase_array=[c_acum_phase_array c_acum_phase];
 
 	 end % zd
 %% new var find
