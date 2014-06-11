@@ -170,12 +170,17 @@ f1=[];
      filt_array_x=ones(1,FILTLEN)*0;
      c_acum_phase_array=[];
      val_array=[];
-	 c_acum_phase_all=pcp_a;
-     c_acum_phase=1;%exp(1i*pcp_a);
+	 c_acum_phase_all=exp(1i*pcp_a);
+     c_acum_phase=exp(1i*pcp_a);
      c_acum_phase_angle=pcp_a;
+     
+%      LATT=1;
+%      shift_phases=zeros(1,LATT)*exp(1i*pcp_a);
+     
      for zd=1:length(data_transfer_filtdata)
+         ssv=shift_phases(LATT);
    		val=data_transfer_filtdata(zd).*conj(exp(1i*angle(c_acum_phase)));        
-%   		val=data_transfer_filtdata(zd).*conj(c_acum_phase/abs(c_acum_phase));
+
         sigg=[sigg val];
 
 		val_dec=demodulate(demod_engine,val); % демодулируем PAM
@@ -184,7 +189,13 @@ f1=[];
 	    val_mod2=modulate(mod_engine,val_dec);
         c_phase_error=(val).*conj(val_mod2);
         
-        c_acum_phase=c_acum_phase.*(c_phase_error/abs(c_phase_error)); 
+%         c_acum_phase=c_acum_phase.*(c_phase_error/abs(c_phase_error)); 
+        c_acum_phase=c_acum_phase.*(c_phase_error); 
+        c_acum_phase=c_acum_phase./abs(c_acum_phase);
+        
+%         shift_phases=[c_acum_phase shift_phases(1:end-1)];
+        
+%         c_acum_phase_array=[c_acum_phase_array c_acum_phase];
         c_acum_phase_array=[c_acum_phase_array c_acum_phase];
 
 	 end % zd
