@@ -1,6 +1,6 @@
 clc
 BERs=3:20;
-BERs=80;
+BERs=75;
 rats_array=[];
 fd=200;      % тактовая частота АЦП/ЦАП
 % pilot_len=250;  % длина марекера по которому определяется расстройка в черне
@@ -178,20 +178,25 @@ f1=[];
 %      shift_phases=zeros(1,LATT)*exp(1i*pcp_a);
      
      for zd=1:length(data_transfer_filtdata)
-         ssv=shift_phases(LATT);
-   		val=data_transfer_filtdata(zd).*conj(exp(1i*angle(c_acum_phase)));        
+%          ssv=shift_phases(LATT);
+%    		val=data_transfer_filtdata(zd).*conj(exp(1i*angle(c_acum_phase)));        
+   		val=data_transfer_filtdata(zd).*conj(c_acum_phase_all);        
 
         sigg=[sigg val];
 
 		val_dec=demodulate(demod_engine,val); % демодулируем PAM
+%         if (zd==floor(length(data_transfer_filtdata)*0.75)) val_dec=3-val_dec; end
         mass=[mass val_dec];		
 
 	    val_mod2=modulate(mod_engine,val_dec);
         c_phase_error=(val).*conj(val_mod2);
         
-%         c_acum_phase=c_acum_phase.*(c_phase_error/abs(c_phase_error)); 
-        c_acum_phase=c_acum_phase.*(c_phase_error); 
+          c_acum_phase=c_acum_phase.*(c_phase_error); 
+        c_acum_phase=c_phase_error; 
         c_acum_phase=c_acum_phase./abs(c_acum_phase);
+        
+        
+        c_acum_phase_all=c_acum_phase_all.*c_acum_phase;
         
 %         shift_phases=[c_acum_phase shift_phases(1:end-1)];
         
