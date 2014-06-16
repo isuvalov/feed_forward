@@ -572,49 +572,26 @@ scalar_mult_inst: entity work.scalar_mult
 --		o_sampleQ=>sampleQ_to_demod
 --		);
 
-
-gadarg_i: entity work.gadarg
-	generic map(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
---		RM=>5856428,     --# RM=1.34*PS/(4*KKK)
---		STEP=>471, --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
---		KKK=>5   --# ceil(log2(STEP)/2)
-		RM=>226871798/8,
-		KKK=>0,
-		STEP=>5148/2
-	)
+average_itertive_demod_i: entity work.average_itertive_demod
 	port map(
 		clk =>clk,
-		reset =>reset_with_s_sync_find,
+		reset =>reset,
+		after_pilot_start=>start_rotate_ce_W(2), --# он должен быть над первым i_ce must be before CE
+		i_ce =>down_ce,
+		i_samplesI=>sampleI_to_demod_W(0),
+		i_samplesQ=>sampleQ_to_demod_W(0),
 
-		i_sampleI=>sampleI_to_demod_W(0),
-		i_sampleQ=>sampleQ_to_demod_W(0),
-		i_ce=>down_ce,
+		i_init_phaseI=>start_rotate_I,
+		i_init_phaseQ=>start_rotate_Q,
 
-		o_sampleI=>demod_sampleI,--demod_sampleI_1state,
-		o_sampleQ=>demod_sampleQ --demod_sampleQ_1state
+		o_samplesI=>demod_sampleI,
+		o_samplesQ=>demod_sampleQ,
+
+--		o_samples_phase: out std_logic_vector(15 downto 0);
+		out_ce=>open
 		);
 
 
---gadarg_ii: entity work.gadarg
---	generic map(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
-----		RM=>5856428,     --# RM=1.34*PS/(4*KKK)
-----		STEP=>471, --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
-----		KKK=>5   --# ceil(log2(STEP)/2)
---		RM=>226871798/8,
---		KKK=>0,
---		STEP=>5148/4
---	)
---	port map(
---		clk =>clk,
---		reset =>reset_with_s_sync_find,
---
---		i_sampleI=>demod_sampleI_2state,
---		i_sampleQ=>demod_sampleQ_2state,
---		i_ce=>down_ce,
---
---		o_sampleI=>demod_sampleI,
---		o_sampleQ=>demod_sampleQ
---		);
 
 
 ss: if SIMULATION=1 generate
