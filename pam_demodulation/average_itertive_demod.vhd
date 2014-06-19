@@ -48,21 +48,35 @@ end if;
 end signed_abs;
 
 constant BITSIZE:integer:=8;
-constant SH:integer:=5;
+constant SH:integer:=3;
 
 signal acum_re_1w,acum_im_1w,acum_re_new,acum_im_new,acum_re,acum_im,sample_rotI,sample_rotQ:std_logic_vector(15 downto 0);
-signal table_re,table_im:std_logic_vector(BITSIZE-1 downto 0);
+signal table_re,table_im,to_tab_re,to_tab_im:std_logic_vector(BITSIZE-1 downto 0);
 signal table_reE,table_imE:std_logic_vector(15 downto 0);
-signal ce_1w,ce_table,ce_acum:std_logic;
+signal ce_1w,ce_table,ce_acum,shift1,shift2:std_logic;
 
 begin
+
+save_complexdata_i: entity work.save_complexdata
+	port map(
+		clk =>clk,
+		i_ce =>i_ce,
+		i_samplesI=>i_samplesI,
+		i_samplesQ=>i_samplesQ,
+
+		i_ce2 =>after_pilot_start,
+		i_samplesI2=>i_init_phaseI,
+		i_samplesQ2=>i_init_phaseQ
+		);
+
+
 
 table_reE<=table_re&EXT("0",16-BITSIZE);
 table_imE<=table_im&EXT("0",16-BITSIZE);
 
 complex_mult_q_i: entity work.complex_mult_q
 	generic map(
-		SHIFT_MUL=>0,
+		SHIFT_MUL=>1,
 		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(
@@ -82,23 +96,33 @@ complex_mult_q_i: entity work.complex_mult_q
 
 complex_mult_q_ii: entity work.complex_mult_q
 	generic map(
-		SHIFT_MUL=>SH,
+		SHIFT_MUL=>3, --# (числа указаны при 3)
 		CONJUGATION=>'0' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(
 		clk =>clk,
 		i_ce =>ce_table,
-		A_I=>acum_re_1w,
+		A_I=>acum_re_1w,       --# 6101+1i*1157  (верно)
 		B_Q=>acum_im_1w,
 
-		C_I=>table_reE,
+		C_I=>table_reE,        --# 32256-1i*4352 (верно)
 		D_Q=>table_imE,
 
 
-		o_I=>acum_re_new,
+		o_I=>acum_re_new, --# тут происходит переполнение должно быть 12318+1i*656
 		o_Q=>acum_im_new,
 		out_ce=>ce_acum
 		);
+
+shift1<='1' when unsigned(signed_abs(sample_rotI(sample_rotI'Length-1 downto 6)))>127 or unsigned(signed_abs(sample_rotQ(sample_rotQ'Length-1 downto 6)))>127  else '0';
+
+to_tab_re<=SXT(sample_rotI(sample_rotI'Length-1 downto 9),BITSIZE) when 
+	unsigned(signed_abs(sample_rotI(sample_rotI'Length-1 downto 6)))>127 or unsigned(signed_abs(sample_rotQ(sample_rotQ'Length-1 downto 6)))>127 
+	else sample_rotI(6+BITSIZE-1 downto 6);
+
+to_tab_im<=SXT(sample_rotQ(sample_rotQ'Length-1 downto 9),BITSIZE) when 
+	unsigned(signed_abs(sample_rotI(sample_rotI'Length-1 downto 6)))>127 or unsigned(signed_abs(sample_rotQ(sample_rotQ'Length-1 downto 6)))>127 
+	else sample_rotQ(6+BITSIZE-1 downto 6);
 
 
 table_demod_i:entity work.table_demod
@@ -109,8 +133,8 @@ table_demod_i:entity work.table_demod
 	 port map(
 		  clk =>clk,
 		  i_ce=>ce_1w,
-	      sample_in_re=>sample_rotI(sample_rotI'Length-1-SH downto sample_rotI'Length-BITSIZE-SH),
-	      sample_in_im=>sample_rotQ(sample_rotI'Length-1-SH downto sample_rotI'Length-BITSIZE-SH),
+	      sample_in_re=>to_tab_re,
+	      sample_in_im=>to_tab_im,
 		  o_ce=>ce_table,
 	      sample_out_re=>table_re,
 	      sample_out_im=>table_im
@@ -132,8 +156,15 @@ begin
 			acum_im<=i_init_phaseQ;
 		else        --# reset
 			if ce_acum='1' then
-				acum_re<=acum_re_new;
-				acum_im<=acum_im_new;
+				if unsigned(signed_abs(acum_re_new))>16384  or  unsigned(signed_abs(acum_im_new))>16384 then
+					acum_re<=SXT(acum_re_new(15 downto 2),16);
+					acum_im<=SXT(acum_im_new(15 downto 2),16);
+					shift2<='1';
+				else
+					shift2<='0';
+					acum_re<=acum_re_new;
+					acum_im<=acum_im_new;
+				end if;
 			end if; --# i_ce
 		end if;     --# reset
 	end if;

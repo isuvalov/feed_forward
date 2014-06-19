@@ -24,8 +24,9 @@ entity modem_rx_top is
 		  test_Q: out std_logic_vector(15 downto 0);
 		  test_inner_pilot_pos: out std_logic;
 		
-		  demod_phase :out std_logic_vector(15 downto 0);
-		  demod_phase_ce : out std_logic;
+		  o_demod_sampleI: out std_logic_vector(15 downto 0);
+		  o_demod_sampleQ: out std_logic_vector(15 downto 0);
+          o_demod_sample_ce: out std_logic;
 
 		  bit_value_ce: out std_logic;
 		  bit_value: out std_logic_vector(1 downto 0);
@@ -572,6 +573,8 @@ scalar_mult_inst: entity work.scalar_mult
 --		o_sampleQ=>sampleQ_to_demod
 --		);
 
+
+
 average_itertive_demod_i: entity work.average_itertive_demod
 	port map(
 		clk =>clk,
@@ -590,7 +593,6 @@ average_itertive_demod_i: entity work.average_itertive_demod
 --		o_samples_phase: out std_logic_vector(15 downto 0);
 		out_ce=>open
 		);
-
 
 
 
@@ -637,6 +639,11 @@ process(clk) is
 begin
 	if rising_edge(clk) then
 
+		o_demod_sampleI<=demod_sampleI;
+		o_demod_sampleQ<=demod_sampleQ;
+		o_demod_sample_ce<=down_ce;
+
+
 		if down_ce='1' then
 			demod_sampleI_2state<=demod_sampleI_1state(demod_sampleI_1state'Length-1 downto 0);
 			demod_sampleQ_2state<=demod_sampleQ_1state(demod_sampleI_1state'Length-1 downto 0);
@@ -646,8 +653,6 @@ begin
 		bit_value_rx<=bit_value_rx_1p;
 		bit_value_rx_ce<=bit_value_rx_ce_1p;
 
-		demod_phase<=s_demod_phase;
-		demod_phase_ce<=s_demod_phase_ce;
 
 		if scalar_sum_ce='1' then
 			start_rotate_I<=scalar_sumI(scalar_sumI'Length-1-4 downto scalar_sumI'Length-16-4);

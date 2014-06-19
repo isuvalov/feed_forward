@@ -34,6 +34,7 @@ architecture complex_mult_q of complex_mult_q is
 --#       (A+jB)*(C+jD)=(AC-BD)+j(AD+BC)
 --# conj: (A+jB)*(C-jD)=(AC+BD)+j(BC-AD)
 
+constant SHIFT_MUL0:integer:=SHIFT_MUL;
 signal A_I_1w,B_Q_1w,A_I_2w,B_Q_2w:std_logic_vector(15 downto 0);
 
 signal AC,AD,BC,BD:std_logic_vector(31 downto 0);
@@ -44,8 +45,8 @@ begin
 
 
 ñ01: if CONJUGATION='0' generate
-	ACmBD<=SXT(AC(AC'Length-1-SHIFT_MUL downto AC'Length-16-SHIFT_MUL),17)-SXT(BD(BD'Length-1-SHIFT_MUL downto BD'Length-16-SHIFT_MUL),17);
-	ADpBC<=SXT(AD(AD'Length-1-SHIFT_MUL downto AD'Length-16-SHIFT_MUL),17)+SXT(BC(BC'Length-1-SHIFT_MUL downto BC'Length-16-SHIFT_MUL),17);
+	ACmBD<=SXT(AC(AC'Length-1-SHIFT_MUL0 downto AC'Length-16-SHIFT_MUL0),17)-SXT(BD(BD'Length-1-SHIFT_MUL0 downto BD'Length-16-SHIFT_MUL0),17);
+	ADpBC<=SXT(AD(AD'Length-1-SHIFT_MUL0 downto AD'Length-16-SHIFT_MUL0),17)+SXT(BC(BC'Length-1-SHIFT_MUL0 downto BC'Length-16-SHIFT_MUL0),17);
 	o_I<=ACmBD(ACmBD'Length-1 downto ACmBD'Length-o_I'Length);
 	o_Q<=ADpBC(ACmBD'Length-1 downto ACmBD'Length-o_I'Length);
 end generate;
