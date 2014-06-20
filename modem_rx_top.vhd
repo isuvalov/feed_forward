@@ -24,8 +24,9 @@ entity modem_rx_top is
 		  test_Q: out std_logic_vector(15 downto 0);
 		  test_inner_pilot_pos: out std_logic;
 		
-		  demod_phase :out std_logic_vector(15 downto 0);
-		  demod_phase_ce : out std_logic;
+		  o_demod_sampleI: out std_logic_vector(15 downto 0);
+		  o_demod_sampleQ: out std_logic_vector(15 downto 0);
+          o_demod_sample_ce: out std_logic;
 
 		  bit_value_ce: out std_logic;
 		  bit_value: out std_logic_vector(1 downto 0);
@@ -110,8 +111,11 @@ signal s_demod_phase_minus,s_demod_phase :std_logic_vector(15 downto 0);
 signal s_demod_phase_ce,s_demod_phase_ce_1w : std_logic;
 signal s_sync_find,print_event: std_logic;
 
-signal bit_value_rx_ce:std_logic;
-signal bit_value_rx:std_logic_vector(1 downto 0);
+signal bit_value_rx_ce,bit_value_rx_ce_1p,reset_with_s_sync_find:std_logic;
+signal bit_value_rx_1p,bit_value_rx:std_logic_vector(1 downto 0);
+
+signal demod_sampleI_1state,demod_sampleQ_1state,demod_sampleI,demod_sampleQ:std_logic_vector(15 downto 0);
+signal demod_sampleI_2state,demod_sampleQ_2state:std_logic_vector(15 downto 0);
 
 begin
 
@@ -272,7 +276,8 @@ bih_filter_integrator_inst: entity work.bih_filter_freq
 	);
 
 --freqcorr01: if SIMULATION/=1 generate
-	freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-1 downto 0),freq_val_filt'Length)-200;
+--	freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-1 downto 0),freq_val_filt'Length)-200;
+	freq_val_filt<=SXT(freq_val_filt2(freq_val_filt2'Length-1 downto 0),freq_val_filt'Length)-0;
 --end generate;
 
 
@@ -381,6 +386,12 @@ begin
 				down_ce<='1';
 			end if;
 		end if;
+
+		if cnt=2 then
+--			down_ce<='1';
+		else
+--			down_ce<='0';
+		end if;
         pilot_valid_1w<=pilot_valid;
 		pilot_valid_2w<=pilot_valid_1w;
 		pilot_valid_3w<=pilot_valid_2w;
@@ -401,6 +412,7 @@ end process;
 
 moveB: entity work.complex_mult
 	generic map(
+		SHIFT_MUL=>2,
 		NOT_USE_IT=>0,--GLOBAL_DEBUG,
 		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
@@ -562,37 +574,88 @@ scalar_mult_inst: entity work.scalar_mult
 --		);
 
 
-itertive_demod_inst: entity work.itertive_demod
+
+average_itertive_demod_i: entity work.average_itertive_demod
+	generic map(
+		SIMULATION=>SIMULATION
+	)
 	port map(
 		clk =>clk,
 		reset =>reset,
-		after_pilot_start =>start_rotate_ce_W(15),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
---		after_pilot_start =>start_rotate_ce_W(14),--start_rotate_ce_1w,--scalar_sum_ce,--start_rotate_ce_1w,--# он должен быть над первым i_ce
---		after_pilot_start =>start_rotate_ce,--# он должен быть над первым i_ce
-		i_ce =>down_ce,--sampleQ_moveback_ce,
---		i_samplesI =>sampleI_to_demod,--sampleI_to_demod_W(7),--sampleI_to_demod_1w,
---		i_samplesQ =>sampleQ_to_demod,--sampleQ_to_demod_W(7),--sampleQ_to_demod_1w,
-
-		i_samplesI =>sampleI_to_demod_W(2*4-2+11+26),--sampleI_to_demod_1w,
-		i_samplesQ =>sampleQ_to_demod_W(2*4-2+11+26),--sampleQ_to_demod_1w,
-
-
-
+		after_pilot_start=>start_rotate_ce_W(2), --# он должен быть над первым i_ce must be before CE
+		i_ce =>down_ce,
+		i_samplesI=>sampleI_to_demod_W(0),
+		i_samplesQ=>sampleQ_to_demod_W(0),
 
 		i_init_phaseI=>start_rotate_I,
 		i_init_phaseQ=>start_rotate_Q,
 
+		o_samplesI=>demod_sampleI,
+		o_samplesQ=>demod_sampleQ,
 
-		o_samples_phase=>s_demod_phase,
-		out_ce=>s_demod_phase_ce
+--		o_samples_phase: out std_logic_vector(15 downto 0);
+		out_ce=>open
 		);
 
-		start_rotate_ce<=scalar_sum_ce;
+
+
+ss: if SIMULATION=1 generate
+	s01: entity work.ToTextFile
+	generic map(BitLen =>demod_sampleI'Length,
+			WriteHex =>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile =>"gadarg_frame_I.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>down_ce,
+		 block_marker =>'0',
+		 DataToSave =>demod_sampleI
+	     );
+
+
+	s02: entity work.ToTextFile
+	generic map(BitLen =>demod_sampleQ'Length,
+			WriteHex =>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile =>"gadarg_frame_Q.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>down_ce,
+		 block_marker =>'0',
+		 DataToSave =>demod_sampleQ
+	     );
+end generate;
+
+pam_demod_i: entity work.pam_demod
+	port map(
+		clk =>clk,
+		i_ce =>down_ce,
+		i_samplesI =>demod_sampleI,
+		i_samplesQ =>demod_sampleQ,
+
+		bit_value=>bit_value_rx_1p,
+		out_ce=>bit_value_rx_ce_1p
+		);
+
+
+	start_rotate_ce<=scalar_sum_ce;
+
 process(clk) is
 begin
 	if rising_edge(clk) then
-		demod_phase<=s_demod_phase;
-		demod_phase_ce<=s_demod_phase_ce;
+
+		o_demod_sampleI<=demod_sampleI;
+		o_demod_sampleQ<=demod_sampleQ;
+		o_demod_sample_ce<=down_ce;
+
+
+		if down_ce='1' then
+			demod_sampleI_2state<=demod_sampleI_1state(demod_sampleI_1state'Length-1 downto 0);
+			demod_sampleQ_2state<=demod_sampleQ_1state(demod_sampleI_1state'Length-1 downto 0);
+		end if;
+
+        reset_with_s_sync_find<=reset or not(s_sync_find);
+		bit_value_rx<=bit_value_rx_1p;
+		bit_value_rx_ce<=bit_value_rx_ce_1p;
+
 
 		if scalar_sum_ce='1' then
 			start_rotate_I<=scalar_sumI(scalar_sumI'Length-1-4 downto scalar_sumI'Length-16-4);
@@ -610,8 +673,11 @@ begin
 		sampleI_to_demod<=sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
     	sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
 
-		sampleI_to_demod_W(0)<=sampleI_to_demod_1w;
-		sampleQ_to_demod_W(0)<=sampleQ_to_demod_1w;
+    	if down_ce='1' then
+			sampleI_to_demod_W(0)<=sampleI_to_demod_1w;
+			sampleQ_to_demod_W(0)<=sampleQ_to_demod_1w;
+		end if;
+
 		for i in 1 to 20+21+26 loop
 			sampleI_to_demod_W(i)<=sampleI_to_demod_W(i-1);
 			sampleQ_to_demod_W(i)<=sampleQ_to_demod_W(i-1);
@@ -624,19 +690,6 @@ begin
 	end if;
 end process;
 
---		sampleI_to_demod<=sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
---        sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
-
-
-pam_demod_by_phase_i: entity work.pam_demod_by_phase
-	port map(
-		clk =>clk,
-		i_ce =>s_demod_phase_ce_1w,
-		i_phase =>s_demod_phase_minus (9 downto 0),
-
-		bit_value=>bit_value_rx,
-		out_ce=>bit_value_rx_ce
-		);
 
 
 end modem_rx_top;

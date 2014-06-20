@@ -178,7 +178,7 @@ pilot_upper_i: entity work.pilot_upper
 		sampleQ_o =>sampleQ_pilot
 		);
 
-pilot_start_work<=pilot_start_W(7*InterpolateRate-1);
+pilot_start_work<=pilot_start_W(7*InterpolateRate-1) when stm=WAITING else '0';
 make_pilotmsk:process (clk)
 begin		
 	if rising_edge(clk) then

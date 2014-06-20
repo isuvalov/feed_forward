@@ -44,14 +44,18 @@ signal sums_array:Tsums_array;
 signal ce_1w,ce_2w,ce_3w:std_logic;
 
 signal cnt:std_logic_vector(1 downto 0):=(others=>'0');
+signal init_W:std_logic_vector(4 downto 0):=(others=>'0');
+signal init_or:std_logic;
 
 begin
+
+init_or<=BusOr(init_W);
 	
 process (clk) is
 variable v_sums:std_logic_vector(sums'Length-1 downto 0);
 begin
 	if rising_edge(clk) then
-
+        init_W<=init_W(init_W'Length-2 downto 0)&init;
 		if init='1' then
 			for i in 0 to TAPS-1 loop
 				delay_line(i)<=init_phase;
@@ -59,7 +63,8 @@ begin
 			end loop;			
 			sums<=SXT(init_phase,sums_fin'Length);
 		else  --# init					
-			if i_ce='1' then
+			if i_ce='1' and init_or='0' then
+--			if i_ce='1' then
 				delay_line_c<=delay_line;
 				delay_line(0)<=i_phase;
 				for i in 1 to TAPS-1 loop
@@ -69,7 +74,7 @@ begin
 
 			v_sums:=(others=>'0');
 			for x in 0 to IN_ONETICK-1 loop
-				muls_array(x)<=signed(delay_line_c(x+0*IN_ONETICK))*signed(conv_std_logic_vector(filter_taps(x+0*IN_ONETICK),delay_line(0)'Length));
+				muls_array(x)<=signed(delay_line(x+0*IN_ONETICK))*signed(conv_std_logic_vector(filter_taps(x+0*IN_ONETICK),delay_line(0)'Length));
 				v_sums:=v_sums+SXT(muls_array(x)(muls_array(0)'Length-1 downto muls_array(0)'Length-MUL_CUT),sums'Length);
 			end loop;
 			sums<=v_sums;
@@ -77,14 +82,20 @@ begin
 
 		end if; --# init
 
-		if i_ce='1' then
+		if i_ce='1' and init_or='0' then
+--		if i_ce='1' then
 --			cnt<=conv_std_logic_vector(InterpolateRate-1,cnt'Length);--  (others=>'0');
 			cnt<=conv_std_logic_vector(1,cnt'Length);--  (others=>'0');
 		else
 			cnt<=cnt+1;
 		end if;
 
-        ce_1w<=i_ce;
+		if init_or='0' then
+	        ce_1w<=i_ce;
+		else
+			ce_1w<='0';
+		end if;
+
 		ce_2w<=ce_1w;
 		ce_3w<=ce_2w;
 		if init='1' then
@@ -97,8 +108,9 @@ begin
 
 	end if;
 end process;
-		o_phase<=SXT(sums_fin(sums_fin'Length-1-2 downto sums_fin'Length-o_phase'Length),o_phase'Length);
---        o_phase<=conv_std_logic_vector(0,o_phase'Length);
+--		o_phase<=SXT(sums_fin(sums_fin'Length-1-2 downto sums_fin'Length-o_phase'Length),o_phase'Length);
+--		o_phase<=SXT(sums_fin(sums_fin'Length-1-2 downto sums_fin'Length-o_phase'Length-2),o_phase'Length);
+		o_phase<=sums_fin(sums_fin'Length-1-2 downto sums_fin'Length-o_phase'Length-2);
 
 
 

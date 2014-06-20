@@ -65552,6 +65552,7 @@ ram[65535] = {-9'd4,-10'd4};
 end
 
 assign test_pos={phase_acum_mod[8:1],input_angles[8:1]};
+//assign test_pos={phase_acum_mod[8-1:1-1],input_angles[8:1]};
 
 always @ ( posedge clk ) begin
 	begin

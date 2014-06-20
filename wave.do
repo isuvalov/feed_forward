@@ -3,159 +3,439 @@ quietly WaveActivateNextPane {} 0
 add wave -noupdate -color Coral -itemcolor Coral /tb/modem_rx_top_inst/sync_find
 add wave -noupdate -color Coral -itemcolor Coral -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/loss_cnt
 add wave -noupdate -radix decimal /tb/modem_rx_top_inst/freq_val_filt
-add wave -noupdate /tb/testlfsr_i/datain
+add wave -noupdate /tb/testLFSR_i/datain
 add wave -noupdate /tb/error
 add wave -noupdate /tb/modem_rx_top_inst/freq_estimator_inst/clk
 add wave -noupdate /tb/modem_rx_top_inst/freq_estimator_inst/reset
 add wave -noupdate /tb/modem_rx_top_inst/freq_estimator_inst/pilot_start
 add wave -noupdate /tb/modem_rx_top_inst/freq_estimator_inst/i_ce
-add wave -noupdate /tb/modem_rx_top_inst/samplei_norm_1w
-add wave -noupdate /tb/modem_rx_top_inst/sampleq_norm_1w
+add wave -noupdate /tb/modem_rx_top_inst/sampleI_norm_1w
+add wave -noupdate /tb/modem_rx_top_inst/sampleQ_norm_1w
 add wave -noupdate /tb/modem_rx_top_inst/clk
-add wave -noupdate /tb/modem_rx_top_inst/samplei_norm
-add wave -noupdate /tb/samplei_tx
-add wave -noupdate /tb/modem_rx_top_inst/sampleq_norm
-add wave -noupdate /tb/modem_rx_top_inst/samplei_delay
-add wave -noupdate -color Coral -itemcolor Coral /tb/modem_rx_top_inst/sync_find
-add wave -noupdate -color Coral -itemcolor Coral -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/loss_cnt
+add wave -noupdate /tb/modem_rx_top_inst/sampleI_norm
+add wave -noupdate /tb/modem_rx_top_inst/sampleQ_norm
+add wave -noupdate /tb/modem_rx_top_inst/sampleI_delay
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 20000.0 -min -20000.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/sampleI_pilot
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilot_valid
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 20000.0 -min -20000.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/i_samplesI
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 20000.0 -min -20000.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/sampleQ_pilot
+add wave -noupdate -group freq_estimator -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/sampleI_pilot(15)
+add wave -noupdate -group freq_estimator -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/sampleQ_pilot(15)
+add wave -noupdate -group freq_estimator -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/test_samplesQ(15)
+add wave -noupdate -group freq_estimator -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/test_samplesI(15)
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 27733.0 -min -27733.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/test_samplesQ
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 27733.0 -min -27733.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/test_samplesI
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 20000.0 -min -20000.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/i_samplesQ
+add wave -noupdate -group freq_estimator -color Blue -itemcolor Blue /tb/modem_rx_top_inst/freq_estimator_inst/freq_ce
+add wave -noupdate -group freq_estimator -color Blue -itemcolor Blue -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/o_freq
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/stm
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pwr_stm
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/memI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/memQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/mem2I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/mem2Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/samples_cnt
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/p_wr
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/p_rd
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/p_rd2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_samplesI_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_samplesQ_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/from_m_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/from_m_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/from_m2_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/from_m2_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/wr
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/start_calc
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/wr_st_was
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_ce_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_ce_w2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_ce_w3
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_cnt_calc_to_angle_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_cnt_calc_to_angle
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_cnt_calc
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_cnt
+add wave -noupdate -group freq_estimator -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/i_samplesI(15)
+add wave -noupdate -group freq_estimator -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/i_samplesQ(15)
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sampleI_pilot(15)
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sampleQ_pilot(15)
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/b_s_pilotI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sampleI_pilot
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sampleQ_pilot
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/b_sc_pilotQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/wind_cnt
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 37733.0 -min -37733.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/pilotII
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 216217000.0 -min -216217000.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/analog_pilotII
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 37733.0 -min -37733.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/pilotQQ
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 37733.0 -min -37733.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/pilotIQ
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 37733.0 -min -37733.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/pilotQI
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 216217000.0 -min -216217000.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/analog_pilotQQ
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 216217000.0 -min -216217000.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/analog_pilotIQ
+add wave -noupdate -group freq_estimator -format Analog-Step -height 50 -max 216217000.0 -min -216217000.0 -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/analog_pilotQI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotmskI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotmskQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotmskI_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotmskQ_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotmsk2I_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotmsk2Q_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_II
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_QQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_IQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_QI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/t_ml_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/t_ml_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sum_ce
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sum_ce_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sum_ce_w2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sum_ce_w3
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_ce
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_ce_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_ce_w2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_calc
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_calc_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_calc_w2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_calc_w3
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_calc_w4
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/acum_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/acum_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/acum_phase
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/s_pilotI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sc_pilotQ
+add wave -noupdate -group freq_estimator -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/pilotmskI
+add wave -noupdate -group freq_estimator -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/analog_pilotmskQ
+add wave -noupdate -group freq_estimator -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/pilotmskQ
+add wave -noupdate -group freq_estimator -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/analog_pilotmskI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/b_s_pilotI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/b_sc_pilotQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/s_pilotIn
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sc_pilotQn
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/div_tab
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_I_mul
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_Q_mul
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/first_l
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angle_sm_floor
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_I_mul_prev
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_Q_mul_prev
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_Q_mul_conj
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/first_l_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_ce_w3
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angle_pilot_ce
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rx_p_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rx_p_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/s_rx_p_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/s_rx_p_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rx_p_II
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rx_p_QQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rx_p_IQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rx_p_QI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/smoofangels_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/smoofangels_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/WAIT_FREQ_FIN_need
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rdy_phase
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sum_mult_preangle
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_I_uns
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_Q_uns
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_div
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_I_choose
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_Q_choose
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_divB_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_divB
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_I_choose2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_Q_choose2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_div2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_div3
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pi_div_2_val
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/need_pi2_sub
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/div_done_w2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/div_done_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/div_done
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/div_sign
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/div_done2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sum_mult_preangle_cnt
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/calc_angle_ce
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/calc_angle_ce_choose2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/calc_angle_ce_choose
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/calc_angle_ce_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/calc_angle_ce_W
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/freq_calc_fin_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/freq_calc_fin
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/freq_calc_fin_pre
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/a_calc_ce
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/a_calc_ce_cnt
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/smp_cnt
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/PILOT_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/PILOT_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/sampleI_norm
+add wave -noupdate -group freq_estimator /tb/sampleI_tx
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/sampleQ_norm
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/sampleI_delay
+add wave -noupdate -group freq_estimator -color Coral -itemcolor Coral /tb/modem_rx_top_inst/sync_find
+add wave -noupdate -group freq_estimator -color Coral -itemcolor Coral -radix unsigned /tb/modem_rx_top_inst/pilotsync_inst/loss_cnt
+add wave -noupdate -group freq_estimator /tb/error
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/clk
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/reset
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilot_start
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_ce
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_samplesI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_samplesQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/freq_ce
+add wave -noupdate -group freq_estimator -radix decimal /tb/modem_rx_top_inst/freq_estimator_inst/o_freq
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/stm
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pwr_stm
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/memI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/memQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/mem2I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/mem2Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/samples_cnt
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/p_wr
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/p_rd
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/p_rd2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_samplesI_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_samplesQ_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/from_m_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/from_m_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/from_m2_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/from_m2_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/wr
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/start_calc
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/wr_st_was
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_ce_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_ce_w2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/i_ce_w3
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_cnt_calc_to_angle_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_cnt_calc_to_angle
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_cnt_calc
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_cnt
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/wind_cnt
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotII
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotQQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotIQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotQI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotmskI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotmskQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotmskI_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotmskQ_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotmsk2I_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pilotmsk2Q_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_II
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_QQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_IQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_QI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/t_ml_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/t_ml_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sum_ce
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sum_ce_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sum_ce_w2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sum_ce_w3
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_ce
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_ce_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_ce_w2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_calc
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_calc_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_calc_w2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_calc_w3
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/l_calc_w4
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/acum_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/acum_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/acum_phase
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/s_pilotI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sc_pilotQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/b_s_pilotI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/b_sc_pilotQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/s_pilotIn
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sc_pilotQn
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/div_tab
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_I_mul
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_Q_mul
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/first_l
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angle_sm_floor
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_I_mul_prev
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_Q_mul_prev
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_Q_mul_conj
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/first_l_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/ml_sum_ce_w3
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angle_pilot_ce
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rx_p_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rx_p_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/s_rx_p_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/s_rx_p_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rx_p_II
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rx_p_QQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rx_p_IQ
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rx_p_QI
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/smoofangels_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/smoofangels_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/WAIT_FREQ_FIN_need
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/rdy_phase
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sum_mult_preangle
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_I
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_I_uns
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_Q_uns
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_div
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_I_choose
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_Q_choose
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_divB_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_divB
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_I_choose2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_Q_choose2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_div2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/angels_to_sum_sum_div3
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/pi_div_2_val
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/need_pi2_sub
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/div_done_w2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/div_done_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/div_done
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/div_sign
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/div_done2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/sum_mult_preangle_cnt
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/calc_angle_ce
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/calc_angle_ce_choose2
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/calc_angle_ce_choose
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/calc_angle_ce_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/calc_angle_ce_W
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/freq_calc_fin_w1
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/freq_calc_fin
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/freq_calc_fin_pre
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/a_calc_ce
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/a_calc_ce_cnt
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/smp_cnt
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/PILOT_Q
+add wave -noupdate -group freq_estimator /tb/modem_rx_top_inst/freq_estimator_inst/PILOT_I
 add wave -noupdate /tb/error
-add wave -noupdate /tb/error
-add wave -noupdate /tb/testlfsr_i/error
-add wave -noupdate -format Analog-Step -height 100 -max 599999.99999999988 -min -600000.0 -radix decimal -subitemconfig {/tb/modem_rx_top_inst/itertive_demod_inst/init_phase(19) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(18) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(17) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(16) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(15) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(14) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(13) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(12) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(11) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(10) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(9) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(8) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(7) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(6) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(5) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(4) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(3) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(2) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(1) {-radix decimal} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase(0) {-radix decimal}} /tb/modem_rx_top_inst/itertive_demod_inst/init_phase
+add wave -noupdate /tb/testLFSR_i/error
 add wave -noupdate -divider {New Divider}
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/clk
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/reset
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/saveit
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/saveit2
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/saveit3
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/saveit2_1w
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/saveit_1w
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/after_pilot_start
-add wave -noupdate -format Analog-Step -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesi
-add wave -noupdate -format Analog-Step -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesq
-add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phasei
-add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_init_phaseq
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/o_samples_phase
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/out_ce
-add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/init_phase2
-add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/init_phase
-add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/sample_phase
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/init_add_phase
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_add_phase
-add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/sample_phase_ok
-add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/sample_init_ok
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_phase_reg
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/samples_phase_mul
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/init_phase_mul
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_phase_short
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acummod
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phi_error
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/val_engle_reg
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/val_engle
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/filt_acum
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_delta_round
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_delta
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_new
-add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_demod
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_new_pi
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_delta_short
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_int0
-add wave -noupdate -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_start
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_p_err
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_p_err_1w
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_p_erre
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_start_shift
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/phase_demod_acum_start_div_mod
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/sample_add_phase_a
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/init_add_phase_a
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/new_after_pilot_start_a
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/new_after_pilot_start_2w
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/new_after_pilot_start_1w
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/new_after_pilot_start
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/ce_correct
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/cccc
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/samplesi_reg
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/samplesq_reg
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_ce_correct_perr
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/i_ce
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/ce_1w
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/ce_2w
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/ce_3w
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_i_ce
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_ce_1w
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_ce_2w
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/d_ce_3w
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/after_pilot_start
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/test_it
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/test_sample_cnt
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/s_phase_demod_acum_new_pi
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/dcnt
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/down_ce
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/after_pilot_start
-add wave -noupdate /tb/modem_rx_top_inst/itertive_demod_inst/whole_dcnt
 add wave -noupdate /tb/modem_tx_top_i/wrapper_tx_stream_i/test_seq
-add wave -noupdate -format Analog-Step -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesi
-add wave -noupdate -format Analog-Step -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/itertive_demod_inst/i_samplesq
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/clk
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/reset
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce
-add wave -noupdate -format Analog-Backstep -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/scalar_mult_inst/ai
-add wave -noupdate -format Analog-Backstep -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/scalar_mult_inst/aq
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/bi
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/bq
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/sum_ce
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/sumi_o
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/sumq_o
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/sum_regi
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/sum_regq
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/mul_regi
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/mul_regq
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aibi
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aqbq
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aibq
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aqbi
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aibi_m_aqbq
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aibq_p_aqbi
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aibi_p_aqbq
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/aqbi_m_aibq
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce_w1
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce_w2
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce_w3
-add wave -noupdate /tb/modem_rx_top_inst/scalar_mult_inst/ce_w4
-add wave -noupdate /tb/modem_tx_top_i/wrapper_tx_stream_i/test_seq
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/clk
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/reset
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/realpilot_event
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/start_pilotu
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/sync_find
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/start_pilotu_have
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/s_start_pilotu
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/start_delayer_cnt
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/loss_cnt
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/stm
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_prev_a
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_best
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_prev
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/main_cnt
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_prev_sum
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/s_sync_find
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/one_p
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/g_start_pilotu_have
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/g_start_pilotu
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/g_start_delayer_cnt
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotu_have_1w
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotu_have
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotu
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_start_delayer_cnt
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/m_realpilot_event
-add wave -noupdate /tb/modem_rx_top_inst/pilotsync_inst/good_come
+add wave -noupdate /tb/modem_rx_top_inst/start_rotate_ce
+add wave -noupdate /tb/modem_rx_top_inst/start_rotate_ce_W
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/clk
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/reset
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/ce
+add wave -noupdate -group scalar_mult -format Analog-Backstep -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/scalar_mult_inst/aI
+add wave -noupdate -group scalar_mult -format Analog-Backstep -height 50 -max 5000.0 -min -5000.0 -radix decimal /tb/modem_rx_top_inst/scalar_mult_inst/aQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/bI
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/bQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/sum_ce
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/sumI_o
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/sumQ_o
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/sum_regI
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/sum_regQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/mul_regI
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/mul_regQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/aIbI
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/aQbQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/aIbQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/aQbI
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/aIbI_m_aQbQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/aIbQ_p_aQbI
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/aIbI_p_aQbQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/aQbI_m_aIbQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/ce_w1
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/ce_w2
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/ce_w3
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_inst/scalar_mult_inst/ce_w4
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/clk
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/reset
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/realpilot_event
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/start_pilotU
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/sync_find
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/start_pilotU_have
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/s_start_pilotU
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/start_delayer_cnt
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/loss_cnt
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/stm
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_prev_a
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_best
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_prev
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/main_cnt
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/main_cnt_prev_sum
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/s_sync_find
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/one_p
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/g_start_pilotU_have
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/g_start_pilotU
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/g_start_delayer_cnt
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotU_have_1w
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotU_have
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/m_start_pilotU
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/m_start_delayer_cnt
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/m_realpilot_event
+add wave -noupdate -group pilotsync /tb/modem_rx_top_inst/pilotsync_inst/good_come
+add wave -noupdate -expand -group lfsr -radix hexadecimal /tb/testLFSR_i/clk
+add wave -noupdate -expand -group lfsr -radix hexadecimal /tb/testLFSR_i/ce
+add wave -noupdate -expand -group lfsr -radix hexadecimal /tb/testLFSR_i/LFSR_Mask
+add wave -noupdate -expand -group lfsr -radix hexadecimal /tb/testLFSR_i/datain
+add wave -noupdate -expand -group lfsr -radix hexadecimal /tb/testLFSR_i/error
+add wave -noupdate -expand -group lfsr -radix hexadecimal /tb/testLFSR_i/shift_rg
+add wave -noupdate -expand -group lfsr -radix hexadecimal /tb/testLFSR_i/s_shift_rgM
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/clk
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/reset
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/after_pilot_start
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/i_ce
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/i_samplesI
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/i_samplesQ
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/i_init_phaseI
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/i_init_phaseQ
+add wave -noupdate -expand -group iterative_demod -radix decimal -childformat {{/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(15) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(14) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(13) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(12) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(11) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(10) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(9) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(8) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(7) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(6) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(5) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(4) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(3) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(2) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(1) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(15) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(14) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(13) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(12) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(11) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(10) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(9) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(8) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(7) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(6) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(5) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(4) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(3) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(2) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(1) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI(0) {-height 15 -radix decimal}} /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesI
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/o_samplesQ
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/out_ce
+add wave -noupdate -expand -group iterative_demod -radix decimal -childformat {{/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(15) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(14) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(13) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(12) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(11) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(10) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(9) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(8) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(7) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(6) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(5) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(4) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(3) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(2) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(1) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(15) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(14) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(13) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(12) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(11) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(10) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(9) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(8) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(7) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(6) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(5) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(4) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(3) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(2) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(1) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new(0) {-height 15 -radix decimal}} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_new
+add wave -noupdate -expand -group iterative_demod -radix decimal -childformat {{/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(15) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(14) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(13) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(12) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(11) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(10) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(9) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(8) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(7) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(6) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(5) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(4) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(3) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(2) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(1) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(15) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(14) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(13) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(12) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(11) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(10) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(9) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(8) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(7) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(6) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(5) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(4) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(3) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(2) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(1) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new(0) {-height 15 -radix decimal}} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_new
+add wave -noupdate -expand -group iterative_demod -radix decimal -childformat {{/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(15) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(14) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(13) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(12) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(11) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(10) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(9) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(8) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(7) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(6) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(5) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(4) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(3) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(2) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(1) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(15) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(14) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(13) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(12) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(11) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(10) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(9) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(8) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(7) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(6) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(5) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(4) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(3) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(2) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(1) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w(0) {-height 15 -radix decimal}} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re_1w
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im_1w
+add wave -noupdate -expand -group iterative_demod /tb/modem_rx_top_inst/average_itertive_demod_i/shift1
+add wave -noupdate -expand -group iterative_demod /tb/modem_rx_top_inst/average_itertive_demod_i/shift2
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/to_tab_im
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/to_tab_re
+add wave -noupdate -expand -group iterative_demod -radix decimal -childformat {{/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(15) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(14) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(13) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(12) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(11) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(10) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(9) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(8) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(7) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(6) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(5) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(4) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(3) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(2) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(1) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(15) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(14) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(13) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(12) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(11) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(10) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(9) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(8) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(7) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(6) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(5) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(4) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(3) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(2) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(1) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re(0) {-height 15 -radix decimal}} /tb/modem_rx_top_inst/average_itertive_demod_i/acum_re
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/acum_im
+add wave -noupdate -expand -group iterative_demod -radix decimal -childformat {{/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(15) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(14) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(13) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(12) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(11) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(10) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(9) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(8) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(7) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(6) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(5) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(4) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(3) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(2) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(1) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(15) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(14) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(13) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(12) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(11) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(10) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(9) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(8) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(7) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(6) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(5) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(4) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(3) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(2) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(1) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI(0) {-height 15 -radix decimal}} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotI
+add wave -noupdate -expand -group iterative_demod -radix decimal -childformat {{/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(15) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(14) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(13) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(12) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(11) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(10) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(9) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(8) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(7) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(6) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(5) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(4) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(3) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(2) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(1) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(15) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(14) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(13) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(12) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(11) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(10) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(9) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(8) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(7) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(6) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(5) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(4) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(3) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(2) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(1) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ(0) {-height 15 -radix decimal}} /tb/modem_rx_top_inst/average_itertive_demod_i/sample_rotQ
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/table_re
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/table_im
+add wave -noupdate -expand -group iterative_demod -radix decimal -childformat {{/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(15) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(14) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(13) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(12) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(11) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(10) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(9) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(8) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(7) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(6) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(5) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(4) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(3) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(2) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(1) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(15) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(14) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(13) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(12) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(11) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(10) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(9) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(8) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(7) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(6) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(5) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(4) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(3) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(2) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(1) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE(0) {-height 15 -radix decimal}} /tb/modem_rx_top_inst/average_itertive_demod_i/table_reE
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/table_imE
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/ce_1w
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/ce_table
+add wave -noupdate -expand -group iterative_demod -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/ce_acum
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/clk
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/i_ce
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/A_I
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/B_Q
+add wave -noupdate -group complex_mult_ii -radix decimal -childformat {{/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(15) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(14) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(13) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(12) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(11) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(10) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(9) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(8) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(7) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(6) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(5) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(4) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(3) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(2) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(1) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(15) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(14) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(13) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(12) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(11) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(10) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(9) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(8) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(7) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(6) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(5) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(4) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(3) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(2) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(1) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I(0) {-height 15 -radix decimal}} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/C_I
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/D_Q
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/o_I
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/o_Q
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/out_ce
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/A_I_1w
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/B_Q_1w
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/A_I_2w
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/B_Q_2w
+add wave -noupdate -group complex_mult_ii -radix decimal -childformat {{/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(31) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(30) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(29) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(28) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(27) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(26) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(25) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(24) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(23) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(22) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(21) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(20) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(19) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(18) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(17) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(16) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(15) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(14) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(13) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(12) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(11) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(10) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(9) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(8) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(7) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(6) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(5) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(4) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(3) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(2) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(1) -radix decimal} {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(31) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(30) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(29) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(28) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(27) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(26) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(25) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(24) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(23) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(22) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(21) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(20) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(19) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(18) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(17) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(16) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(15) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(14) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(13) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(12) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(11) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(10) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(9) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(8) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(7) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(6) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(5) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(4) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(3) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(2) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(1) {-height 15 -radix decimal} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC(0) {-height 15 -radix decimal}} /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AC
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/AD
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/BC
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/BD
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/ACmBD
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/ADpBC
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/ACpBD
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/BCmAD
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/ce_1w
+add wave -noupdate -group complex_mult_ii -radix decimal /tb/modem_rx_top_inst/average_itertive_demod_i/complex_mult_q_ii/ce_2w
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {819052341 ps} 0}
-configure wave -namecolwidth 425
+WaveRestoreCursors {{Cursor 1} {626168000 ps} 0}
+quietly wave cursor active 1
+configure wave -namecolwidth 283
 configure wave -valuecolwidth 94
 configure wave -justifyvalue left
-configure wave -signalnamewidth 0
+configure wave -signalnamewidth 1
 configure wave -snapdistance 10
 configure wave -datasetprefix 0
 configure wave -rowmargin 4
@@ -166,4 +446,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {334314650 ps} {2087667650 ps}
+WaveRestoreZoom {0 ps} {2292196200 ps}
