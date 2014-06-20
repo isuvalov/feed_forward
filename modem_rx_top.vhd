@@ -576,6 +576,9 @@ scalar_mult_inst: entity work.scalar_mult
 
 
 average_itertive_demod_i: entity work.average_itertive_demod
+	generic map(
+		SIMULATION=>SIMULATION
+	)
 	port map(
 		clk =>clk,
 		reset =>reset,

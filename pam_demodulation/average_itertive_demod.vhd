@@ -10,6 +10,9 @@ USE STD.TEXTIO.ALL;
 USE IEEE.STD_LOGIC_TEXTIO.ALL;
 
 entity average_itertive_demod is
+	generic(
+		SIMULATION:integer:=1
+	);
 	port(
 		clk : in STD_LOGIC;
 		reset : in std_logic;
@@ -57,8 +60,9 @@ signal ce_1w,ce_table,ce_acum,shift1,shift2:std_logic;
 
 begin
 
-save_complexdata_i: entity work.save_complexdata
-	port map(
+SIM01: if SIMULATION=1 generate
+	save_complexdata_i: entity work.save_complexdata
+		port map(
 		clk =>clk,
 		i_ce =>i_ce,
 		i_samplesI=>i_samplesI,
@@ -68,7 +72,7 @@ save_complexdata_i: entity work.save_complexdata
 		i_samplesI2=>i_init_phaseI,
 		i_samplesQ2=>i_init_phaseQ
 		);
-
+end generate;
 
 
 table_reE<=table_re&EXT("0",16-BITSIZE);
@@ -160,6 +164,14 @@ begin
 					acum_re<=SXT(acum_re_new(15 downto 2),16);
 					acum_im<=SXT(acum_im_new(15 downto 2),16);
 					shift2<='1';
+				elsif unsigned(signed_abs(acum_re_new))>8192  or  unsigned(signed_abs(acum_im_new))>8192 then
+					acum_re<=SXT(acum_re_new(15 downto 1),16);
+					acum_im<=SXT(acum_im_new(15 downto 1),16);
+					shift2<='1';
+				elsif unsigned(signed_abs(acum_re_new))<2048  and  unsigned(signed_abs(acum_im_new))<2048 then
+					acum_re<=acum_re_new(15-3 downto 0)&"000";
+					acum_im<=acum_im_new(15-3 downto 0)&"000";
+					shift2<='0';
 				else
 					shift2<='0';
 					acum_re<=acum_re_new;
