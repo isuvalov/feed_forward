@@ -4,65 +4,24 @@ use ieee.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
 library work;
 use work.feedf_consts_pack.all;
-use work.assert_pack.all;
 
-USE STD.TEXTIO.ALL;
-USE IEEE.STD_LOGIC_TEXTIO.ALL;
 
-entity average_itertive_demod is
-	generic(
-		SIMULATION:integer:=1
-	);
+entity qcomplex_norm is
 	port(
 		clk : in STD_LOGIC;
-		reset : in std_logic;
-		after_pilot_start: in std_logic; --# он должен быть над первым i_ce
 		i_ce : in std_logic;		
 		i_samplesI: in std_logic_vector(15 downto 0);
 		i_samplesQ: in std_logic_vector(15 downto 0);
 
-		i_init_phaseI: in std_logic_vector(15 downto 0);
-		i_init_phaseQ: in std_logic_vector(15 downto 0);
-
+		o_ce : out std_logic;		
 		o_samplesI: out std_logic_vector(15 downto 0);
-		o_samplesQ: out std_logic_vector(15 downto 0);
-
-		out_ce: out std_logic
+		o_samplesQ: out std_logic_vector(15 downto 0)
 		);
-end average_itertive_demod;
+end qcomplex_norm;
 
 
 
-architecture average_itertive_demod of average_itertive_demod is
-
-function signed_abs (L: std_logic_vector) return std_logic_vector is
--- pragma label_applies_to abs
-  
-variable result : std_logic_vector(L'range) ;
---attribute IS_SIGNED of L:constant is TRUE ;
---attribute SYNTHESIS_RETURN of result:variable is "ABS" ;
-begin
-if (L(L'left) = '0' or L(L'left) = 'L') then
-    result := L;
-else
-    result := 0 - signed(L);
-end if;
-    return result ;
-end signed_abs;
-
-
-
-function int_abs (L: integer) return integer is
-	variable result : integer;
-begin
-	if (L>0) then
-    	result := L;
-	else
-    	result := 0 - L;
-	end if;
-    return result ;
-end int_abs;
-
+architecture qcomplex_norm of qcomplex_norm is
 
 constant NORMBIT:natural:=5;
 constant NORMBITOUT:natural:=8;
@@ -124,169 +83,40 @@ constant norm_mem:Tnorm_mem:=  (
 "01010001", "01110010", "10110100" );
 
 
-
-constant BITSIZE:integer:=8;
-constant SH:integer:=3;
-
+signal ce_1w,ce_2w:std_logic;
 signal mulval_a:std_logic_vector(NORMBITOUT-1 downto 0):=(others=>'0');
-signal acum_re_1w,acum_im_1w,acum_re_new,acum_im_new,acum_re,acum_im,sample_rotI,sample_rotQ:std_logic_vector(15 downto 0);
+signal samplesI_1w,samplesQ_1w:std_logic_vector(i_samplesI'Length-1 downto 0);
 signal acum_re_mula,acum_im_mula:std_logic_vector(15+NORMBITOUT+1 downto 0):=(others=>'0');
-signal table_re,table_im,to_tab_re,to_tab_im:std_logic_vector(BITSIZE-1 downto 0);
-signal table_reE,table_imE:std_logic_vector(15 downto 0);
-signal ce_1w,ce_table,ce_acum,shift1,shift2:std_logic;
-signal poval:std_logic_vector(NORMBIT*2-1 downto 0);
-signal povval_x,povval_y:std_logic_vector(NORMBIT-1 downto 0);
 
 begin
 
-SIM01: if SIMULATION=1 generate
-	save_complexdata_i: entity work.save_complexdata
-		port map(
-		clk =>clk,
-		i_ce =>i_ce,
-		i_samplesI=>i_samplesI,
-		i_samplesQ=>i_samplesQ,
-
-		i_ce2 =>after_pilot_start,
-		i_samplesI2=>i_init_phaseI,
-		i_samplesQ2=>i_init_phaseQ
-		);
-end generate;
-
-
-table_reE<=table_re&EXT("0",16-BITSIZE);
-table_imE<=table_im&EXT("0",16-BITSIZE);
-
-complex_mult_q_i: entity work.complex_mult_q
-	generic map(
-		SHIFT_MUL=>1,
-		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
-	)
-	port map(
-		clk =>clk,
-		i_ce =>i_ce,
-		A_I=>i_samplesI,
-		B_Q=>i_samplesQ,
-
-		C_I=>acum_re,
-		D_Q=>acum_im,
-
-
-		o_I=>sample_rotI,
-		o_Q=>sample_rotQ,
-		out_ce=>open
-		);
-
-complex_mult_q_ii: entity work.complex_mult_q
-	generic map(
-		SHIFT_MUL=>3, --# (числа указаны при 3)
-		CONJUGATION=>'0' --# умножение на сопряженное число, если '1' - то сопрягать
-	)
-	port map(
-		clk =>clk,
-		i_ce =>ce_table,
-		A_I=>acum_re_1w,       --# 6101+1i*1157  (верно)
-		B_Q=>acum_im_1w,
-
-		C_I=>table_reE,        --# 32256-1i*4352 (верно)
-		D_Q=>table_imE,
-
-
-		o_I=>acum_re_new, --# тут происходит переполнение должно быть 12318+1i*656
-		o_Q=>acum_im_new,
-		out_ce=>ce_acum
-		);
-
-shift1<='1' when unsigned(signed_abs(sample_rotI(sample_rotI'Length-1 downto 6)))>127 or unsigned(signed_abs(sample_rotQ(sample_rotQ'Length-1 downto 6)))>127  else '0';
-
---to_tab_re<=SXT(sample_rotI(sample_rotI'Length-1 downto 9),BITSIZE) when 
---	unsigned(signed_abs(sample_rotI(sample_rotI'Length-1 downto 6)))>127 or unsigned(signed_abs(sample_rotQ(sample_rotQ'Length-1 downto 6)))>127 
---	else sample_rotI(6+BITSIZE-1 downto 6);
-
---to_tab_im<=SXT(sample_rotQ(sample_rotQ'Length-1 downto 9),BITSIZE) when 
---	unsigned(signed_abs(sample_rotI(sample_rotI'Length-1 downto 6)))>127 or unsigned(signed_abs(sample_rotQ(sample_rotQ'Length-1 downto 6)))>127 
---	else sample_rotQ(6+BITSIZE-1 downto 6);
-
-to_tab_re<=sample_rotI(5+BITSIZE-1 downto 5);
-to_tab_im<=sample_rotQ(5+BITSIZE-1 downto 5);
-
-table_demod_i:entity work.table_demod
-	generic map(
-		BIT_IN=>BITSIZE,
-		BIT_OUT=>BITSIZE
-	)
-	 port map(
-		  clk =>clk,
-		  i_ce=>ce_1w,
-	      sample_in_re=>to_tab_re,
-	      sample_in_im=>to_tab_im,
-		  o_ce=>ce_table,
-	      sample_out_re=>table_re,
-	      sample_out_im=>table_im
-		 );
-		
-
---for i in 0 to 255 generate
---	snorm_table
---end generate;
-povval_x<=acum_re_new(acum_re_new'Length-1-1 downto acum_re_new'Length-NORMBIT-1);
-povval_y<=acum_im_new(acum_re_new'Length-1-1 downto acum_re_new'Length-NORMBIT-1);
-poval<=acum_im_new(acum_re_new'Length-1-1 downto acum_re_new'Length-NORMBIT-1)&acum_re_new(acum_re_new'Length-1-1 downto acum_re_new'Length-NORMBIT-1);
-mulval_a<=norm_mem(conv_integer(poval));
-
-process(clk) is
-variable v_acum_re_mula,v_acum_im_mula:std_logic_vector(acum_re_mula'Length-1 downto 0):=(others=>'0');
-
-begin
+process (clk) is
+begin		
 	if rising_edge(clk) then
+
 		ce_1w<=i_ce;
-		out_ce<=i_ce;
-		acum_re_1w<=acum_re;
-		acum_im_1w<=acum_im;
-		o_samplesI<=sample_rotI;
-		o_samplesQ<=sample_rotQ;
+		ce_2w<=ce_1w;
 
-		if after_pilot_start='1' then
-			acum_re<=i_init_phaseI;
-			acum_im<=i_init_phaseQ;
-		else        --# reset
-			if ce_acum='1' then
+		if i_ce='1' then
+		    mulval_a<=norm_mem(conv_integer(i_samplesI(i_samplesI'Length-1-1 downto i_samplesI'Length-NORMBIT-1)&i_samplesQ(i_samplesQ'Length-1-1 downto i_samplesQ'Length-NORMBIT-1)));
+			samplesI_1w<=i_samplesI;
+			samplesQ_1w<=i_samplesQ;
+		end if;
+		
+		if ce_1w='1' then
+			acum_re_mula<=signed(samplesI_1w)*unsigned(mulval_a);
+			acum_im_mula<=signed(samplesQ_1w)*unsigned(mulval_a);
+		end if;
 
-
-
-				v_acum_re_mula:=signed(acum_re_new)*signed('0'&mulval_a);
-				v_acum_im_mula:=signed(acum_im_new)*signed('0'&mulval_a);
-
-				acum_re_mula<=signed(acum_re_new)*signed('0'&mulval_a);
-				acum_im_mula<=signed(acum_im_new)*signed('0'&mulval_a);
+		o_ce<=ce_2w;
+		o_samplesI<=acum_re_mula(acum_re_mula'Length-1-NORMBIT downto acum_re_mula'Length-o_samplesI'Length-NORMBIT);
+		o_samplesQ<=acum_im_mula(acum_re_mula'Length-1-NORMBIT downto acum_re_mula'Length-o_samplesQ'Length-NORMBIT);
 
 
-				acum_re<=v_acum_re_mula(acum_re_mula'Length-1-(NORMBIT-1) downto acum_re_mula'Length-acum_re'Length-(NORMBIT-1));
-				acum_im<=v_acum_im_mula(acum_re_mula'Length-1-(NORMBIT-1) downto acum_re_mula'Length-acum_re'Length-(NORMBIT-1));
-
---				if unsigned(signed_abs(acum_re_new))>16384  or  unsigned(signed_abs(acum_im_new))>16384 then
---					acum_re<=SXT(acum_re_new(15 downto 2),16);
---					acum_im<=SXT(acum_im_new(15 downto 2),16);
---					shift2<='1';
---				elsif unsigned(signed_abs(acum_re_new))>8192  or  unsigned(signed_abs(acum_im_new))>8192 then
---					acum_re<=SXT(acum_re_new(15 downto 1),16);
---					acum_im<=SXT(acum_im_new(15 downto 1),16);
---					shift2<='1';
---				elsif unsigned(signed_abs(acum_re_new))<2048  and  unsigned(signed_abs(acum_im_new))<2048 then
---					acum_re<=acum_re_new(15-3 downto 0)&"000";
---					acum_im<=acum_im_new(15-3 downto 0)&"000";
---					shift2<='0';
---				else
---					shift2<='0';
---					acum_re<=acum_re_new;
---					acum_im<=acum_im_new;
---				end if;
-
-			end if; --# i_ce
-		end if;     --# reset
 	end if;
 end process;
 
-end average_itertive_demod;
+
+end qcomplex_norm;
 
 

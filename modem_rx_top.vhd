@@ -117,6 +117,10 @@ signal bit_value_rx_1p,bit_value_rx:std_logic_vector(1 downto 0);
 signal demod_sampleI_1state,demod_sampleQ_1state,demod_sampleI,demod_sampleQ:std_logic_vector(15 downto 0);
 signal demod_sampleI_2state,demod_sampleQ_2state:std_logic_vector(15 downto 0);
 
+signal down_ce_norm:std_logic;
+signal demod_sampleI_norm,demod_sampleQ_norm:std_logic_vector(sampleI_to_demod'Length-1 downto 0);
+
+
 begin
 
 sync_find<=s_sync_find;
@@ -575,6 +579,19 @@ scalar_mult_inst: entity work.scalar_mult
 
 
 
+qcomplex_norm_i: entity work.qcomplex_norm
+	port map(
+		clk =>clk,
+		i_ce =>down_ce,
+		i_samplesI =>sampleI_to_demod_W(0),
+		i_samplesQ =>sampleQ_to_demod_W(0),
+
+		o_ce =>down_ce_norm,
+		o_samplesI => demod_sampleI_norm,
+		o_samplesQ => demod_sampleQ_norm
+		);
+
+
 average_itertive_demod_i: entity work.average_itertive_demod
 	generic map(
 		SIMULATION=>SIMULATION
@@ -583,9 +600,9 @@ average_itertive_demod_i: entity work.average_itertive_demod
 		clk =>clk,
 		reset =>reset,
 		after_pilot_start=>start_rotate_ce_W(2), --# он должен быть над первым i_ce must be before CE
-		i_ce =>down_ce,
-		i_samplesI=>sampleI_to_demod_W(0),
-		i_samplesQ=>sampleQ_to_demod_W(0),
+		i_ce =>down_ce_norm,--down_ce,
+		i_samplesI=>demod_sampleI_norm,--sampleI_to_demod_W(0),
+		i_samplesQ=>demod_sampleQ_norm,--sampleQ_to_demod_W(0),
 
 		i_init_phaseI=>start_rotate_I,
 		i_init_phaseQ=>start_rotate_Q,
