@@ -39,6 +39,7 @@ signal delaylineI,delaylineQ:Tdelayline;
 
 type Tshifts is array(0 to log2roundup(NM)) of natural;
 constant shifts:Tshifts:=(1,1,1,1,1,0,1,0,1);
+--constant shifts:Tshifts:=(1,1,1,1,1,1,1,1,1,1);
 
 type Tmult_col is array(0 to NM-1) of std_logic_vector(i_samplesI'Length downto 0);
 type Tmultarray is array(0 to log2roundup(NM)) of Tmult_col;

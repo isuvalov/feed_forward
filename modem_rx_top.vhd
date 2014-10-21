@@ -43,6 +43,8 @@ signal sampleIE,sampleQE,sampleI_zero,sampleQ_zero: std_logic_vector(15 downto 0
 
 signal sampleIfilt,sampleQfilt: std_logic_vector(15 downto 0);
 signal sampleIfilt2,sampleQfilt2: std_logic_vector(15 downto 0);
+
+constant USE_FREQ_CORRECTION:integer:=0;
 constant SQRT_LATENCY:natural:=16;
 constant FILTRCC_LATENCY:natural:=33/2+1-5;
 constant DELAY_LEN:natural:=InterpolateRate*PILOT_LEN+SQRT_LATENCY+FILTRCC_LATENCY;
@@ -160,10 +162,17 @@ rcc_up_filter_inst: entity work.rcc_up_filter_rx
 		o_sampleI=>sampleIfilt,
 		o_sampleQ=>sampleQfilt
 		);
+
+--sampleIfilt<=sampleI_zero(sampleIfilt'Length-1 downto 0);
+--sampleQfilt<=sampleQ_zero(sampleIfilt'Length-1 downto 0);
+
 sampleIfilt2<=sampleIfilt(sampleIfilt'Length-2 downto 0)&"0";
 sampleQfilt2<=sampleQfilt(sampleIfilt'Length-2 downto 0)&"0";
---sampleIfilt2<=sampleIfilt;
+
+
+--sampleIfilt2<=sampleIfilt; --# nnneww!!!!
 --sampleQfilt2<=sampleQfilt;
+
 
 
 
@@ -260,8 +269,10 @@ freq_estimator_inst: entity work.freq_estimator
 
 bih_filter_integrator_inst: entity work.bih_filter_freq
 	generic map(
-		ALPHA_NUM=>12,  --# коэффициент интегрировани€, чем он больше тем большую историю храним
-		SCALE_FACTOR=>9,  --# маштаб - чем он больше тем меньше значение на выходе
+--		ALPHA_NUM=>12,  --# коэффициент интегрировани€, чем он больше тем большую историю храним
+--		SCALE_FACTOR=>9,  --# маштаб - чем он больше тем меньше значение на выходе
+		ALPHA_NUM=>4,  --# коэффициент интегрировани€, чем он больше тем большую историю храним
+		SCALE_FACTOR=>1,  --# маштаб - чем он больше тем меньше значение на выходе
 		WIDTH=>freq_value'Length
 	)
 	port map(
@@ -365,8 +376,6 @@ begin
 		start_rotate_ce_2w<=start_rotate_ce_1w;
 		start_rotate_ce_3w<=start_rotate_ce_2w;
 
-		sampleI_to_demod_1w<=sampleI_to_demod;
-		sampleQ_to_demod_1w<=sampleQ_to_demod;
 
 --		start_rotate_ce_W<=start_rotate_ce_W(start_rotate_ce_W'Length-2 downto 0)&start_rotate_ce;
 
@@ -408,12 +417,12 @@ begin
 	end if;
 end process;
 
-
+usefreq01: if USE_FREQ_CORRECTION=1 generate
 moveB: entity work.complex_mult
 	generic map(
-		SHIFT_MUL=>2,
+		SHIFT_MUL=>1,
 		NOT_USE_IT=>0,--GLOBAL_DEBUG,
-		CONJUGATION=>'1' --# умножение на сопр€женное число, если '1' - то сопр€гать
+		CONJUGATION=>'0' --# умножение на сопр€женное число, если '1' - то сопр€гать
 	)
 	port map(
 		clk =>clk,
@@ -428,9 +437,15 @@ moveB: entity work.complex_mult
 		o_Q =>sampleQ_moveback,
 		out_ce =>sampleQ_moveback_ce
 		);
+end generate;
+usefreq02: if USE_FREQ_CORRECTION/=1 generate
+	sampleI_moveback<=sampleI_delay_fe_reg(sampleI_delay_fe_reg'Length-1 downto sampleI_delay_fe_reg'Length-16);
+	sampleQ_moveback<=sampleQ_delay_fe_reg(sampleQ_delay_fe_reg'Length-1 downto sampleQ_delay_fe_reg'Length-16);
 
-
-
+--	sampleI_moveback<=SXT(sampleI_delay_fe_reg(sampleI_delay_fe_reg'Length-1 downto sampleI_delay_fe_reg'Length-16+1),16);
+--	sampleQ_moveback<=SXT(sampleQ_delay_fe_reg(sampleQ_delay_fe_reg'Length-1 downto sampleQ_delay_fe_reg'Length-16+1),16);
+	sampleQ_moveback_ce<='1';
+end generate;
 
 
 pilotsync_inst: entity work.pilot_sync_every_time
@@ -572,7 +587,7 @@ scalar_mult_inst: entity work.scalar_mult
 --		o_sampleQ=>sampleQ_to_demod
 --		);
 
-average_itertive_demod_i: entity work.average_itertive_demod
+average_itertive_demod_i: entity work.norm_itertive_demod
 	port map(
 		clk =>clk,
 		reset =>reset,
@@ -583,14 +598,29 @@ average_itertive_demod_i: entity work.average_itertive_demod
 
 		i_init_phaseI=>start_rotate_I,
 		i_init_phaseQ=>start_rotate_Q,
-
 		o_samplesI=>demod_sampleI,
 		o_samplesQ=>demod_sampleQ,
-
---		o_samples_phase: out std_logic_vector(15 downto 0);
 		out_ce=>open
 		);
 
+--gadarg_i: entity work.gadarg
+--	generic map(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
+--		RM=>226871798/2, --226871798/2,
+--		KKK=>0,
+----		STEP=>5148/8
+--		STEP=>5148/16
+--	) 
+--	port map(
+--		clk =>clk,
+--		reset =>reset,
+--
+--		i_sampleI=>sampleI_to_demod_W(0),
+--		i_sampleQ=>sampleQ_to_demod_W(0),
+--		i_ce =>down_ce,
+--
+--		o_sampleI =>demod_sampleI,
+--		o_sampleQ =>demod_sampleQ
+--		);
 
 
 
@@ -603,7 +633,7 @@ ss: if SIMULATION=1 generate
 		 clk =>clk,
 		 CE =>down_ce,
 		 block_marker =>'0',
-		 DataToSave =>demod_sampleI
+		 DataToSave =>demod_sampleI --sampleI_to_demod_W(0) --
 	     );
 
 
@@ -615,7 +645,7 @@ ss: if SIMULATION=1 generate
 		 clk =>clk,
 		 CE =>down_ce,
 		 block_marker =>'0',
-		 DataToSave =>demod_sampleQ
+		 DataToSave =>demod_sampleQ --sampleQ_to_demod_W(0) --
 	     );
 end generate;
 
@@ -665,10 +695,15 @@ begin
 		sampleI_to_demod<=sampleI_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
     	sampleQ_to_demod<=sampleQ_moveback(sampleI_moveback'Length-1 downto sampleI_moveback'Length-16);
 
-    	if down_ce='1' then
+		sampleI_to_demod_1w<=sampleI_to_demod;
+		sampleQ_to_demod_1w<=sampleQ_to_demod;
+
+
+
+--    	if down_ce='1' then
 			sampleI_to_demod_W(0)<=sampleI_to_demod_1w;
 			sampleQ_to_demod_W(0)<=sampleQ_to_demod_1w;
-		end if;
+--		end if;
 
 		for i in 1 to 20+21+26 loop
 			sampleI_to_demod_W(i)<=sampleI_to_demod_W(i-1);

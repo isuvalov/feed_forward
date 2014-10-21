@@ -30,6 +30,7 @@ end gadarg;
 
 architecture gadarg of gadarg is
 
+constant STEPTUNE:integer:=2; --# for make STEP more
 constant FILTER_LEN:natural:=4;
 constant FILTER_COEF_WIDTH:natural:=16;
 constant FILTER_ACUM_WIDTH:natural:=32;
@@ -270,8 +271,8 @@ begin
                 v_sumed_muls_i:=(c_mul_ii(0)+c_mul_ii(1)+c_mul_ii(2)+c_mul_ii(3)) - (c_mul_qq(0)+c_mul_qq(1)+c_mul_qq(2)+c_mul_qq(3));
 				v_sumed_muls_q:=(c_mul_iq(0)+c_mul_iq(1)+c_mul_iq(2)+c_mul_iq(3)) + (c_mul_qi(0)+c_mul_qi(1)+c_mul_qi(2)+c_mul_qi(3));
 
-				sumed_muls_i<=v_sumed_muls_i(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH); --# sumed_muls =I(k)
-				sumed_muls_q<=v_sumed_muls_q(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH); --# sumed_muls =I(k)
+				sumed_muls_i<=v_sumed_muls_i(FILTER_ACUM_WIDTH-1-1 downto FILTER_WORK_WIDTH-1); --# sumed_muls =I(k)
+				sumed_muls_q<=v_sumed_muls_q(FILTER_ACUM_WIDTH-1-1 downto FILTER_WORK_WIDTH-1); --# sumed_muls =I(k)
 				-------------------
 
 				-------------------
@@ -285,11 +286,11 @@ begin
 				--# result of this have latency=7
 				sumed_muls_i_1w<=sumed_muls_i;
 				for i in 0 to FILTER_LEN-1 loop 
-					WR0r_div(i)<=signed(delay_line_with_step_i(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vr1r*vr2r
-					WI0i_div(i)<=signed(delay_line_with_step_q(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(vi2i(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vi1i*vi2i
+					WR0r_div(i)<=signed(delay_line_with_step_i(i)(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE))*signed(vr2r(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE)); --# vr1r*vr2r
+					WI0i_div(i)<=signed(delay_line_with_step_q(i)(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE))*signed(vi2i(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE)); --# vi1i*vi2i
 					                                                                                            
-					WI0r_div(i)<=signed(delay_line_with_step_i(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(vi2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vi1r*vi2r
-					WR0i_div(i)<=signed(delay_line_with_step_q(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(vr2i(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vr1i*vr2i
+					WI0r_div(i)<=signed(delay_line_with_step_i(i)(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE))*signed(vi2r(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE)); --# vi1r*vi2r
+					WR0i_div(i)<=signed(delay_line_with_step_q(i)(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE))*signed(vr2i(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE)); --# vr1i*vr2i
 				end loop;
 				-------------------
 				--#===============================

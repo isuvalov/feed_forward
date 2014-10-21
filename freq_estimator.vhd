@@ -116,6 +116,7 @@ signal rdy_phase:std_logic;
 
 signal sum_mult_preangle:std_logic;
 signal angels_to_sum_sum_I,angels_to_sum_sum_Q:std_logic_vector(NBITm1+log2roundup(PILOT_LEN*2) downto 0);
+signal angels_to_sum_sum_I_get,angels_to_sum_sum_Q_get:std_logic_vector(NBITm1+log2roundup(PILOT_LEN*2) downto 0);
 signal angels_to_sum_sum_I_uns,angels_to_sum_sum_Q_uns:std_logic_vector(NBITm1+log2roundup(PILOT_LEN*2) downto 0);
 signal angels_to_sum_sum_div,angels_to_sum_sum_I_choose,angels_to_sum_sum_Q_choose:std_logic_vector(NBITm1+log2roundup(PILOT_LEN*2) downto 0);
 signal angels_to_sum_sum_divB_w1,angels_to_sum_sum_divB,angels_to_sum_sum_I_choose2,angels_to_sum_sum_Q_choose2:std_logic_vector(2*angels_to_sum_sum_I_choose'Length-1 downto 0);
@@ -145,6 +146,8 @@ signal pilot_start_work:std_logic;
 type Tdelay_samples is array(32 downto 0) of std_logic_vector(i_samplesI'Length-1 downto 0);
 signal test_samplesI,test_samplesQ:std_logic_vector(i_samplesI'Length-1 downto 0);
 signal delay_samplesI,delay_samplesQ:Tdelay_samples;
+
+signal freq_angle:std_logic_vector(19 downto 0);
 
 begin
 
@@ -179,6 +182,7 @@ pilot_upper_i: entity work.pilot_upper
 		);
 
 pilot_start_work<=pilot_start_W(7*InterpolateRate-1) when stm=WAITING else '0';
+--pilot_start_work<=pilot_start_W(7*InterpolateRate-1-1) when stm=WAITING else '0';
 make_pilotmsk:process (clk)
 begin		
 	if rising_edge(clk) then
@@ -270,11 +274,11 @@ delay_samplesQ(0)<=i_samplesQ;
 --		pilotmskI<=SXT(pilotII,pilotmskI'Length)-SXT(pilotQQ,pilotmskI'Length);	
 --		pilotmskQ<=SXT(pilotIQ,pilotmskI'Length)+SXT(pilotQI,pilotmskI'Length);
 
-		analog_pilotmskI<=SXT(analog_pilotII(31-5 downto 16-5),pilotmskI'Length)-SXT(analog_pilotQQ(31-5 downto 16-5),pilotmskI'Length);	
-		analog_pilotmskQ<=SXT(analog_pilotIQ(31-5 downto 16-5),pilotmskI'Length)+SXT(analog_pilotQI(31-5 downto 16-5),pilotmskI'Length);
+--		analog_pilotmskI<=SXT(analog_pilotII(31-5 downto 16-5),pilotmskI'Length)-SXT(analog_pilotQQ(31-5 downto 16-5),pilotmskI'Length);	
+--		analog_pilotmskQ<=SXT(analog_pilotIQ(31-5 downto 16-5),pilotmskI'Length)+SXT(analog_pilotQI(31-5 downto 16-5),pilotmskI'Length);
 
---		analog_pilotmskI<=SXT(analog_pilotII(31-3 downto 16-3),pilotmskI'Length)+SXT(analog_pilotQQ(31-3 downto 16-3),pilotmskI'Length);	
---		analog_pilotmskQ<=SXT(analog_pilotQI(31-3 downto 16-3),pilotmskI'Length)-SXT(analog_pilotIQ(31-3 downto 16-3),pilotmskI'Length);
+		analog_pilotmskI<=SXT(analog_pilotII(31-3 downto 16-3),pilotmskI'Length)-SXT(analog_pilotQQ(31-3 downto 16-3),pilotmskI'Length);	
+		analog_pilotmskQ<=SXT(analog_pilotIQ(31-3 downto 16-3),pilotmskI'Length)+SXT(analog_pilotQI(31-3 downto 16-3),pilotmskI'Length);
 
 
 
@@ -406,7 +410,19 @@ begin
 				first_l<='1';
 				l_cnt_calc<=(others=>'0');
 				WAIT_FREQ_FIN_need<='0';
-				freq_ce<='0';
+			sum_ce_w1<='0';
+			sum_ce_w2<='0';
+			sum_ce_w3<='0';
+			l_calc<='0';
+			l_calc_w1<='0';
+			l_calc_w2<='0';
+			l_calc_w3<='0';
+			l_calc_w4<='0';
+			ml_sum_ce<='0';
+			ml_sum_ce_w1<='0';
+			angle_pilot_ce<='0';
+			freq_ce<='0';
+
 			when ML_ARRAY_START =>
 				ml_sum_ce<='0';
 				angle_pilot_ce<='0';
@@ -452,13 +468,10 @@ begin
 				end if;
 				first_l<='0';
 			when WAIT_FREQ_FIN=>
---				if freq_calc_fin='1' then
 					stm<=WAITING;
-					o_freq<=SXT(angels_to_sum_sum_div3,o_freq'Length);
+--					o_freq<=SXT(angels_to_sum_sum_div3,o_freq'Length);
+					o_freq<=SXT(freq_angle,o_freq'Length);
 					freq_ce<='1';
---				else
---					freq_ce<='0';
---				end if;
 			when others=>
 			end case;
 
@@ -530,6 +543,18 @@ end process;
 
 
 
+cordic_wrapper_i: entity work.cordic_wrapper
+	port map(
+		clk =>clk,
+		i_ce =>'1',
+		i_samplesI=>angels_to_sum_sum_I_get(angels_to_sum_sum_I'Length-1-5 downto angels_to_sum_sum_I'Length-16-5),
+		i_samplesQ=>angels_to_sum_sum_Q_get(angels_to_sum_sum_I'Length-1-5 downto angels_to_sum_sum_I'Length-16-5),
+
+		phase=>freq_angle
+		);
+
+
+
 process (clk) is
 begin
 	if rising_edge(clk) then
@@ -594,6 +619,8 @@ begin
 		--# Если div_sign='0' тогда тогда поделенное значение будет положительным
 		if calc_angle_ce='1' then
 			div_sign<=angels_to_sum_sum_I(angels_to_sum_sum_I'Length-1) xor angels_to_sum_sum_Q(angels_to_sum_sum_Q'Length-1);
+			angels_to_sum_sum_I_get<=angels_to_sum_sum_I;
+			angels_to_sum_sum_Q_get<=angels_to_sum_sum_Q;
 			if signed(angels_to_sum_sum_I)<0 then
 				angels_to_sum_sum_I_uns<=0-angels_to_sum_sum_I;
 			else
@@ -638,11 +665,12 @@ serial_divide_uu_inst: entity work.serial_divide_uu
                                             -- the resource utilization (costs extra d-flip-flops.)
     port map(clk_i      =>clk,
              clk_en_i   =>'1',
-             rst_i      =>reset,
+             rst_i      =>start_calc,--reset,
              divide_i   =>calc_angle_ce_choose2,
 		 		--# считаем что angels_to_sum_sum_I_choose>angels_to_sum_sum_Q_choose
              dividend_i =>angels_to_sum_sum_Q_choose2, --# если не так то поменяем местами 
              divisor_i  =>angels_to_sum_sum_I_choose2,
+
 		 		--# result=angels_to_sum_sum_I/angels_to_sum_sum_Q
              quotient_o =>angels_to_sum_sum_divB,
              done_o     =>div_done

@@ -3,8 +3,8 @@ BIT_OUT=8; % bit with sign
 
 M=4;
 
-mod_engine=modem.pskmod('M',M,'PhaseOffset', pi/4 );
-demod_engine=modem.pskdemod('M',M,'PhaseOffset', pi/4);
+mod_engine=modem.pskmod('M',M,'PhaseOffset', 0 );
+demod_engine=modem.pskdemod('M',M,'PhaseOffset', 0);
 
 out_int_array=zeros(1,2^(BIT_IN+1));
 
