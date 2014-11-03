@@ -1,6 +1,6 @@
 clc
 BERs=3:20;
-BERs=79;
+BERs=379;
 rats_array=[];
 fd=200;      % тактовая частота АЦП/ЦАП
 % pilot_len=250;  % длина марекера по которому определяется расстройка в черне
@@ -12,15 +12,15 @@ tdelay=10000;        % длина полезного информации которая стоит между маркерами
 tlen=(PilotsNum+1)*(tdelay+pilot_len); %201000; % длина всех отсчетов
 alpha1=0.2;      % коэффициент усреднения, чем он меньше тем больше усреднение
 alpha2=0.1;
-% FreqOffset=1;
-FreqOffset=1;
+ FreqOffset=0.5;
+%   FreqOffset=0;
 test_freq_d=0.05;
 M=4;
 FILTLEN=32;
 R=0.2;
 
-mod_engine=modem.pskmod('M',M,'PhaseOffset', pi/4 );
-demod_engine=modem.pskdemod('M',M,'PhaseOffset', pi/4);
+mod_engine=modem.pskmod('M',M,'PhaseOffset', 0);
+demod_engine=modem.pskdemod('M',M,'PhaseOffset', 0);
 
 
 Fi_porog=abs(angle(modulate(mod_engine,0))-angle(modulate(mod_engine,1)))/2;
@@ -88,8 +88,8 @@ t4=0:1/fd:tframelen/fd-1/fd;
 
 %% Chanell добавляем адитивнй шум и сдвиг по частоте
     % Еще добавляем фазовые шумы на уровне -90dB
-	rx_transfer=s_transfer_filt1.*exp(1i*t3*FreqOffset*2*pi+(0.1/fd)*randn(1,length(s_transfer_filt1)));
-%      rx_transfer=rx_transfer.*exp(1i*pi/4);
+%  	rx_transfer=s_transfer_filt1.*exp(1i*t3*FreqOffset*2*pi+(0.1/fd)*randn(1,length(s_transfer_filt1)));
+rx_transfer=s_transfer_filt1.*exp(1i*t3*FreqOffset*2*pi);      
  	rx_transfer = awgn(rx_transfer,BERval,'measured');  
 
 
@@ -100,6 +100,8 @@ t4=0:1/fd:tframelen/fd-1/fd;
 
 rx_transfer_filt=conv(rx_transfer,hsqrt); % фильтр на приеме
 rx_transfer_filt=rx_transfer_filt(cut_f_l:end-cut_f_l);
+% rx_transfer_filt=rx_transfer;
+
 
 
 foffest_a=[];
@@ -139,6 +141,7 @@ for z=1:N-1
     f_offset=fdo+test_freq_d; %fir_acum*alpha1;
     
     rx_transfer_filt_cor=rx_transfer_filt((z-1)*tframelen+1:z*tframelen).*exp(-1i*2*pi*(f_offset)*t4); %% двигаем сигнал обратно на (-offset
+    rx_transfer_filt_cor=rx_transfer_filt((z-1)*tframelen+1:z*tframelen);
     rx_pilot2=rx_transfer_filt_cor(1:length(pilotUP));
 
     pcp=rx_pilot2(1:end-1)*conj(pilotUP(2:end)).';    
@@ -146,8 +149,12 @@ for z=1:N-1
 	pcp_a=angle(pcp);    
 
     phase_line_a=[];
-    
-    data_transfer_filtdata=rx_transfer_filt_cor(pilot_len*InterpolateRate+1+InterpolateRate/2:InterpolateRate:end);
+    good_pos=find_cync_ce((rx_transfer_filt_cor(4:end)),InterpolateRate);
+%     break;
+%     data_transfer_filtdata=rx_transfer_filt_cor(good_pos);
+      data_transfer_filtdata=rx_transfer_filt_cor(1+pilot_len*InterpolateRate+InterpolateRate/2:InterpolateRate:end);
+%      data_transfer_filtdata_e=rx_transfer_filt_cor(0+pilot_len*InterpolateRate+InterpolateRate/2:InterpolateRate:end);    
+%     data_transfer_filtdata_all=rx_transfer_filt_cor(pilot_len*InterpolateRate+1+InterpolateRate/2:1:end);
     
     mass=[];
     phase_demod_acum=pcp_a; % инициализируем аккомулятор фазы посчитанным значением фазы пилот сигнала
@@ -165,46 +172,65 @@ for z=1:N-1
 mmm_new_max=0;
 f1=[];
 USETABLE=1;
+
+%  data_transfer_filtdata=resample(data_transfer_filtdata,10001,10000);
 %% new variant
      sigg=[];
+     pcp_a=0;
      filt_array_x=ones(1,FILTLEN)*0;
      c_acum_phase_array=[];
      val_array=[];
-	 c_acum_phase_all=exp(1i*pcp_a);
+%      pcp_a=pcp_a+pi/16;
+	 c_acum_phase_all=conj(exp(1i*(pcp_a)));
+     c_phase_error_prev=1;
+     c_phase_error_midle=0;
      c_acum_phase=exp(1i*pcp_a);
      c_acum_phase_angle=pcp_a;
-     
+       midle_phase=0;     
 %      LATT=1;
 %      shift_phases=zeros(1,LATT)*exp(1i*pcp_a);
      c_phase_error_norm=1;
-     
+     adc_phase_error=[];
+     tic;
      for zd=1:length(data_transfer_filtdata)
-%         val_pre=data_transfer_filtdata(zd)./abs(data_transfer_filtdata(zd));
-   		val=data_transfer_filtdata(zd).*conj(c_acum_phase_all);        
-        val_c=val/abs(val);
-        sigg=[sigg val];
-if (USETABLE==1)
-    val_c=round(val_c*BITLEN); % MUST be round!!!
-    p=big_signed2unsigned(real(val_c),BITLEN)+bitshift(big_signed2unsigned(imag(val_c),BITLEN),BITLEN);
-    c_phase_error=acum_table(1,p)+acum_table(2,p)*1i;
-end; %USETABLE            
-% acum_table        
-if (USETABLE~=1)        
-		val_dec=demodulate(demod_engine,val);
-        mass=[mass val_dec];		
+         val_pre=data_transfer_filtdata(zd)./abs(data_transfer_filtdata(zd));
+%          val_pre_e=data_transfer_filtdata_e(zd)./abs(data_transfer_filtdata_e(zd));
+         
+%         adc_phase_error=[adc_phase_error conj(val_pre_e).*(val_pre)];
+%       val_pre=data_transfer_filtdata_all(zd)./abs(data_transfer_filtdata_all(zd));
+%    	val=data_transfer_filtdata(zd).*conj(c_acum_phase_all);        
+   		val=val_pre.*conj(c_acum_phase_all);        
+         sigg=[sigg val];
 
-	    val_mod2=modulate(mod_engine,val_dec);
-        c_phase_error=(val).*conj(val_mod2);
-        c_phase_error=c_phase_error./abs(c_phase_error);
-end; %USETABLE        
-        c_acum_phase_all=c_acum_phase_all.*c_phase_error;
-        
-%         c_phase_error_norm=c_phase_error./abs(c_phase_error);
-        c_acum_phase_array=[c_acum_phase_array c_acum_phase_all];
+            if (USETABLE==1)
+                val_c=round(val*BITLEN); % MUST be round!!!
+                p=big_signed2unsigned(real(val_c),BITLEN)+bitshift(big_signed2unsigned(imag(val_c),BITLEN),BITLEN);
+                c_phase_error=acum_table(1,p)+acum_table(2,p)*1i;
+            end; %USETABLE            
+
+            if (USETABLE~=1)        
+                    val_dec=demodulate(demod_engine,val);
+                    mass=[mass val_dec];		
+
+                    val_mod2=modulate(mod_engine,val_dec);
+                    c_phase_error=(val).*conj(val_mod2);
+                    c_phase_error=c_phase_error./abs(c_phase_error);
+            end; %USETABLE
+            
+               c_acum_phase_all=c_acum_phase_all.*c_phase_error; 
+               
+%             c_phase_error_midle=exp(1i*(1)*(angle(c_phase_error_prev)+angle(c_phase_error)) );
+%               c_phase_error_prev=c_phase_error;
+%              c_acum_phase_all=c_phase_error_midle;
+             
+             
+            c_acum_phase_all=c_acum_phase_all./abs(c_acum_phase_all);
+            c_acum_phase_array=[c_acum_phase_array c_phase_error];
+%             sigg=[sigg val];
 
 	 end % zd
 %% new var find
-
+toc
 
     mass2=[mass2 mass];
 
@@ -212,8 +238,8 @@ end; %USETABLE
 end
 %        scatterplot(mass2);
 % [number,ratio,individual] = biterr(mass2,values_all(1:length(mass2)));
-rats_array=[rats_array ratio];
-fprintf('Процент ошибки составляет %.4i, при их количестве %i на %i данных\n',ratio,number,length(mass2)*log2(M));
+% rats_array=[rats_array ratio];
+% fprintf('Процент ошибки составляет %.4i, при их количестве %i на %i данных\n',ratio,number,length(mass2)*log2(M));
 fprintf('Девиация ошибки %.2f dB\n',20*log10(std(foffest_a))); 
 fprintf('Значение частот в среднем составило %.5f т.е. ошибка %.2f dB\n',mean(foffest_a),20*log10(FreqOffset-mean(foffest_a)));
 end;

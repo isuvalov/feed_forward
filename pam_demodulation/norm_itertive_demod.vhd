@@ -43,6 +43,61 @@ end mround;
 constant BITSIZE:integer:=6;
 
 
+constant DIV_TABLEW:integer:=8-1;
+
+type Tceil is array(1 downto 0) of std_logic_vector(DIV_TABLEW downto 0);
+type Tdiv_tab_raw is array(-(2**DIV_TABLEW) to (2**DIV_TABLEW)-1) of Tceil;
+type Tdiv_tab is array(-(2**DIV_TABLEW) to (2**DIV_TABLEW)-1) of Tdiv_tab_raw;
+
+signal div_tab:Tdiv_tab;
+
+function signed_abs (L: std_logic_vector) return std_logic_vector is
+-- pragma label_applies_to abs
+  
+variable result : std_logic_vector(L'range) ;
+--attribute IS_SIGNED of L:constant is TRUE ;
+--attribute SYNTHESIS_RETURN of result:variable is "ABS" ;
+begin
+if (L(L'left) = '0' or L(L'left) = 'L') then
+    result := L;
+else
+    result := 0 - signed(L);
+end if;
+    return result ;
+end signed_abs;
+
+
+function make_tab (a:integer) return Tdiv_tab is
+variable ret:Tdiv_tab;
+begin
+ for xx in (-(2**DIV_TABLEW)) to ((2**DIV_TABLEW)-1) loop
+	 for yy in (-(2**DIV_TABLEW)) to ((2**DIV_TABLEW)-1) loop
+		 if (xx/=0) and (yy/=0) then
+		 if conv_std_logic_vector(integer(real(2**(DIV_TABLEW))*real(xx)/sqrt(real(xx*xx+yy*yy))),DIV_TABLEW+1)=0 then
+			ret(xx)(yy)(0):=conv_std_logic_vector(1,DIV_TABLEW+1);
+		 else
+			ret(xx)(yy)(0):=conv_std_logic_vector(integer(real(2**(DIV_TABLEW))*real(xx)/sqrt(real(xx*xx+yy*yy))),DIV_TABLEW+1);
+		 end if; 
+		 if conv_std_logic_vector(integer(real(2**(DIV_TABLEW))*real(yy)/sqrt(real(xx*xx+yy*yy))),DIV_TABLEW+1)=0 then
+			ret(xx)(yy)(1):=conv_std_logic_vector(1,DIV_TABLEW+1);
+		 else
+			 ret(xx)(yy)(1):=conv_std_logic_vector(integer(real(2**(DIV_TABLEW))*real(yy)/sqrt(real(xx*xx+yy*yy))),DIV_TABLEW+1);
+		 end if;
+		end if;
+	end loop; --# y
+end loop;     --# x
+
+for xx in (-(2**DIV_TABLEW)) to ((2**DIV_TABLEW)-1) loop
+	ret(xx)(0)(0):="01"&SXT("1",DIV_TABLEW-1);
+	ret(xx)(0)(1):=(others=>'0');
+	ret(0)(xx)(0):="01"&SXT("1",DIV_TABLEW-1);
+	ret(0)(xx)(1):=(others=>'0');
+end loop;
+
+return ret;
+end make_tab;
+
+
 --type Tceil is array(1 downto 0) of std_logic_vector(DIV_TABLEW downto 0);
 --type Tdiv_tab_raw is array(-(2**DIV_TABLEW) to (2**DIV_TABLEW)-1) of Tceil;
 --type Tdiv_tab is array(-(2**DIV_TABLEW) to (2**DIV_TABLEW)-1) of Tdiv_tab_raw;
@@ -57,9 +112,9 @@ constant BITSIZE:integer:=6;
 
 signal table_re,table_im:std_logic_vector(BITSIZE-1 downto 0);
 --signal ce_1w,ce_table,ce_acum:std_logic;
-signal ce_1w,ce_acum,shift1,shift2:std_logic;
-signal sample_norm_I,sample_norm_Q,samplesI_1w,samplesQ_1w:std_logic_vector(15 downto 0);
-
+signal ce_3w,ce_2w,ce_1w,ce_acum,shift1,shift2:std_logic;
+signal samplesI_1w,samplesQ_1w:std_logic_vector(15 downto 0);
+--sample_norm_I,sample_norm_Q,
 
 signal acum_re_new,acum_re:std_logic_vector(15 downto 0):=x"7FFF";
 signal acum_im_new,acum_im:std_logic_vector(15 downto 0):=x"0000";
@@ -74,10 +129,29 @@ signal table_reE,table_imE:std_logic_vector(15 downto 0);
 signal table_re2E,table_im2E:std_logic_vector(15 downto 0);
 
 signal after_pilot_start_norm:std_logic;
-signal init_phaseI_norm,init_phaseQ_norm:std_logic_vector(15 downto 0);
-
+signal init_phaseI_norm,init_phaseQ_norm,samplesQ_sign,samplesI_sign:std_logic_vector(15 downto 0);
+signal start_rotate_ce_W:std_logic_vector(InterpolateRate*PILOT_LEN downto 0);
 
 begin
+
+div_tab<=make_tab(0);
+
+process(clk) is
+begin
+	if rising_edge(clk) then
+		if signed(i_samplesI)>0 then
+			samplesI_sign<=x"3FFF";
+		else
+			samplesI_sign<=x"C000";
+		end if;
+		if signed(i_samplesQ)>0 then
+			samplesQ_sign<=x"3FFF";
+		else
+			samplesQ_sign<=x"C000";
+		end if;
+	end if;
+end process;
+
 
 abs_normalizer_int: entity work.abs_normalizer
 	port map(
@@ -124,14 +198,14 @@ norm_samples2Q<=norm_samplesQ(norm_samples2I'Length-2 downto 0)&"0";
 --complex_mult_qo_i: entity work.complex_mult_q_equal
 complex_mult_qo_i: entity work.complex_mult_q
 	generic map(
-		SHIFT_MUL=>0,
+		SHIFT_MUL=>2,
 		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(
 		clk =>clk,
-		i_ce =>i_ce,
-		A_I=>norm_samples2I,
-		B_Q=>norm_samples2Q,
+		i_ce =>ce_2w,
+		A_I=>norm_samplesI,
+		B_Q=>norm_samplesQ,
 
 		C_I=>acum_re_new,
 		D_Q=>acum_im_new,
@@ -164,8 +238,8 @@ table_demod_i: entity work.table_demod_ver2
 	      o_phase_error_im=>table_im
 		 );
 
-table_reE<=table_re&EXT("0",16-BITSIZE);
-table_imE<=table_im&EXT("0",16-BITSIZE);
+table_reE<=SXT(table_re,BITSIZE+1)&EXT("0",16-BITSIZE-1);
+table_imE<=SXT(table_im,BITSIZE+1)&EXT("0",16-BITSIZE-1);
 --table_reE<=SXT(table_re,16);
 --table_imE<=SXT(table_im,16);
 
@@ -174,7 +248,8 @@ table_imE<=table_im&EXT("0",16-BITSIZE);
 --complex_mult_q_ii: entity work.complex_mult_q_equal
 complex_mult_q_ii: entity work.complex_mult_q
 	generic map(
-		SHIFT_MUL=>7,
+--		SHIFT_MUL=>7,
+		SHIFT_MUL=>1,
 		CONJUGATION=>'0' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(
@@ -202,26 +277,38 @@ begin
 			samplesI_reg<=i_samplesI;
 			samplesQ_reg<=i_samplesQ;
 		end if;
-
+        start_rotate_ce_W<=start_rotate_ce_W(start_rotate_ce_W'Length-2 downto 0)&after_pilot_start;
 		ce_1w<=i_ce;
+		ce_2w<=ce_1w;
+		ce_3w<=ce_2w;
 		out_ce<=i_ce;
 		o_samplesI<=ssample_rotI;
 		o_samplesQ<=ssample_rotQ;
 		if after_pilot_start_norm='1' then
-			acum_re_new<=init_phaseI_norm(init_phaseI_norm'Length-2 downto 0)&"0";
-			acum_im_new<=init_phaseQ_norm(init_phaseI_norm'Length-2 downto 0)&"0";
+			acum_re_new<=init_phaseI_norm(init_phaseI_norm'Length-1 downto 0);--&"0";
+			acum_im_new<=0-init_phaseQ_norm(init_phaseI_norm'Length-1 downto 0);--&"0";
 		else
 			if ce_acum='1' then
-				if acum_re=0 then
-					acum_re_new<=conv_std_logic_vector(1,acum_re_new'Length);
+
+                if unsigned(signed_abs(acum_re_new))<(2**DIV_TABLEW) and unsigned(signed_abs(acum_im_new))<(2**DIV_TABLEW) then
+					acum_re_new<=SXT(div_tab(conv_integer(signed(acum_re(DIV_TABLEW downto 0))))(conv_integer(signed(acum_im(DIV_TABLEW downto 0))))(0)&"0000000",16);
+					acum_im_new<=SXT(div_tab(conv_integer(signed(acum_re(DIV_TABLEW downto 0))))(conv_integer(signed(acum_im(DIV_TABLEW downto 0))))(1)&"0000000",16);
 				else
-					acum_re_new<=acum_re;
+					acum_re_new<=SXT(div_tab(conv_integer(signed(acum_re(15 downto 15-DIV_TABLEW))))(conv_integer(signed(acum_im(15 downto 15-DIV_TABLEW))))(0)&"0000000",16);
+					acum_im_new<=SXT(div_tab(conv_integer(signed(acum_re(15 downto 15-DIV_TABLEW))))(conv_integer(signed(acum_im(15 downto 15-DIV_TABLEW))))(1)&"0000000",16);
 				end if;
-				if acum_im=0 then
-					acum_im_new<=conv_std_logic_vector(1,acum_im_new'Length);
-				else
-					acum_im_new<=acum_im;
-				end if;
+
+
+--				if acum_re=0 then
+--					acum_re_new<=conv_std_logic_vector(1,acum_re_new'Length);
+--				else
+--					acum_re_new<=acum_re;
+--				end if;
+--				if acum_im=0 then
+--					acum_im_new<=conv_std_logic_vector(1,acum_im_new'Length);
+--				else
+--					acum_im_new<=acum_im;
+--				end if;
 
 			end if;
 		end if;

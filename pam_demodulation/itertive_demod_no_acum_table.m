@@ -1,8 +1,8 @@
-BITLEN=6;
+BITLEN=8;
 M=4;
 
-mod_engine=modem.pskmod('M',M,'PhaseOffset', pi/4 );
-demod_engine=modem.pskdemod('M',M,'PhaseOffset', pi/4);
+mod_engine=modem.pskmod('M',M,'PhaseOffset', 0 );
+demod_engine=modem.pskdemod('M',M,'PhaseOffset', 0);
 
 p_left=-(2^(BITLEN-1));
 p_right=(2^(BITLEN-1))-1;
