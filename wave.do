@@ -532,10 +532,48 @@ add wave -noupdate -group abs_norm_int /tb/modem_rx_top_inst/average_itertive_de
 add wave -noupdate -group abs_norm_int /tb/modem_rx_top_inst/average_itertive_demod_i/abs_normalizer_int/iq_sq_root_1wE
 add wave -noupdate -group abs_norm_int /tb/modem_rx_top_inst/average_itertive_demod_i/abs_normalizer_int/s_samplesQ_sm
 add wave -noupdate -group abs_norm_int /tb/modem_rx_top_inst/average_itertive_demod_i/abs_normalizer_int/s_samplesI_sm
+add wave -noupdate -group sync_ce /tb/modem_rx_top_inst/find_ce_period_sync_i/clk
+add wave -noupdate -group sync_ce /tb/modem_rx_top_inst/find_ce_period_sync_i/reset
+add wave -noupdate -group sync_ce /tb/modem_rx_top_inst/find_ce_period_sync_i/i_samplesI
+add wave -noupdate -group sync_ce /tb/modem_rx_top_inst/find_ce_period_sync_i/i_samplesQ
+add wave -noupdate -group sync_ce /tb/modem_rx_top_inst/find_ce_period_sync_i/out_ce
+add wave -noupdate -group sync_ce /tb/modem_rx_top_inst/find_ce_period_sync_i/sync_find
+add wave -noupdate -group sync_ce /tb/modem_rx_top_inst/find_ce_period_sync_i/event
+add wave -noupdate -group sync_ce /tb/modem_rx_top_inst/find_ce_period_sync_i/sync_event
+add wave -noupdate -group sync_ce -radix unsigned /tb/modem_rx_top_inst/find_ce_period_sync_i/sample_sq
+add wave -noupdate -group sync_ce -format Analog-Step -height 60 -max 5661860.0 -radix unsigned /tb/modem_rx_top_inst/find_ce_period_sync_i/threshold
+add wave -noupdate -group sync_ce /tb/modem_rx_top_inst/find_ce_period_sync_i/sq_mean
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/clk
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/reset
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/ce
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/sample
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/filtered
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/ce_out
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/acum_p
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/acum
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/acum_w1
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/acum0
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/sign_val
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/ce_w3
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/ce_w2
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/ce_w1
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/sample_w1
+add wave -noupdate -group sync_ce_thr /tb/modem_rx_top_inst/find_ce_period_sync_i/bih_filter_integrator_sign_i/sample_w2
+add wave -noupdate -expand -group sync2 /tb/modem_rx_top_inst/find_ce_period_sync_i/strob_sync_ver2_i/clk
+add wave -noupdate -expand -group sync2 /tb/modem_rx_top_inst/find_ce_period_sync_i/strob_sync_ver2_i/reset
+add wave -noupdate -expand -group sync2 /tb/modem_rx_top_inst/find_ce_period_sync_i/strob_sync_ver2_i/realpilot_event
+add wave -noupdate -expand -group sync2 /tb/modem_rx_top_inst/find_ce_period_sync_i/strob_sync_ver2_i/start_pilotU
+add wave -noupdate -expand -group sync2 /tb/modem_rx_top_inst/find_ce_period_sync_i/strob_sync_ver2_i/sync_find
+add wave -noupdate -expand -group sync2 /tb/modem_rx_top_inst/find_ce_period_sync_i/strob_sync_ver2_i/pilot_event
+add wave -noupdate -expand -group sync2 /tb/modem_rx_top_inst/find_ce_period_sync_i/strob_sync_ver2_i/cnt_timeout
+add wave -noupdate -expand -group sync2 /tb/modem_rx_top_inst/find_ce_period_sync_i/strob_sync_ver2_i/stm
+add wave -noupdate -expand -group sync2 /tb/modem_rx_top_inst/find_ce_period_sync_i/strob_sync_ver2_i/cnt
+add wave -noupdate -expand -group sync2 /tb/modem_rx_top_inst/find_ce_period_sync_i/strob_sync_ver2_i/cntE
+add wave -noupdate -expand -group sync2 /tb/modem_rx_top_inst/find_ce_period_sync_i/strob_sync_ver2_i/cntE_mean
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {1782420000 ps} 0}
+WaveRestoreCursors {{Cursor 1} {5201682 ps} 0}
 quietly wave cursor active 1
-configure wave -namecolwidth 271
+configure wave -namecolwidth 166
 configure wave -valuecolwidth 94
 configure wave -justifyvalue left
 configure wave -signalnamewidth 1
@@ -549,4 +587,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {1778261764 ps} {1798454136 ps}
+WaveRestoreZoom {0 ps} {694919400 ps}

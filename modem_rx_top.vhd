@@ -119,6 +119,8 @@ signal bit_value_rx_1p,bit_value_rx:std_logic_vector(1 downto 0);
 signal demod_sampleI_1state,demod_sampleQ_1state,demod_sampleI,demod_sampleQ:std_logic_vector(15 downto 0);
 signal demod_sampleI_2state,demod_sampleQ_2state:std_logic_vector(15 downto 0);
 
+signal down_ce_sync:std_logic;
+
 begin
 
 sync_find<=s_sync_find;
@@ -591,12 +593,23 @@ scalar_mult_inst: entity work.scalar_mult
 --		o_sampleQ=>sampleQ_to_demod
 --		);
 
+
+find_ce_period_sync_i: entity work.find_ce_period_sync
+	port map(
+		clk =>clk,
+		reset =>reset_with_s_sync_find,
+		i_samplesI =>sampleI_to_demod_W(InterpolateRate*PILOT_LEN),
+		i_samplesQ =>sampleQ_to_demod_W(InterpolateRate*PILOT_LEN),
+		out_ce =>down_ce_sync
+		);
+
+
 average_itertive_demod_i: entity work.norm_itertive_demod
 	port map(
 		clk =>clk,
 		reset =>reset,
 		after_pilot_start=>start_rotate_ce_W(InterpolateRate*(PILOT_LEN-3)), --# он должен быть над первым i_ce must be before CE
-		i_ce =>down_ce,
+		i_ce =>down_ce_sync,
 		i_samplesI=>sampleI_to_demod_W(InterpolateRate*PILOT_LEN),
 		i_samplesQ=>sampleQ_to_demod_W(InterpolateRate*PILOT_LEN),
 
@@ -635,9 +648,9 @@ ss: if SIMULATION=1 generate
 			NameOfFile =>"gadarg_frame_I.txt")
 	 port map(
 		 clk =>clk,
-		 CE =>down_ce,
+		 CE =>down_ce_sync,
 		 block_marker =>'0',
-		 DataToSave =>demod_sampleI --sampleI_to_demod_W(0) --
+		 DataToSave =>demod_sampleI --sampleI_to_demod_W(InterpolateRate*PILOT_LEN) --
 	     );
 
 
@@ -647,9 +660,9 @@ ss: if SIMULATION=1 generate
 			NameOfFile =>"gadarg_frame_Q.txt")
 	 port map(
 		 clk =>clk,
-		 CE =>down_ce,
+		 CE =>down_ce_sync,
 		 block_marker =>'0',
-		 DataToSave =>demod_sampleQ --sampleQ_to_demod_W(0) --
+		 DataToSave =>demod_sampleQ --sampleQ_to_demod_W(InterpolateRate*PILOT_LEN) --
 	     );
 end generate;
 

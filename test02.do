@@ -47,9 +47,12 @@ vcom pam_demodulation/table_demod_ver2.vhd
 vcom pam_demodulation/divv/pipe_div32.vhd 
 vcom pam_demodulation/abs_normalizer.vhd 
 vcom pam_demodulation/norm_itertive_demod.vhd
+vcom pam_demodulation/strob_sync_ver2.vhd 
+vcom pam_demodulation/find_ce_period_sync.vhd 
 
 #vcom gadarg/gadarg_quick_complex.vhd
 #vcom gadarg/gadarg_quick_complex_4ce.vhd 
+
 
 vcom modem_rx_top.vhd 
 
