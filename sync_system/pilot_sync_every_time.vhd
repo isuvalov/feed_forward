@@ -121,7 +121,7 @@ begin
 				end if;
 				good_come<='1'; --# указывает начало времени когда будем ожидать пришествие импульса
 			else	 --# realpilot_event
-			    if unsigned(main_cnt(main_cnt'Length-2 downto 0))<=(DELAY_LEN/4) then
+			    if unsigned(main_cnt(main_cnt'Length-2 downto 0))<=(DELAY_LEN/InterpolateRate) then
 					good_come<='0'; --# теперь будем придумывать импульс сами
 				end if; --# main_cnt
 			end if;  --# realpilot_event

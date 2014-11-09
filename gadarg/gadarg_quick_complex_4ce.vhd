@@ -30,6 +30,10 @@ end gadarg;
 
 architecture gadarg of gadarg is
 
+constant USE_REALMODE:integer:=0;
+
+constant FILT_CORRECT:integer:=1;
+constant STEPTUNE:integer:=2; --# for make STEP more
 constant FILTER_LEN:natural:=4;
 constant FILTER_COEF_WIDTH:natural:=16;
 constant FILTER_ACUM_WIDTH:natural:=32;
@@ -110,6 +114,10 @@ signal sampl_cnt:std_logic_vector(log2roundup(FILTER_LEN+MULSUM_LATENCY) downto 
 signal work_cnt:std_logic_vector(log2roundup(FILTER_LEN+MULSUM_LATENCY) downto 0);
 
 signal reset_local,reset_reg:std_logic:='1';
+
+signal s_sumed_muls_i,s_sumed_muls_q:std_logic_vector(c_mul_i(0)'Length-1 downto 0);
+signal s_sumed_muls_ii,s_sumed_muls_qq,s_sumed_muls_iq,s_sumed_muls_qi:std_logic_vector(c_mul_i(0)'Length-1 downto 0);
+
 
 begin
 
@@ -259,6 +267,15 @@ divmuls: for i in 0 to FILTER_LEN-1 generate
 		cdiv_mul_qi(i)<=SXT(c_mul_qi(i)(c_mul_ii(i)'Length-1 downto 2),cdiv_mul_ii(i)'Length);
 end generate;
 
+s_sumed_muls_ii<=c_mul_ii(0)+c_mul_ii(1)+c_mul_ii(2)+c_mul_ii(3);
+s_sumed_muls_qq<=c_mul_qq(0)+c_mul_qq(1)+c_mul_qq(2)+c_mul_qq(3);
+s_sumed_muls_iq<=c_mul_iq(0)+c_mul_iq(1)+c_mul_iq(2)+c_mul_iq(3);
+s_sumed_muls_qi<=c_mul_qi(0)+c_mul_qi(1)+c_mul_qi(2)+c_mul_qi(3);
+
+s_sumed_muls_i<=(cdiv_mul_ii(0)+cdiv_mul_ii(1)+cdiv_mul_ii(2)+cdiv_mul_ii(3)) - (cdiv_mul_qq(0)+cdiv_mul_qq(1)+cdiv_mul_qq(2)+cdiv_mul_qq(3));
+s_sumed_muls_q<=(cdiv_mul_iq(0)+cdiv_mul_iq(1)+cdiv_mul_iq(2)+cdiv_mul_iq(3)) + (cdiv_mul_qi(0)+cdiv_mul_qi(1)+cdiv_mul_qi(2)+cdiv_mul_qi(3));
+
+
 mainloop: process (clk) is
 variable v_sumed_muls_i,v_sumed_muls_q:std_logic_vector(c_mul_i(0)'Length-1 downto 0);
 variable v_sumed_muls_ii,v_sumed_muls_qq,v_sumed_muls_iq,v_sumed_muls_qi:std_logic_vector(c_mul_i(0)'Length-1 downto 0);
@@ -280,33 +297,41 @@ begin
                 delay_line_with_step_q_1w<=delay_line_with_step_q;
 				for i in 0 to FILTER_LEN-1 loop
 					c_mul_ii(i)<=signed(coefs_i(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_I(i));
-					c_mul_qq(i)<=signed(coefs_q(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_Q(i));
-
 					c_mul_iq(i)<=signed(coefs_i(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_Q(i));
-					c_mul_qi(i)<=signed(coefs_q(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_I(i));
+					if USE_REALMODE=1 then 
+						c_mul_qq(i)<=(others=>'0');
+						c_mul_qi(i)<=(others=>'0');
+					else
+						c_mul_qq(i)<=signed(coefs_q(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_Q(i));
+						c_mul_qi(i)<=signed(coefs_q(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(delay_line_I(i));
+					end if;
 				end loop;
-                v_sumed_muls_ii:=c_mul_ii(0)+c_mul_ii(1)+c_mul_ii(2)+c_mul_ii(3);
-                v_sumed_muls_qq:=c_mul_qq(0)+c_mul_qq(1)+c_mul_qq(2)+c_mul_qq(3);
-                v_sumed_muls_iq:=c_mul_iq(0)+c_mul_iq(1)+c_mul_iq(2)+c_mul_iq(3);
-                v_sumed_muls_qi:=c_mul_qi(0)+c_mul_qi(1)+c_mul_qi(2)+c_mul_qi(3);
+--                v_sumed_muls_ii:=c_mul_ii(0)+c_mul_ii(1)+c_mul_ii(2)+c_mul_ii(3);
+--                v_sumed_muls_qq:=c_mul_qq(0)+c_mul_qq(1)+c_mul_qq(2)+c_mul_qq(3);
+--                v_sumed_muls_iq:=c_mul_iq(0)+c_mul_iq(1)+c_mul_iq(2)+c_mul_iq(3);
+--                v_sumed_muls_qi:=c_mul_qi(0)+c_mul_qi(1)+c_mul_qi(2)+c_mul_qi(3);
 
-                v_sumed_muls_i:=(cdiv_mul_ii(0)+cdiv_mul_ii(1)+cdiv_mul_ii(2)+cdiv_mul_ii(3)) - (cdiv_mul_qq(0)+cdiv_mul_qq(1)+cdiv_mul_qq(2)+cdiv_mul_qq(3));
-				v_sumed_muls_q:=(cdiv_mul_iq(0)+cdiv_mul_iq(1)+cdiv_mul_iq(2)+cdiv_mul_iq(3)) + (cdiv_mul_qi(0)+cdiv_mul_qi(1)+cdiv_mul_qi(2)+cdiv_mul_qi(3));
+--                v_sumed_muls_i:=(cdiv_mul_ii(0)+cdiv_mul_ii(1)+cdiv_mul_ii(2)+cdiv_mul_ii(3)) - (cdiv_mul_qq(0)+cdiv_mul_qq(1)+cdiv_mul_qq(2)+cdiv_mul_qq(3));
+--				v_sumed_muls_q:=(cdiv_mul_iq(0)+cdiv_mul_iq(1)+cdiv_mul_iq(2)+cdiv_mul_iq(3)) + (cdiv_mul_qi(0)+cdiv_mul_qi(1)+cdiv_mul_qi(2)+cdiv_mul_qi(3));
 
-			sumed_muls_i<=v_sumed_muls_i(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH); --# sumed_muls =I(k)
-			sumed_muls_q<=v_sumed_muls_q(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH); --# sumed_muls =I(k)
+			sumed_muls_i<=s_sumed_muls_i(FILTER_ACUM_WIDTH-1-FILT_CORRECT downto FILTER_WORK_WIDTH-FILT_CORRECT); --# sumed_muls =I(k)
+			sumed_muls_q<=s_sumed_muls_q(FILTER_ACUM_WIDTH-1-FILT_CORRECT downto FILTER_WORK_WIDTH-FILT_CORRECT); --# sumed_muls =I(k)
 			sq_sumed_muls_i<=signed(sumed_muls_i)*signed(sumed_muls_i);
 			sq_sumed_muls_q<=signed(sumed_muls_q)*signed(sumed_muls_q);
 			for i in 0 to FILTER_LEN-1 loop 
-				WR0r_div(i)<=signed(delay_line_with_step_i_1w(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(vr2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vr1r*vr2r
-				WI0i_div(i)<=signed(delay_line_with_step_q_1w(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(vi2i(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vi1i*vi2i
+				WR0r_div(i)<=signed(delay_line_with_step_i_1w(i)(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE))*signed(vr2r(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE)); --# vr1r*vr2r
+				WI0i_div(i)<=signed(delay_line_with_step_q_1w(i)(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE))*signed(vi2i(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE)); --# vi1i*vi2i
 				                                                                                            
-				WI0r_div(i)<=signed(delay_line_with_step_i_1w(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(vi2r(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vi1r*vi2r
-				WR0i_div(i)<=signed(delay_line_with_step_q_1w(i)(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH))*signed(vr2i(FILTER_ACUM_WIDTH-1 downto FILTER_WORK_WIDTH)); --# vr1i*vr2i
+				WI0r_div(i)<=signed(delay_line_with_step_i_1w(i)(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE))*signed(vi2r(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE)); --# vi1r*vi2r
+				WR0i_div(i)<=signed(delay_line_with_step_q_1w(i)(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE))*signed(vr2i(FILTER_ACUM_WIDTH-1-STEPTUNE downto FILTER_WORK_WIDTH-STEPTUNE)); --# vr1i*vr2i
 			end loop;
 		 	for i in 0 to FILTER_LEN-1 loop 
 			  coefs_i(i)<=coefs_i(i)-(WRr(i)+WIi(i));
-			  coefs_q(i)<=coefs_q(i)-(WIr(i)-WRi(i));
+			  if USE_REALMODE=1 then 
+				coefs_q(i)<=(others=>'0');
+			  else
+			    coefs_q(i)<=coefs_q(i)-(WIr(i)-WRi(i));
+			  end if;
 			end loop;
 
 

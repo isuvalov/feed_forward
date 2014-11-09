@@ -122,9 +122,34 @@ modem_tx_top_i: entity work.modem_tx_top
 
 		  pilot_ce_test=>open,
 
-		  sampleI_tx_o=>sampleI_tx0,
-		  sampleQ_tx_o=>sampleQ_tx0
+--		  sampleI_tx_o=>sampleI_tx0,
+--		  sampleQ_tx_o=>sampleQ_tx0
+		  sampleI_tx_o=>sampleI_tx,
+		  sampleQ_tx_o=>sampleQ_tx
+
 	);
+
+
+shift_dataflow_inst: entity work.shift_dataflow
+	port map(
+		clk =>clk,
+		reset =>reset,
+--		offset =>conv_std_logic_vector(10000000,32),
+--		offset =>conv_std_logic_vector(00001000,32),  --# 1900
+--		offset =>conv_std_logic_vector(00020000,32),  
+		offset =>conv_std_logic_vector(00000000,32),
+		in_sampleI=>sampleI_tx,
+		in_sampleQ=>sampleQ_tx,
+		ce_in=>'1',
+
+		out_sampleI=>sampleQ_tx_sh,
+		out_sampleQ=>sampleI_tx_sh,
+		ce_out=>open
+		);
+sampleI_tx0<=rats(SXT(sampleI_tx_sh(sampleI_tx'Length-1 downto 1),sampleQ_tx0'Length));
+sampleQ_tx0<=rats(SXT(sampleQ_tx_sh(sampleI_tx'Length-1 downto 1),sampleQ_tx0'Length));
+
+
 
 modem_rx_top_inst: entity work.modem_rx_top
 	generic map(
