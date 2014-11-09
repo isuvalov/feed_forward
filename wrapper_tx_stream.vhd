@@ -165,6 +165,7 @@ qam4_mapper_inst:entity work.qam4_mapper
 		o_ce=>sm_qam_ce
 		);
 
+filton_i: if INOUT_FILTER_ON=1 generate
 rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 10 тактов
 	generic map(
 		LEN=>mod_samplesI'Length
@@ -177,6 +178,13 @@ rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 10 тактов
 		o_sampleI=>s_sampleI_o,
 		o_sampleQ=>s_sampleQ_o
 		);
+end generate;
+
+filtoff_i: if INOUT_FILTER_ON=0 generate
+s_sampleI_o<= conv_std_logic_vector(16000,s_sampleI_o'Length) when signed(mod_samplesI)>0 else conv_std_logic_vector(-16000,s_sampleI_o'Length);
+s_sampleQ_o<= conv_std_logic_vector(16000,s_sampleI_o'Length) when signed(mod_samplesQ)>0 else conv_std_logic_vector(-16000,s_sampleI_o'Length);
+end generate;
+
 pilot_ce<=s_pilot_ce;
 
 G01: if GLOBAL_DEBUG/=1 generate

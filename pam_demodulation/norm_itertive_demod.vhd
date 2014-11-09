@@ -4,7 +4,7 @@ use ieee.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
 library work;
 use work.feedf_consts_pack.all;
-use work.assert_pack.all;
+--use work.assert_pack.all;
 use WORK.MATH_REAL.all;
 
 USE STD.TEXTIO.ALL;

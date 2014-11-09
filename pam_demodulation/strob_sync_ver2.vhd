@@ -38,7 +38,7 @@ begin
 bih_filter_integrator_sign_i: entity work.bih_filter_integrator_sign
 	generic map(
 		ALPHA_NUM=>6,  --# коэффициент интегрирования, чем он больше тем большую историю храним
-		SCALE_FACTOR=>3,  --# маштаб - чем он больше тем меньше значение на выходе
+		SCALE_FACTOR=>4,  --# маштаб - чем он больше тем меньше значение на выходе
 		WIDTH=>cntE'Length
 	)
 	port map(

@@ -50,7 +50,7 @@ signal time_out,time_out1:std_logic_vector(log2roundup(InterpolateRate*PILOT_LEN
 type TEXTREMUM_STM is (WAITING,LOOK_MAX,TIMEOUT);
 signal EXTREMUM_STM:TEXTREMUM_STM;
 
-signal start_cnt:std_logic_vector(correlation_sqrt'Length-1 downto 0);
+signal start_cnt:std_logic_vector(correlation_sqrt'Length-1-2 downto 0);
 signal cor_filtered_ce_st:std_logic;
 
 begin
@@ -107,15 +107,18 @@ begin
 		if reset='1' then
 			EXTREMUM_STM<=WAITING;
 			more_than_porog<='0';
+			
 		else
+			
 			case EXTREMUM_STM is 
 			when WAITING=>
-				if unsigned(cor_test)<unsigned(correlation_sqrt) then
+				if unsigned(cor_test)<unsigned(correlation_sqrt) then --and cor_filtered_ce_st='1' then
 					EXTREMUM_STM<=LOOK_MAX;
 					correlation_sqrt_max<=correlation_sqrt;				
 				end if;
 				more_than_porog<='0';
 			when LOOK_MAX=>
+--				if unsigned(correlation_sqrt_max)<=unsigned(correlation_sqrt_w1) then
 				if unsigned(correlation_sqrt_max)<unsigned(correlation_sqrt_w1) then
 					correlation_sqrt_max<=correlation_sqrt;
 					more_than_porog<='1';

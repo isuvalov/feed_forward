@@ -4,6 +4,8 @@ use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
 PACKAGE feedf_consts_pack IS
 
+
+constant INOUT_FILTER_ON:integer:=1; --# При 1 включаются фильтры по входу и выходу
 constant GLOBAL_DEBUG:integer:=0;  --# При этом специально расстройка частоты постулируется равной 0 (freq offset=0)
 
 constant PILOT_LEN:natural:=64;

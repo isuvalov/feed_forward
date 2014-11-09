@@ -4,7 +4,7 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 library work;
 use work.feedf_consts_pack.all;
-use work.assert_pack.all;
+--use work.assert_pack.all;
 
 entity modem_rx_top is
 	generic (
@@ -15,13 +15,15 @@ entity modem_rx_top is
 		  sampleI: in std_logic_vector(11 downto 0);
 		  sampleQ: in std_logic_vector(11 downto 0);
 
-		  test_mode: in std_logic_vector(1 downto 0);
+		  test_mode: in std_logic_vector(2 downto 0);
 				--# 1 - output after signal normalizing
 				--# 2 - output after rcc filter
 				--# 3 - output after correlation
+				--# 4 - output after demodulation
 
 		  test_I: out std_logic_vector(15 downto 0);
 		  test_Q: out std_logic_vector(15 downto 0);
+		  o_down_ce_sync: out std_logic;
 		  test_inner_pilot_pos: out std_logic;
 		
 		  demod_phase :out std_logic_vector(15 downto 0);
@@ -151,7 +153,7 @@ zero_remove01: if SIMULATION/=1 generate
 	);
 end generate; --#SIMULATION/=1
 
-
+filton_i: if INOUT_FILTER_ON=1 generate
 rcc_up_filter_inst: entity work.rcc_up_filter_rx
 	generic map(
 		USE_IT=>1,
@@ -165,12 +167,15 @@ rcc_up_filter_inst: entity work.rcc_up_filter_rx
 		o_sampleI=>sampleIfilt,
 		o_sampleQ=>sampleQfilt
 		);
+end generate;
 
---sampleIfilt<=sampleI_zero(sampleIfilt'Length-1 downto 0);
---sampleQfilt<=sampleQ_zero(sampleIfilt'Length-1 downto 0);
+filtoff_i: if INOUT_FILTER_ON=0 generate
+	sampleIfilt<=sampleI_zero(sampleIfilt'Length-3-2 downto 0)&"0000";
+	sampleQfilt<=sampleQ_zero(sampleIfilt'Length-3-2 downto 0)&"0000";
+end generate;
 
-sampleIfilt2<=sampleIfilt(sampleIfilt'Length-2 downto 0)&"0";
-sampleQfilt2<=sampleQfilt(sampleIfilt'Length-2 downto 0)&"0";
+sampleIfilt2<=sampleIfilt(sampleIfilt'Length-3 downto 0)&"00";
+sampleQfilt2<=sampleQfilt(sampleIfilt'Length-3 downto 0)&"00";
 
 
 --sampleIfilt2<=sampleIfilt; --# nnneww!!!!
@@ -232,20 +237,24 @@ normalizer_inst:entity work.normalizer
 	begin
 		if rising_edge(clk) then
 			case test_mode is
-			when "00" =>
+			when "000" =>
 				if scalar_sum_ce='1' then
 					test_I<=scalar_sumI(scalar_sumI'Length-1 downto scalar_sumI'Length-test_I'Length);
 					test_Q<=scalar_sumQ(scalar_sumI'Length-1 downto scalar_sumI'Length-test_I'Length);
 				end if;
-			when "01" =>
+			when "001" =>
 				test_I<=sampleI_norm;
 				test_Q<=sampleQ_norm;
-			when "10" =>
+			when "010" =>
 				test_I<=sampleI_norm;
 				test_Q<=sampleQ_norm;
-			when "11" =>
+			when "011" =>
 				test_I<=corrI_s;
 				test_Q<=corrQ_s;
+			when "100" =>
+				test_I<=demod_sampleI;
+				test_Q<=demod_sampleQ;
+			
 			when others=>
 			end case;
 		end if;
@@ -412,8 +421,8 @@ begin
 
 		if pilot_valid_2w='1' and pilot_valid_3w='0' and s_sync_find='1' then
 			print_event<='1';
-			print(GLOBAL_DEBUG,"On scalar_mult.vhd pilot first value is ("&int_to_string(conv_integer(signed(sampleI_moveback)))&
-				","&int_to_string(conv_integer(signed(sampleQ_moveback)))&")");
+--			print(GLOBAL_DEBUG,"On scalar_mult.vhd pilot first value is ("&int_to_string(conv_integer(signed(sampleI_moveback)))&
+--				","&int_to_string(conv_integer(signed(sampleQ_moveback)))&")");
 		else
 			print_event<='0';
 		end if;
@@ -602,7 +611,7 @@ find_ce_period_sync_i: entity work.find_ce_period_sync
 		i_samplesQ =>sampleQ_to_demod_W(InterpolateRate*PILOT_LEN),
 		out_ce =>down_ce_sync
 		);
-
+o_down_ce_sync<=down_ce_sync;
 
 average_itertive_demod_i: entity work.norm_itertive_demod
 	port map(

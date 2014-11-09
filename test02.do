@@ -37,7 +37,7 @@ vcom pilot_sync_every_time.vhd
 vcom complex_normalizer.vhd
 
 vcom pam_demodulation/assert_pack.vhd 
-#vcom pam_demodulation/pam_demod.vhd
+vcom pam_demodulation/pam_demod.vhd
 #vcom pam_demodulation/table_demod.vhd 
 #vcom pam_demodulation/average_itertive_demod.vhd 
 

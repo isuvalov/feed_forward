@@ -13,7 +13,7 @@ tlen=(PilotsNum+1)*(tdelay+pilot_len); %201000; % длина всех отсчетов
 alpha1=0.2;      % коэффициент усреднения, чем он меньше тем больше усреднение
 alpha2=0.1;
  FreqOffset=0.5;
-%   FreqOffset=0;
+  FreqOffset=0;
 test_freq_d=0.05;
 M=4;
 FILTLEN=32;
@@ -152,7 +152,7 @@ for z=1:N-1
     good_pos=find_cync_ce((rx_transfer_filt_cor(4:end)),InterpolateRate);
 %     break;
 %     data_transfer_filtdata=rx_transfer_filt_cor(good_pos);
-      data_transfer_filtdata=rx_transfer_filt_cor(1+pilot_len*InterpolateRate+InterpolateRate/2:InterpolateRate:end);
+      data_transfer_filtdata=rx_transfer_filt_cor(2+pilot_len*InterpolateRate+InterpolateRate/2:InterpolateRate:end);
 %      data_transfer_filtdata_e=rx_transfer_filt_cor(0+pilot_len*InterpolateRate+InterpolateRate/2:InterpolateRate:end);    
 %     data_transfer_filtdata_all=rx_transfer_filt_cor(pilot_len*InterpolateRate+1+InterpolateRate/2:1:end);
     
