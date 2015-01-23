@@ -160,7 +160,7 @@ modem_rx_top_inst: entity work.modem_rx_top
 		  sampleI=>sampleI_tx0(sampleI_tx'Length-1 downto sampleI_tx'Length-12),
 		  sampleQ=>sampleQ_tx0(sampleQ_tx'Length-1 downto sampleQ_tx'Length-12),
 
-		  test_mode=>"01",
+		  test_mode=>"001",
 				--# 0 - output phase calculation
 				--# 1 - output after signal normalizing
 				--# 2 - output after rcc filter
@@ -170,9 +170,9 @@ modem_rx_top_inst: entity work.modem_rx_top
 		  test_Q=>open,
 		  test_inner_pilot_pos=>open,
 
-		  o_demod_sampleI=>open,
-		  o_demod_sampleQ=>open,
-          o_demod_sample_ce=>open,
+--		  o_demod_sampleI=>open,
+--		  o_demod_sampleQ=>open,
+--          o_demod_sample_ce=>open,
 
 		  bit_value_ce=>bit_value_rx_ce,
 		  bit_value=>bit_value_rx,

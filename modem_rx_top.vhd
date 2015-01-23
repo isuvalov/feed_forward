@@ -631,10 +631,10 @@ average_itertive_demod_i: entity work.norm_itertive_demod
 
 --gadarg_i: entity work.gadarg
 --	generic map(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
---		RM=>226871798/2, --226871798/2,
+--		RM=>226871798/80, --226871798/2,
 --		KKK=>0,
-----		STEP=>5148/8
---		STEP=>5148/16
+--		STEP=>5148/8
+----		STEP=>5148/16
 --	) 
 --	port map(
 --		clk =>clk,
@@ -642,7 +642,7 @@ average_itertive_demod_i: entity work.norm_itertive_demod
 --
 --		i_sampleI=>sampleI_to_demod_W(0),
 --		i_sampleQ=>sampleQ_to_demod_W(0),
---		i_ce =>down_ce,
+--		i_ce =>down_ce_sync,
 --
 --		o_sampleI =>demod_sampleI,
 --		o_sampleQ =>demod_sampleQ
@@ -659,7 +659,7 @@ ss: if SIMULATION=1 generate
 		 clk =>clk,
 		 CE =>down_ce_sync,
 		 block_marker =>'0',
-		 DataToSave =>demod_sampleI --sampleI_to_demod_W(InterpolateRate*PILOT_LEN) --
+		 DataToSave =>  demod_sampleI--sampleI_to_demod_W(InterpolateRate*PILOT_LEN) --
 	     );
 
 
@@ -671,7 +671,7 @@ ss: if SIMULATION=1 generate
 		 clk =>clk,
 		 CE =>down_ce_sync,
 		 block_marker =>'0',
-		 DataToSave =>demod_sampleQ --sampleQ_to_demod_W(InterpolateRate*PILOT_LEN) --
+		 DataToSave => demod_sampleQ--sampleQ_to_demod_W(InterpolateRate*PILOT_LEN) --
 	     );
 end generate;
 
