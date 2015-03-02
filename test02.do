@@ -41,6 +41,7 @@ vcom pam_demodulation/pam_demod.vhd
 
 #vcom gadarg/gadarg_quick_complex.vhd
 vcom gadarg/gadarg_quick_complex_4ce.vhd 
+#vcom gadarg/gadarg_quick_4ce.vhd
 
 vcom modem_rx_top.vhd 
 

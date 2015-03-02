@@ -369,14 +369,6 @@ begin
 		sampleQ_to_demod_1w<=sampleQ_to_demod;
 
 --		start_rotate_ce_W<=start_rotate_ce_W(start_rotate_ce_W'Length-2 downto 0)&start_rotate_ce;
-
-        down_ce_1w<=down_ce;
-        if start_rotate_ce='1' then
---		  if start_rotate_ce_W(12-2)='1' then
---			cnt<=conv_std_logic_vector(InterpolateRate-1,cnt'Length);
-			cnt<=conv_std_logic_vector(0,cnt'Length);
-			down_ce<='1';
-		else
 			if unsigned(cnt)<InterpolateRate-1 then
 				cnt<=cnt+1;
 				down_ce<='0';
@@ -384,6 +376,22 @@ begin
 				cnt<=(others=>'0');
 				down_ce<='1';
 			end if;
+
+
+        down_ce_1w<=down_ce;
+        if start_rotate_ce='1' then
+--		  if start_rotate_ce_W(12-2)='1' then
+--			cnt<=conv_std_logic_vector(InterpolateRate-1,cnt'Length);
+			cnt<=conv_std_logic_vector(0,cnt'Length);
+--			down_ce<='1';
+		else
+--			if unsigned(cnt)<InterpolateRate-1 then
+--				cnt<=cnt+1;
+--				down_ce<='0';
+--			else
+--				cnt<=(others=>'0');
+--				down_ce<='1';
+--			end if;
 		end if;
 
 		if cnt=2 then
@@ -412,7 +420,7 @@ end process;
 moveB: entity work.complex_mult
 	generic map(
 		SHIFT_MUL=>2,
-		NOT_USE_IT=>0,--GLOBAL_DEBUG,
+		NOT_USE_IT=>1,--GLOBAL_DEBUG,
 		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(
@@ -578,9 +586,9 @@ gadarg_i: entity work.gadarg
 --		RM=>5856428,     --# RM=1.34*PS/(4*KKK)
 --		STEP=>471, --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
 --		KKK=>5   --# ceil(log2(STEP)/2)
-		RM=>226871798/8,
-		KKK=>0,
-		STEP=>5148/2
+		RM=>5856428*10,--226871798/512,
+		KKK=>1,
+		STEP=>471*10 --5148
 	)
 	port map(
 		clk =>clk,

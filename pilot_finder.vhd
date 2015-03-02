@@ -40,7 +40,8 @@ signal cor_test,cor_filtered,sampleI_corr,sampleQ_corr: std_logic_vector(15 down
 signal cor_filtered_ce,cor_sqrt_ce,sample_ce_w1: std_logic;
 --constant MULT_POROG:std_logic_vector(6 downto 0):=conv_std_logic_vector(30,7); --# ÷ель умножить на 1.1 т.е. примерно *71/64
 
-constant MULT_POROG:std_logic_vector(6 downto 0):=conv_std_logic_vector(70,7); --# ÷ель умножить на 1.1 т.е. примерно *71/64
+--constant MULT_POROG:std_logic_vector(6 downto 0):=conv_std_logic_vector(70,7); --# ÷ель умножить на 1.1 т.е. примерно *71/64
+constant MULT_POROG:std_logic_vector(6 downto 0):=conv_std_logic_vector(66,7); --# ÷ель умножить на 1.1 т.е. примерно *71/64
 signal cor_filtered_mult:std_logic_vector(cor_filtered'Length+MULT_POROG'Length-1 downto 0);
 
 signal more_than_porog:std_logic;
