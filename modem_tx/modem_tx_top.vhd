@@ -7,10 +7,12 @@ use work.feedf_consts_pack.all;
 
 entity modem_tx_top is
 	generic(
-			USE_LFSR:integer:=1
+		USE_LFSR:integer:=1
 	);
-    Port (clk: in std_logic;
+        port (clk: in std_logic;
 		  reset: in std_logic;
+
+		  init_complite: in std_logic; --# from modem_rx
 
 		  pilot_ce_test: out std_logic;
 
@@ -54,6 +56,10 @@ signal usedw : STD_LOGIC_VECTOR (3 DOWNTO 0);
 signal s_pilot_ce_test: std_logic;
 
 signal gen_ce,gen_ce_1w:std_logic;
+
+type Tstm is (RESETING,INIT_SEQUENCE,START_SYNC,WORKING);
+signal stm:Tstm;
+
 
 begin
 
@@ -139,11 +145,12 @@ testLFSR_i:entity work.testLFSR
 	     );
 
 
-
-wrapper_tx_stream_i: entity work.wrapper_tx_stream
+wrapper_tx_stream_i: entity work.tx_insert_pilots
 	port map(
 		clk =>clk,
 		reset =>reset,
+
+		init_complite =>init_complite,
 
 		rd_o=>rd_req,
 		bits_i=>bits_gen2, --# биты должны поступать с latency=0

@@ -8,7 +8,7 @@ InterpolateRate=4;
 PilotsNum=1; % количество кадров с пилотами при симуляции системы 
 tdelay=10000;        % длина полезного информации которая стоит между маркерами
 % tlen=PilotsNum*(2*tdelay+pilot_len*InterpolateRate); %201000; % длина всех отсчетов
-tlen=(PilotsNum)*(tdelay+pilot_len); %201000; % длина всех отсчетов
+tlen=39064;%(PilotsNum)*(tdelay+pilot_len); %201000; % длина всех отсчетов
 alpha1=0.001;      % коэффициент усреднения, чем он меньше тем больше усреднение
 alpha2=0.1;
  FreqOffset=0.5;
@@ -117,3 +117,13 @@ t3=0:1/fd:tlen/fd-1/fd;
 
 
 % plot(abs(cors(1:1000)))
+%%
+FreqOffset=1;
+  	rx_transfer=exp(1i*t3*FreqOffset*2*pi)+exp(-1i*t3*FreqOffset*2*pi);
+    plot(real(rx_transfer(1:1024)));
+    
+    b=exp(1i*t3*FreqOffset*2*pi);
+    a=round( imag(b)*32702 );
+    plot(abs(fft(a)));
+    hold on;
+    plot(abs(fft(sss)),'r');    
