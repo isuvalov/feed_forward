@@ -6,9 +6,9 @@ fd=100;      % тактовая частота АЦП/ЦАП
 pilot_len=64;  % длина марекера по которому определяется расстройка в черне
 InterpolateRate=4;
 PilotsNum=1; % количество кадров с пилотами при симуляции системы 
-tdelay=10000;        % длина полезного информации которая стоит между маркерами
+tdelay=100000;        % длина полезного информации которая стоит между маркерами
 % tlen=PilotsNum*(2*tdelay+pilot_len*InterpolateRate); %201000; % длина всех отсчетов
-tlen=39064;%(PilotsNum)*(tdelay+pilot_len); %201000; % длина всех отсчетов
+tlen=(PilotsNum)*(tdelay+pilot_len); %201000; % длина всех отсчетов
 alpha1=0.001;      % коэффициент усреднения, чем он меньше тем больше усреднение
 alpha2=0.1;
  FreqOffset=0.5;
@@ -118,12 +118,75 @@ t3=0:1/fd:tlen/fd-1/fd;
 
 % plot(abs(cors(1:1000)))
 %%
+tlen=100000;
+t3=0:1/fd:tlen/fd-1/fd;
+
 FreqOffset=1;
-  	rx_transfer=exp(1i*t3*FreqOffset*2*pi)+exp(-1i*t3*FreqOffset*2*pi);
-    plot(real(rx_transfer(1:1024)));
+  	needthis=exp(1i*t3*FreqOffset*2*pi)+exp(-1i*t3*FreqOffset*2*pi);
+    needthis=needthis.*exp(1i*pi/4);
     
-    b=exp(1i*t3*FreqOffset*2*pi);
-    a=round( imag(b)*32702 );
-    plot(abs(fft(a)));
-    hold on;
-    plot(abs(fft(sss)),'r');    
+FreqOffset=2;
+  	rx_transfer=exp(1i*t3*FreqOffset*2*pi)+exp(-1i*t3*FreqOffset*2*pi);
+    rx_transfer=rx_transfer.*exp(1i*pi/4);
+    rx_transfer=round(awgn(rx_transfer,0)*16384);
+%     plot(real(rx_transfer(1:1024)));
+% a=conv(needthis,rx_transfer);
+
+%%
+lll=length(rx_transfer);
+b  = firls(15, [0 4 7 fd/2]/(fd/2), [1 1 0 0], [1 80]);
+sin_filt_Hd = dfilt.dffir(b);
+
+
+rx_transfer_filt=filter(sin_filt_Hd, rx_transfer);
+
+sq_vals=abs(rx_transfer_filt);
+
+max_val=max(sq_vals);
+min_val=min(sq_vals);
+mean_val=mean(sq_vals);
+
+sq_vals_inv=diff(sq_vals);
+
+[vals,poss]=find(sq_vals<(mean_val/16));
+
+difpos=diff(poss);
+
+[ptmp,pos_filt]=find(difpos>3);
+
+polus_len=mean(difpos(pos_filt))
+
+freq_estim=1/(2*polus_len/fd);
+
+fprintf('Freq estmate to %f\n',freq_estim);
+
+%%
+
+
+lll=length(rx_transfer);
+b  = firls(15, [0 4 7 fd/2]/(fd/2), [1 1 0 0], [1 80]);
+sin_filt_Hd = dfilt.dffir(b);
+
+rx_transfer_filt=filter(sin_filt_Hd, rx_transfer);
+
+an=angle(rx_transfer_filt);
+an2=an-mean(an);
+
+test_vals=sign(an2);
+
+test_vals2=abs(diff(test_vals));
+
+pos0=find(test_vals2>0);
+pos_delta=diff(pos0);
+
+pos_delta_filtpos=find(pos_delta>20);  % 20 this is 5MHz
+pos_delta_filt=pos_delta(pos_delta_filtpos);
+
+0.5*fd/mean(pos_delta_filt)
+
+% plot((test_vals2(1:512)))
+% mean
+
+
+
+
