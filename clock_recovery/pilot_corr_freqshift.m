@@ -127,8 +127,8 @@ FreqOffset=1;
     
 FreqOffset=2;
   	rx_transfer=exp(1i*t3*FreqOffset*2*pi)+exp(-1i*t3*FreqOffset*2*pi);
-    rx_transfer=rx_transfer.*exp(1i*pi/4);
-    rx_transfer=round(awgn(rx_transfer,0)*16384);
+    rx_transfer=rx_transfer.*exp(1i*pi/2);
+    rx_transfer=round(awgn(rx_transfer,100)*16384);
 %     plot(real(rx_transfer(1:1024)));
 % a=conv(needthis,rx_transfer);
 
@@ -172,7 +172,13 @@ rx_transfer_filt=filter(sin_filt_Hd, rx_transfer);
 an=angle(rx_transfer_filt);
 an2=an-mean(an);
 
+
+
+
+
 test_vals=sign(an2);
+% test_vals=sign(real(rx_transfer_filt)).*sign(imag(rx_transfer_filt));
+
 
 test_vals2=abs(diff(test_vals));
 

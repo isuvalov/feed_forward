@@ -8,6 +8,7 @@ use work.math_real.all;
 
 entity start_sin_gen is
 	generic (
+		SIN_GEN:integer:=1;  --# 1-sin generation, 0-cos genearation
 		FREQ_FD:integer:=100; --# Frequncy of discretization
 		FREQ_VAL:integer:=1; --# it means Fs=fd/freq_val, where Fs - frequncy of sin
 		LEN:natural:=16
@@ -102,13 +103,23 @@ begin
 		ce_2w<=ce_1w;
 		ce_3w<=ce_2w;
 
-		case cnt_1w is 
-		when "00" => sin_val_mux<=sin_val;
-		when "01" => sin_val_mux<=sin_val_inv;
-		when "10" => sin_val_mux<=0-sin_val;
-		when "11" => sin_val_mux<=0-sin_val_inv;
-		when others=>
-		end case;
+		if SIN_GEN=1 then
+			case cnt_1w is 
+			when "00" => sin_val_mux<=sin_val;
+			when "01" => sin_val_mux<=sin_val_inv;
+			when "10" => sin_val_mux<=0-sin_val;
+			when "11" => sin_val_mux<=0-sin_val_inv;
+			when others=>
+			end case;
+		else    --# SIN_GEN
+			case cnt_1w is 
+			when "00" => sin_val_mux<=sin_val_inv;
+			when "01" => sin_val_mux<=sin_val;
+			when "10" => sin_val_mux<=0-sin_val_inv;
+			when "11" => sin_val_mux<=0-sin_val;
+			when others=>
+			end case;			
+		end if; --# SIN_GEN
 
 		o_samples<=sin_val_mux;	
 		o_ce<=ce_3w;

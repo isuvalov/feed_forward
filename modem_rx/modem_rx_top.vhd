@@ -116,6 +116,8 @@ signal bit_value_rx_1p,bit_value_rx:std_logic_vector(1 downto 0);
 signal demod_sampleI_1state,demod_sampleQ_1state,demod_sampleI,demod_sampleQ:std_logic_vector(15 downto 0);
 signal demod_sampleI_2state,demod_sampleQ_2state:std_logic_vector(15 downto 0);
 
+signal freq_corrector_ce:std_logic;
+
 begin
 
 sync_find<=s_sync_find;
@@ -164,6 +166,32 @@ sampleIfilt2<=sampleIfilt(sampleIfilt'Length-2 downto 0)&"0";
 sampleQfilt2<=sampleQfilt(sampleIfilt'Length-2 downto 0)&"0";
 
 
+dds_I_inst:entity work.dds_synthesizer_pipe
+  generic map(
+    ftw_width =>32
+    )
+  port map(
+    clk_i   =>clk,
+    rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
+    ftw_i   =>conv_std_logic_vector(100,32),
+    phase_i =>x"4000",
+    phase_o =>open,
+    ampl_o  =>dds_cos
+    );
+
+dds_Q_inst:entity work.dds_synthesizer_pipe
+  generic map(
+    ftw_width =>32
+    )
+  port map(
+    clk_i   =>clk,
+    rst_i   =>reset,
+    ftw_i   =>conv_std_logic_vector(100,32),
+    phase_i =>x"0000",
+    phase_o =>open,
+    ampl_o  =>dds_sin
+    );
+
 
 pilot_finder_inst: entity work.pilot_finder
     Port map(clk=>clk,
@@ -195,6 +223,21 @@ delayer_find: entity work.delayer
 		o_sampleQ=>sampleQ_delay
 		);
 
+
+freq_corrector_ce<='1';
+
+calc_freq_of_sin_i: entity work.calc_freq_of_sin
+	port map(
+		clk =>clk,
+		reset =>reset,
+
+		i_ce => freq_corrector_ce,
+		i_sampleI=>sampleI_tx,
+		i_sampleQ=>sampleQ_tx,
+
+		o_freq_ce=>open,
+		o_freq=>open
+		);
 
 
 

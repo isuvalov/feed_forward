@@ -45,7 +45,7 @@ signal s_sampleI_o,s_sampleQ_o:std_logic_vector(sampleI_o'Length-1 downto 0);
 
 
 signal s_sampleI_filt,s_sampleQ_filt:std_logic_vector(sampleI_o'Length-1 downto 0);
-signal s_sampleI_sin:std_logic_vector(sampleI_o'Length-1 downto 0);
+signal s_sampleI_sin,s_sampleI_cos:std_logic_vector(sampleI_o'Length-1 downto 0);
 signal s_sampleI_mux,s_sampleQ_mux:std_logic_vector(sampleI_o'Length-1 downto 0);
 
 signal m_sampleI_o,m_sampleQ_o:std_logic_vector(sampleI_o'Length-1 downto 0);
@@ -210,6 +210,7 @@ rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 10 тактов
 
 start_sin_gen_i:entity work.start_sin_gen
 	generic map(
+		SIN_GEN=>1,
 		FREQ_FD=>100, --# Frequncy of discretization
 		FREQ_VAL=>1, --# it means Fs=fd/freq_val, where Fs - frequncy of sin
 		LEN=>s_sampleI_sin'Length
@@ -222,6 +223,20 @@ start_sin_gen_i:entity work.start_sin_gen
 		o_samples =>s_sampleI_sin
 		);
 
+start_sin_gen2_i:entity work.start_sin_gen
+	generic map(
+		SIN_GEN=>0,
+		FREQ_FD=>100, --# Frequncy of discretization
+		FREQ_VAL=>1, --# it means Fs=fd/freq_val, where Fs - frequncy of sin
+		LEN=>s_sampleI_sin'Length
+	)
+	port map(
+		clk =>clk,
+		i_reset =>reset,
+		i_ce =>'1',
+		o_ce => open,
+		o_samples =>s_sampleI_cos
+		);
 
 
 process(clk) is
@@ -233,7 +248,7 @@ begin
 			s_sampleQ_mux<=s_sampleQ_filt(s_sampleI_o'Length-1-1 downto 0)&"0";
 		else
 			s_sampleI_mux<=s_sampleI_sin;
-			s_sampleQ_mux<=(others=>'0');
+			s_sampleQ_mux<=s_sampleI_cos;
 		end if;
 	end if;
 end process;
