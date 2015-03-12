@@ -69,7 +69,7 @@ signal cnt_rd:std_logic_vector(64 downto 0):=(others=>'0');
 signal cnt_wr:std_logic_vector(64 downto 0):=(others=>'0');
 
 signal samples,sampleI_tx,sampleQ_tx:std_logic_vector(15 downto 0):=(others=>'0');
-
+signal phase_for_dds:std_logic_vector(31 downto 0):=(others=>'0');
 
 
 begin
@@ -132,12 +132,31 @@ calc_freq_of_sin_i: entity work.calc_freq_of_sin
 		clk =>clkq,
 		reset =>reset,
 
+		i_ce=>'1',
 		i_sampleI=>sampleI_tx,
 		i_sampleQ=>sampleQ_tx,
+
+		phase_for_dds_ce=>open,
+		phase_for_dds=>phase_for_dds,
+
 
 		o_freq_ce=>open,
 		o_freq=>open
 		);
+
+
+dds_I_inst:entity work.dds_synthesizer_pipe
+  generic map(
+    ftw_width =>32
+    )
+  port map(
+    clk_i   =>clkq,
+    rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
+    ftw_i   =>phase_for_dds,--conv_std_logic_vector(134217728,32), --#  =  (2**32)/100 =42949672
+    phase_i =>x"4000",
+    phase_o =>open,
+    ampl_o  =>open
+    );
 
 
 

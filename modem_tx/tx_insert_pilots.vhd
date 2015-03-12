@@ -212,7 +212,7 @@ start_sin_gen_i:entity work.start_sin_gen
 	generic map(
 		SIN_GEN=>1,
 		FREQ_FD=>100, --# Frequncy of discretization
-		FREQ_VAL=>1, --# it means Fs=fd/freq_val, where Fs - frequncy of sin
+		FREQ_VAL=>3, --# it means Fs=fd/freq_val, where Fs - frequncy of sin
 		LEN=>s_sampleI_sin'Length
 	)
 	port map(
@@ -227,7 +227,7 @@ start_sin_gen2_i:entity work.start_sin_gen
 	generic map(
 		SIN_GEN=>0,
 		FREQ_FD=>100, --# Frequncy of discretization
-		FREQ_VAL=>1, --# it means Fs=fd/freq_val, where Fs - frequncy of sin
+		FREQ_VAL=>3, --# it means Fs=fd/freq_val, where Fs - frequncy of sin
 		LEN=>s_sampleI_sin'Length
 	)
 	port map(

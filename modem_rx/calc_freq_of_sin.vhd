@@ -12,6 +12,9 @@ entity calc_freq_of_sin is
 		i_sampleI: in std_logic_vector(15 downto 0);
 		i_sampleQ: in std_logic_vector(15 downto 0);
 
+		phase_for_dds_ce: out std_logic;
+		phase_for_dds: out std_logic_vector(31 downto 0);
+
 		o_freq_ce: out std_logic;
 		o_freq: out std_logic_vector(31 downto 0)
 		);
@@ -21,9 +24,10 @@ end calc_freq_of_sin;
 
 architecture calc_freq_of_sin of calc_freq_of_sin is
 
-signal sign,sign_1w,f_ce:std_logic;
+
+signal sign,sign_1w,f_ce,s_freq_ce:std_logic;
 signal sampleI_filt:std_logic_vector(15 downto 0);
-signal width_cnt,width_cnt_reg:std_logic_vector(31 downto 0);
+signal s_freq,width_cnt,width_cnt_reg:std_logic_vector(31 downto 0);
 
 begin
 
@@ -52,7 +56,7 @@ begin
 		if i_ce='1' then
 			if 	sign_1w='0' and sign='1' then
 				width_cnt<=(others=>'0');
-				if unsigned(width_cnt)>20 then  --# 20 this is 5MHz
+				if unsigned(width_cnt)>14 then  --# 20 this is 5MHz
 					width_cnt_reg<=width_cnt+1;
 					f_ce<='1';
 				else
@@ -68,11 +72,12 @@ begin
 	end if;	--clk
 end process;
 
+o_freq<=s_freq;
 
 bih_filter_freq_i:entity work.bih_filter_freq
 	generic map(
-		ALPHA_NUM=>7,  --# коэффициент интегрирования, чем он больше тем большую историю храним
-		SCALE_FACTOR=>5,  --# маштаб - чем он больше тем меньше значение на выходе
+		ALPHA_NUM=>7+2+1,  --# коэффициент интегрирования, чем он больше тем большую историю храним
+		SCALE_FACTOR=>5+2,  --# маштаб - чем он больше тем меньше значение на выходе
 		WIDTH=>width_cnt_reg'Length
 	)
 	port map(
@@ -81,10 +86,34 @@ bih_filter_freq_i:entity work.bih_filter_freq
 		ce =>f_ce,
 		sample =>width_cnt_reg, --# this is unsigned value!!!
 
-		filtered=>o_freq,
-		ce_out =>o_freq_ce
+		filtered=>s_freq,
+		ce_out =>s_freq_ce
 	);
 
-		 
+o_freq_ce<=s_freq_ce;
+
+ 
+
+divI_inst: entity work.serial_divide_uu
+  generic map( M_PP => 32,           -- Size of dividend
+            N_PP => 32,            -- Size of divisor
+            R_PP =>0,            -- Size of remainder
+            S_PP =>0,            -- Skip this many bits (known leading zeros)
+--            COUNT_WIDTH_PP : integer := 5;  -- 2^COUNT_WIDTH_PP-1 >= (M_PP+R_PP-S_PP-1)
+            HELD_OUTPUT_PP =>1) -- Set to 1 if stable output should be held
+                                            -- from previous operation, during current
+                                            -- operation.  Using this option will increase
+                                            -- the resource utilization (costs extra d-flip-flops.)
+    port map(   clk_i      =>clk,
+            clk_en_i   =>'1',
+            rst_i      =>reset,
+            divide_i   =>s_freq_ce,
+            dividend_i =>x"FFFFFFF0",
+            divisor_i  =>s_freq,
+            quotient_o =>phase_for_dds,
+            done_o     =>phase_for_dds_ce
+    );
+
+
 	
 end calc_freq_of_sin;

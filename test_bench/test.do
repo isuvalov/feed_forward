@@ -21,7 +21,7 @@ vcom ../rcc_up_filter.vhd
 vcom ../rcc_up_filter_rx.vhd 
 vcom ../ce_manager.vhd 
 
-
+vcom ../divider/serial_divide_uu.vhd 
 vcom ../dds_synthesizers/sine_lut_16_x_16.vhd
 vcom ../dds_synthesizers/dds_synthesizer_pipe.vhd 
 

@@ -30,11 +30,11 @@ constant Nbit_FILT_COSINE:natural:=12;
 constant SH2:integer:=0;  --# надо для сдвига сумматоров 
 constant SH3:integer:=1;  --# надо для сдвига сумматоров 
 constant SH4:integer:=1;  --# надо для сдвига сумматоров 
-constant SH5:integer:=1;
+constant SH5:integer:=0;
 
 type Tcoefs is array(0 to 32) of integer;
---# At Fd=100Mhz, cut freqs is 6Mhz to 7Mhz
-constant coefs:Tcoefs:=(-110, -147, -166, -158, -112, -20, 121, 310, 542, 805, 1083, 1358, 1610, 1819, 1969, 2047, 2047, 1969, 1819, 1610, 1358, 1083, 805, 542, 310, 121, -20, -112, -158, -166, -147, -110 );
+--# At Fd=100Mhz, cut freqs is 10Mhz to 11Mhz
+constant coefs:Tcoefs:=(77, 145, 199, 210, 156, 34, -136, -306, -416, -405, -231, 112, 584, 1110, 1590, 1926, 2047, 1926, 1590, 1110, 584, 112, -231, -405, -416, -306, -136, 34, 156, 210, 199, 145, 77 );
 constant coefs_test:Tcoefs:=(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2047, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 constant MULTSIZE:natural:=Nbit_FILT_COSINE+i_samplesI'Length;
