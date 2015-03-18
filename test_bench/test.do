@@ -21,6 +21,17 @@ vcom ../rcc_up_filter.vhd
 vcom ../rcc_up_filter_rx.vhd 
 vcom ../ce_manager.vhd 
 
+vcom ../sqrt32to16_altera.vhd
+vcom ../bih_filter_integrator_sign.vhd 
+vcom ../bih_filter_integrator.vhd 
+vcom ../bih_filter_freq.vhd
+vcom ../pilot_correlator.vhd
+vcom ../pilot_finder.vhd 
+vcom ../remove_zero.vhd
+vcom ../pilot_finder.vhd
+vcom ../delayer.vhd 
+vcom ../complex_mult.vhd
+
 vcom ../divider/serial_divide_uu.vhd 
 vcom ../dds_synthesizers/sine_lut_16_x_16.vhd
 vcom ../dds_synthesizers/dds_synthesizer_pipe.vhd 
@@ -32,6 +43,10 @@ vcom ../bih_filter_freq.vhd
 vcom ../modem_rx/sinfilt_rxfilter.vhd 
 vcom ../modem_rx/calc_freq_of_sin.vhd
 
+
+vcom ../pilot_sync_every_time.vhd 
+
+vcom ../modem_rx/modem_rx_top.vhd
 
 vcom tb.vhd
 

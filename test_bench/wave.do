@@ -1,58 +1,319 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
-add wave -noupdate -group dds /tb/dds_I_inst/clk_i
-add wave -noupdate -group dds /tb/dds_I_inst/rst_i
-add wave -noupdate -group dds -radix decimal /tb/dds_I_inst/ftw_i
-add wave -noupdate -group dds /tb/dds_I_inst/phase_i
-add wave -noupdate -group dds /tb/dds_I_inst/phase_o
-add wave -noupdate -group dds /tb/dds_I_inst/ampl_o
-add wave -noupdate -group dds -format Analog-Step -height 50 -max 32000.0 -min -32000.0 -radix decimal /tb/dds_I_inst/ampl_o
-add wave -noupdate -group dds /tb/dds_I_inst/ftw_accu
-add wave -noupdate -group dds /tb/dds_I_inst/ftw_accu_w1
-add wave -noupdate -group dds /tb/dds_I_inst/phase_w3
-add wave -noupdate -group dds /tb/dds_I_inst/phase_w2
-add wave -noupdate -group dds /tb/dds_I_inst/phase_w1
-add wave -noupdate -group dds /tb/dds_I_inst/phase
-add wave -noupdate -group dds /tb/dds_I_inst/lut_in
-add wave -noupdate -group dds /tb/dds_I_inst/lut_out
-add wave -noupdate -group dds /tb/dds_I_inst/lut_out_delay
-add wave -noupdate -group dds /tb/dds_I_inst/lut_out_inv_delay
-add wave -noupdate -group dds /tb/dds_I_inst/quadrant_2_or_4
-add wave -noupdate -group dds /tb/dds_I_inst/quadrant_2_or_4_w1
-add wave -noupdate -group dds /tb/dds_I_inst/quadrant_2_or_4_w2
-add wave -noupdate -group dds /tb/dds_I_inst/quadrant_3_or_4
-add wave -noupdate -group dds /tb/dds_I_inst/quadrant_3_or_4_delay
-add wave -noupdate -group dds /tb/dds_I_inst/quadrant_3_or_4_2delay
-add wave -noupdate -group dds /tb/dds_I_inst/quadrant_3_or_4_2delay_w1
-add wave -noupdate -group dds /tb/dds_I_inst/quadrant_3_or_4_2delay_w2
-add wave -noupdate -group dds /tb/dds_I_inst/ram_value
-add wave -noupdate -group calc_freq /tb/calc_freq_of_sin_i/clk
-add wave -noupdate -group calc_freq /tb/calc_freq_of_sin_i/reset
-add wave -noupdate -group calc_freq /tb/calc_freq_of_sin_i/i_ce
-add wave -noupdate -group calc_freq -radix decimal /tb/calc_freq_of_sin_i/i_sampleI(15)
-add wave -noupdate -group calc_freq -format Analog-Step -height 50 -max 32000.0 -min -32000.0 -radix decimal -childformat {{/tb/calc_freq_of_sin_i/i_sampleI(15) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(14) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(13) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(12) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(11) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(10) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(9) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(8) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(7) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(6) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(5) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(4) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(3) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(2) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(1) -radix decimal} {/tb/calc_freq_of_sin_i/i_sampleI(0) -radix decimal}} -subitemconfig {/tb/calc_freq_of_sin_i/i_sampleI(15) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(14) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(13) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(12) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(11) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(10) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(9) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(8) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(7) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(6) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(5) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(4) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(3) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(2) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(1) {-height 15 -radix decimal} /tb/calc_freq_of_sin_i/i_sampleI(0) {-height 15 -radix decimal}} /tb/calc_freq_of_sin_i/i_sampleI
-add wave -noupdate -group calc_freq /tb/calc_freq_of_sin_i/i_sampleI
-add wave -noupdate -group calc_freq /tb/calc_freq_of_sin_i/i_sampleQ
-add wave -noupdate -group calc_freq /tb/calc_freq_of_sin_i/o_freq_ce
-add wave -noupdate -group calc_freq -radix decimal /tb/calc_freq_of_sin_i/o_freq
-add wave -noupdate -group calc_freq /tb/calc_freq_of_sin_i/sign
-add wave -noupdate -group calc_freq /tb/calc_freq_of_sin_i/sign_1w
-add wave -noupdate -group calc_freq /tb/calc_freq_of_sin_i/f_ce
-add wave -noupdate -group calc_freq /tb/calc_freq_of_sin_i/sampleI_filt
-add wave -noupdate -group calc_freq -radix unsigned /tb/calc_freq_of_sin_i/periods_cnt
-add wave -noupdate -group calc_freq -radix unsigned /tb/calc_freq_of_sin_i/width_cnt
-add wave -noupdate -group calc_freq -radix unsigned /tb/calc_freq_of_sin_i/width_cnt_reg_shift
-add wave -noupdate -group calc_freq /tb/calc_freq_of_sin_i/s_freq_ce
-add wave -noupdate -group calc_freq -radix unsigned /tb/calc_freq_of_sin_i/s_freq
-add wave -noupdate -group calc_freq /tb/calc_freq_of_sin_i/phase_for_dds_ce
-add wave -noupdate -group calc_freq -radix decimal /tb/calc_freq_of_sin_i/phase_for_dds
-add wave -noupdate -group calc_freq -radix decimal /tb/calc_freq_of_sin_i/phase_for_dds_test
-add wave -noupdate -group calc_freq -radix decimal /tb/calc_freq_of_sin_i/measure_phase_for_dds
-add wave -noupdate -group calc_freq -radix unsigned /tb/calc_freq_of_sin_i/width_cnt_reg
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/clk
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/reset
+add wave -noupdate -group modem_rx -height 50 -radix decimal /tb/modem_rx_top_i/sampleI
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/test_mode
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/test_I
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/test_Q
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/test_inner_pilot_pos
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/demod_phase
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/demod_phase_ce
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/bit_value_ce
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/bit_value
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sync_find
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/dds_cos_o
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/dds_sin_o
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/pilot_start
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleIE
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQE
+add wave -noupdate -group modem_rx -format Analog-Step -height 70 -max 18000.0 -min -18000.0 -radix decimal /tb/modem_rx_top_i/sampleI_zero
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_zero
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleIfilt
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQfilt
+add wave -noupdate -group modem_rx -radix decimal -childformat {{/tb/modem_rx_top_i/sampleIfilt2(15) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(14) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(13) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(12) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(11) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(10) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(9) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(8) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(7) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(6) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(5) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(4) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(3) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(2) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(1) -radix decimal} {/tb/modem_rx_top_i/sampleIfilt2(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/sampleIfilt2(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/sampleIfilt2(0) {-height 15 -radix decimal}} /tb/modem_rx_top_i/sampleIfilt2
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQfilt2
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_delay
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_delay
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_delay_fe
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_delay_fe
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_delay_fe_reg
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_delay_fe_reg
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/s_pilot_start
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/freq_value
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/freq_val_filt2
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/freq_val_filt
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/freq_val_filt_mult_1w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/freq_val_filt_mult
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/freq_ce
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/freq_ce_f
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/freq_ce_f_1w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/freq_ce_f_2w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/good_values
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/dds_cos
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/dds_sin
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/dds_cos_d
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/dds_sin_d
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/s_pilot_start_norm_1w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/s_pilot_start_norm
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/pilot_wr
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/start_pilotU
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/start_pilotU_1w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_norm
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_norm
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_norm_W
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_norm_W
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_norm_1w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_norm_1w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_norm_2w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_norm_2w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_norm_3w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_norm_3w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/corrI_s
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/corrQ_s
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/time_for_freqcalc_ce
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/time_for_freqcalc_cnt
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/time_for_freqcalc_cnt_reg
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_32moveback
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_32moveback
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_moveback
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_moveback
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/pilotU_I
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/pilotU_Q
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/start_pilotU_have
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/start_delayer_cnt
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/scalar_sumI
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/scalar_sumQ
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/scalar_sum_ce
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/pilot_valid
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/pilot_valid_1w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/pilot_valid_2w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/pilot_valid_3w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/pilot_valid_W
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/start_rotate_I
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/start_rotate_Q
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/start_rotate_ce
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_to_demod
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_to_demod
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_to_demod_1w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_to_demod_1w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleI_to_demod_W
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_to_demod_W
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/cnt
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/sampleQ_moveback_ce
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/down_ce
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/down_ce_1w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/start_rotate_ce_3w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/start_rotate_ce_2w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/start_rotate_ce_1w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/start_rotate_ce_W
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/s_demod_phase_minus
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/s_demod_phase
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/s_demod_phase_ce
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/s_demod_phase_ce_1w
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/s_sync_find
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/print_event
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/bit_value_rx_ce
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/bit_value_rx_ce_1p
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/reset_with_s_sync_find
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/bit_value_rx_1p
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/bit_value_rx
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/demod_sampleI_1state
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/demod_sampleQ_1state
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/demod_sampleI
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/demod_sampleQ
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/demod_sampleI_2state
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/demod_sampleQ_2state
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/freq_corrector_ce
+add wave -noupdate -group modem_rx /tb/modem_rx_top_i/ftw_correction
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/clk
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/reset
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/ce
+add wave -noupdate -group remove_zero -format Analog-Step -height 50 -max 15000.0 -min -15000.0 -radix decimal /tb/modem_rx_top_i/remove_zero_inst/sampleI
+add wave -noupdate -group remove_zero -format Analog-Step -height 50 -max 15000.0 -min -15000.0 -radix decimal /tb/modem_rx_top_i/remove_zero_inst/sampleQ
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/sampleI
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/sampleQ
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/filtered_I
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/filtered_Q
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/ce_out
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/filterrrI
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/filterrrQ
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/ce_filt
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/ce_filt_1w
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/sample_removeI
+add wave -noupdate -group remove_zero /tb/modem_rx_top_i/remove_zero_inst/sample_removeQ
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/clk
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/reset
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/sample_ce
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/corrI_o
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/corrQ_o
+add wave -noupdate -group pilot_finder -format Analog-Step -height 60 -max 15000.0 -min -15000.0 -radix decimal /tb/modem_rx_top_i/pilot_finder_inst/sampleI
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/sampleQ
+add wave -noupdate -group pilot_finder -radix decimal -childformat {{/tb/modem_rx_top_i/pilot_finder_inst/sampleI(15) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(14) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(13) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(12) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(11) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(10) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(9) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(8) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(7) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(6) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(5) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(4) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(3) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(2) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(1) -radix decimal} {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/pilot_finder_inst/sampleI(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/pilot_finder_inst/sampleI(0) {-height 15 -radix decimal}} /tb/modem_rx_top_i/pilot_finder_inst/sampleI
+add wave -noupdate -group pilot_finder -radix decimal /tb/modem_rx_top_i/pilot_finder_inst/sampleQ
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/pilot_start
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/correlation_sqrt2
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/correlation_sqrt_p2
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/correlation_sqrt_p1
+add wave -noupdate -group pilot_finder -radix unsigned /tb/modem_rx_top_i/pilot_finder_inst/correlation_sqrt_w1
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/sampleI_sq
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/sampleQ_sq
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/sample_sq
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/sampleI_corr
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/sampleQ_corr
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_ce
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/cor_sqrt_ce
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/sample_ce_w1
+add wave -noupdate -group pilot_finder -radix decimal /tb/modem_rx_top_i/pilot_finder_inst/correlation_sqrt
+add wave -noupdate -group pilot_finder -format Analog-Step -height 100 -max 5000.0 -radix decimal /tb/modem_rx_top_i/pilot_finder_inst/correlation_sqrt
+add wave -noupdate -group pilot_finder -radix decimal /tb/modem_rx_top_i/pilot_finder_inst/correlation_sqrt_max
+add wave -noupdate -group pilot_finder -radix unsigned /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered
+add wave -noupdate -group pilot_finder -radix unsigned -childformat {{/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(22) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(21) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(20) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(19) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(18) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(17) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(16) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(15) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(14) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(13) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(12) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(11) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(10) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(9) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(8) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(7) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(6) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(5) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(4) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(3) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(2) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(1) -radix unsigned} {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(0) -radix unsigned}} -subitemconfig {/tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(22) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(21) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(20) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(19) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(18) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(17) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(16) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(15) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(14) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(13) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(12) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(11) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(10) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(9) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(8) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(7) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(6) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(5) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(4) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(3) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(2) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(1) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult(0) {-height 15 -radix unsigned}} /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_mult
+add wave -noupdate -group pilot_finder -format Analog-Step -height 70 -max 9000.0 -radix unsigned /tb/modem_rx_top_i/pilot_finder_inst/cor_test
+add wave -noupdate -group pilot_finder -radix unsigned /tb/modem_rx_top_i/pilot_finder_inst/cor_test
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/more_than_porog
+add wave -noupdate -group pilot_finder -radix unsigned /tb/modem_rx_top_i/pilot_finder_inst/time_out
+add wave -noupdate -group pilot_finder -radix unsigned /tb/modem_rx_top_i/pilot_finder_inst/time_out1
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/EXTREMUM_STM
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/start_cnt
+add wave -noupdate -group pilot_finder /tb/modem_rx_top_i/pilot_finder_inst/cor_filtered_ce_st
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/clk
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/i_ce
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/i_reset
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/o_ce
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/o_samples
+add wave -noupdate -group sin_gen2 -format Analog-Step -height 50 -max 32000.0 -min -32000.0 -radix decimal /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/o_samples
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/sin_quarter
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/ce_1w
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/ce_2w
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/ce_3w
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/cnt
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/cnt_1w
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/cnt_q_period
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/cnt_q_period_inv
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/cnt_q_period_inv_1w
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/sin_val
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/sin_val_inv
+add wave -noupdate -group sin_gen2 /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen2_i/sin_val_mux
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/clk
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/i_ce
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/i_reset
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/o_ce
+add wave -noupdate -group sin_gen -format Analog-Step -height 50 -max 32000.0 -min -32000.0 -radix decimal /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/o_samples
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/o_samples
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/sin_quarter
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/ce_1w
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/ce_2w
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/ce_3w
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/cnt
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/cnt_1w
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/cnt_q_period
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/cnt_q_period_inv
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/cnt_q_period_inv_1w
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/sin_val
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/sin_val_inv
+add wave -noupdate -group sin_gen /tb/tx_top_i/wrapper_tx_stream_i/start_sin_gen_i/sin_val_mux
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/clk
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/reset
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/i_ce
+add wave -noupdate -expand -group calc_freq -format Analog-Step -height 70 -max 20000.0 -min -20000.0 /tb/modem_rx_top_i/calc_freq_of_sin_i/i_sampleI
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/i_sampleI
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/i_sampleQ
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds_ce
+add wave -noupdate -expand -group calc_freq -radix decimal -childformat {{/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(31) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(30) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(29) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(28) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(27) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(26) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(25) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(24) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(23) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(22) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(21) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(20) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(19) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(18) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(17) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(16) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(15) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(14) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(13) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(12) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(11) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(10) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(9) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(8) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(7) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(6) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(5) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(4) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(3) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(2) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(1) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(31) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(30) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(29) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(28) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(27) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(26) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(25) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(24) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(23) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(22) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(21) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(20) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(19) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(18) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(17) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(16) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(0) {-height 15 -radix decimal}} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/o_freq_ce
+add wave -noupdate -expand -group calc_freq -radix unsigned /tb/modem_rx_top_i/calc_freq_of_sin_i/o_freq
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/sign
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/sign_1w
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/f_ce
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq_ce
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/s_phase_for_dds_ce
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/sampleI_filt
+add wave -noupdate -expand -group calc_freq -radix decimal -childformat {{/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(31) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(30) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(29) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(28) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(27) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(26) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(25) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(24) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(23) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(22) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(21) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(20) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(19) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(18) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(17) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(16) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(15) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(14) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(13) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(12) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(11) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(10) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(9) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(8) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(7) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(6) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(5) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(4) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(3) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(2) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(1) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(31) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(30) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(29) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(28) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(27) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(26) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(25) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(24) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(23) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(22) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(21) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(20) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(19) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(18) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(17) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(16) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq(0) {-height 15 -radix decimal}} /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq
+add wave -noupdate -expand -group calc_freq -radix unsigned /tb/modem_rx_top_i/calc_freq_of_sin_i/s_freq_div
+add wave -noupdate -expand -group calc_freq -radix unsigned /tb/modem_rx_top_i/calc_freq_of_sin_i/width_cnt
+add wave -noupdate -expand -group calc_freq -radix unsigned /tb/modem_rx_top_i/calc_freq_of_sin_i/width_cnt_reg
+add wave -noupdate -expand -group calc_freq -radix decimal /tb/modem_rx_top_i/calc_freq_of_sin_i/width_cnt_reg_shift
+add wave -noupdate -expand -group calc_freq -radix decimal -childformat {{/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(31) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(30) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(29) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(28) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(27) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(26) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(25) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(24) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(23) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(22) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(21) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(20) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(19) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(18) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(17) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(16) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(15) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(14) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(13) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(12) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(11) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(10) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(9) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(8) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(7) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(6) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(5) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(4) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(3) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(2) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(1) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(31) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(30) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(29) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(28) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(27) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(26) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(25) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(24) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(23) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(22) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(21) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(20) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(19) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(18) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(17) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(16) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds(0) {-height 15 -radix decimal}} /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds
+add wave -noupdate -expand -group calc_freq -radix decimal /tb/modem_rx_top_i/calc_freq_of_sin_i/measure_phase_for_dds_mul
+add wave -noupdate -expand -group calc_freq -radix decimal /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds_test
+add wave -noupdate -expand -group calc_freq /tb/modem_rx_top_i/calc_freq_of_sin_i/periods_cnt
+add wave -noupdate -expand -group calc_freq -radix decimal -childformat {{/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(31) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(30) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(29) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(28) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(27) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(26) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(25) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(24) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(23) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(22) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(21) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(20) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(19) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(18) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(17) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(16) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(15) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(14) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(13) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(12) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(11) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(10) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(9) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(8) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(7) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(6) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(5) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(4) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(3) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(2) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(1) -radix decimal} {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(31) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(30) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(29) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(28) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(27) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(26) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(25) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(24) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(23) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(22) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(21) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(20) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(19) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(18) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(17) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(16) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds(0) {-height 15 -radix decimal}} /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds
+add wave -noupdate -expand -group calc_freq -radix decimal /tb/modem_rx_top_i/calc_freq_of_sin_i/phase_for_dds_pre
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/clk_i
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/rst_i
+add wave -noupdate -group dds_I_rx_part -radix decimal /tb/modem_rx_top_i/dds_I_inst/ftw_i
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/phase_i
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/phase_o
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/ampl_o
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/ftw_accu
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/ftw_accu_w1
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/phase_w3
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/phase_w2
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/phase_w1
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/phase
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/lut_in
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/lut_out
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/lut_out_delay
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/lut_out_inv_delay
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/quadrant_2_or_4
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/quadrant_2_or_4_w1
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/quadrant_2_or_4_w2
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/quadrant_3_or_4
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/quadrant_3_or_4_delay
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/quadrant_3_or_4_2delay
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/quadrant_3_or_4_2delay_w1
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/quadrant_3_or_4_2delay_w2
+add wave -noupdate -group dds_I_rx_part /tb/modem_rx_top_i/dds_I_inst/ram_value
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/clk
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/reset
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/realpilot_event
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/start_pilotU
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/sync_find
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/pilot_not_here
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/start_pilotU_have
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/s_start_pilotU
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/start_delayer_cnt
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/loss_cnt
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/stm
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/main_cnt_prev_a
+add wave -noupdate -group pilotsync -radix unsigned -childformat {{/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(15) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(14) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(13) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(12) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(11) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(10) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(9) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(8) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(7) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(6) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(5) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(4) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(3) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(2) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(1) -radix unsigned} {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(0) -radix unsigned}} -subitemconfig {/tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(15) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(14) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(13) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(12) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(11) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(10) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(9) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(8) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(7) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(6) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(5) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(4) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(3) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(2) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(1) {-height 15 -radix unsigned} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best(0) {-height 15 -radix unsigned}} /tb/modem_rx_top_i/pilotsync_inst/main_cnt_best
+add wave -noupdate -group pilotsync -radix unsigned /tb/modem_rx_top_i/pilotsync_inst/main_cnt_prev
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/main_cnt
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/main_cnt_prev_sum
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/s_sync_find
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/one_p
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/g_start_pilotU_have
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/g_start_pilotU
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/g_start_delayer_cnt
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/m_start_pilotU_have_1w
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/m_start_pilotU_have
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/m_start_pilotU
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/m_start_delayer_cnt
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/m_realpilot_event
+add wave -noupdate -group pilotsync /tb/modem_rx_top_i/pilotsync_inst/good_come
+add wave -noupdate -group rcc_upfilter /tb/modem_rx_top_i/rcc_up_filter_inst/clk
+add wave -noupdate -group rcc_upfilter /tb/modem_rx_top_i/rcc_up_filter_inst/reset
+add wave -noupdate -group rcc_upfilter -format Analog-Step -height 74 -max 15999.999999999998 -min -16000.0 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/i_samplesI
+add wave -noupdate -group rcc_upfilter -format Analog-Step -height 74 -max 15999.999999999998 -min -16000.0 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/i_samplesQ
+add wave -noupdate -group rcc_upfilter -format Analog-Step -height 74 -max 15999.999999999998 -min -16000.0 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/o_sampleI
+add wave -noupdate -group rcc_upfilter -format Analog-Step -height 74 -max 15999.999999999998 -min -16000.0 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/o_sampleQ
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal -childformat {{/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(0) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(1) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(2) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(3) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(4) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(5) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(6) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(7) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(8) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(9) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(10) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(11) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(12) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(13) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(14) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(15) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(16) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(17) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(18) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(19) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(20) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(21) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(22) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(23) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(24) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(25) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(26) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(27) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(28) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(29) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(30) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(31) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(32) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(0) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(16) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(17) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(18) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(19) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(20) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(21) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(22) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(23) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(24) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(25) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(26) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(27) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(28) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(29) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(30) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(31) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I(32) {-height 15 -radix decimal}} /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/muls_Q
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/delaylineI
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/delaylineQ
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/sumsI_1
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/sumsQ_1
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/sumsI_2
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/sumsQ_2
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/sumsI_3
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/sumsQ_3
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/sumsI_4
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/sumsQ_4
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/sumsI_5
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/sumsQ_5
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/s_o_sampleI
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/s_o_sampleQ
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal -childformat {{/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(0) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(1) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(2) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(3) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(4) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(5) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(6) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(7) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(8) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(9) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(10) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(11) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(12) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(13) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(14) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(15) -radix decimal} {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(16) -radix decimal}} -expand -subitemconfig {/tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(0) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I(16) {-height 15 -radix decimal}} /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I
+add wave -noupdate -group rcc_upfilter -height 50 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_Q
+add wave -noupdate -radix decimal -childformat {{/tb/dds_I_inst/ampl_o(15) -radix decimal} {/tb/dds_I_inst/ampl_o(14) -radix decimal} {/tb/dds_I_inst/ampl_o(13) -radix decimal} {/tb/dds_I_inst/ampl_o(12) -radix decimal} {/tb/dds_I_inst/ampl_o(11) -radix decimal} {/tb/dds_I_inst/ampl_o(10) -radix decimal} {/tb/dds_I_inst/ampl_o(9) -radix decimal} {/tb/dds_I_inst/ampl_o(8) -radix decimal} {/tb/dds_I_inst/ampl_o(7) -radix decimal} {/tb/dds_I_inst/ampl_o(6) -radix decimal} {/tb/dds_I_inst/ampl_o(5) -radix decimal} {/tb/dds_I_inst/ampl_o(4) -radix decimal} {/tb/dds_I_inst/ampl_o(3) -radix decimal} {/tb/dds_I_inst/ampl_o(2) -radix decimal} {/tb/dds_I_inst/ampl_o(1) -radix decimal} {/tb/dds_I_inst/ampl_o(0) -radix decimal}} -subitemconfig {/tb/dds_I_inst/ampl_o(15) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(14) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(13) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(12) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(11) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(10) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(9) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(8) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(7) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(6) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(5) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(4) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(3) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(2) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(1) {-height 15 -radix decimal} /tb/dds_I_inst/ampl_o(0) {-height 15 -radix decimal}} /tb/dds_I_inst/ampl_o
+add wave -noupdate -radix decimal /tb/dds_I_inst/ampl_o(15)
+add wave -noupdate /tb/modem_rx_top_i/dds_I_inst/ampl_o(15)
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {8641460262 ps} 0}
+WaveRestoreCursors {{Cursor 1} {569012000 ps} 0}
 quietly wave cursor active 1
-configure wave -namecolwidth 310
+configure wave -namecolwidth 450
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
@@ -66,4 +327,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {8410710413 ps} {10083646821 ps}
+WaveRestoreZoom {557576439 ps} {613124672 ps}

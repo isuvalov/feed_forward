@@ -15,6 +15,8 @@ entity pilot_sync_every_time is
 		clk : in STD_LOGIC;
 		reset : in std_logic;
 
+		pilot_not_here: out std_logic;
+
 		realpilot_event: in std_logic; 
 		
 		
@@ -36,7 +38,7 @@ constant PILOTUP_START_DELAY:natural:=9+3; --# Время которое надо для того чтоб 
 
 constant INTERP_CUT:natural:=log2roundup(InterpolateRate);
 
-signal start_pilotU_have,s_start_pilotU:std_logic;
+signal start_pilotU_have,s_start_pilotU:std_logic:='0';
 signal start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0);
 
 
@@ -54,11 +56,11 @@ signal main_cnt_best,main_cnt_prev,main_cnt:std_logic_vector(log2roundup(DELAY_L
 signal main_cnt_prev_sum:std_logic_vector(main_cnt_prev'Length-1+log2roundup(CNT_FILTER) downto 0);
 signal s_sync_find,one_p:std_logic;
 
-signal g_start_pilotU_have,g_start_pilotU:std_logic;
+signal g_start_pilotU_have,g_start_pilotU:std_logic:='0';
 signal g_start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0);
 
-signal m_start_pilotU_have_1w,m_start_pilotU_have,m_start_pilotU:std_logic;
-signal m_start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0);
+signal m_start_pilotU_have_1w,m_start_pilotU_have,m_start_pilotU:std_logic:='0';
+signal m_start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 downto 0):=(others=>'1');
 
 signal m_realpilot_event,good_come:std_logic;
 
@@ -70,6 +72,7 @@ begin
 process (clk) is 
 begin		
 	if rising_edge(clk) then
+		pilot_not_here<=main_cnt(13);--not m_start_pilotU_have;
 		if m_start_pilotU='1' then
 --			good_come<='1';
 		else
@@ -205,7 +208,7 @@ process (clk) is
 begin		
 	if rising_edge(clk) then
 		m_start_pilotU_have_1w<=m_start_pilotU_have;
-		if m_realpilot_event='1' then
+		if m_realpilot_event='1' or reset='1' then
 			m_start_delayer_cnt<=conv_std_logic_vector(DELAY_AFTER_FREQESTIM-PILOTUP_START_DELAY-18-1,m_start_delayer_cnt'Length);		
 			m_start_pilotU<='0';
 			m_start_pilotU_have<='0';

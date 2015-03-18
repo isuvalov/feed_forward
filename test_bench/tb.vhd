@@ -2,6 +2,8 @@ LIBRARY ieee;
 use IEEE.STD_LOGIC_1164.all;
 use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
+library work;
+use work.math_real.all;
 
 
 entity tb is
@@ -71,10 +73,11 @@ signal cnt_wr:std_logic_vector(64 downto 0):=(others=>'0');
 signal samples,sampleI_tx,sampleQ_tx:std_logic_vector(15 downto 0):=(others=>'0');
 signal phase_for_dds:std_logic_vector(31 downto 0):=(others=>'0');
 
+signal dds_cos,dds_sin,sampleI_moveback,sampleQ_moveback:std_logic_vector(15 downto 0);
 
 begin
 
-reset<='0' after 30 ns;
+reset<='0' after 400 ns;
 
 
 CLK_GEN125: process(clkq)
@@ -127,23 +130,22 @@ tx_top_i: entity work.modem_tx_top
 	);
 
 
-calc_freq_of_sin_i: entity work.calc_freq_of_sin
-	port map(
-		clk =>clkq,
-		reset =>reset,
-
-		i_ce=>'1',
-		i_sampleI=>sampleI_tx,
-		i_sampleQ=>sampleQ_tx,
-
-		phase_for_dds_ce=>open,
-		phase_for_dds=>phase_for_dds,
-
-
-		o_freq_ce=>open,
-		o_freq=>open
-		);
-
+--calc_freq_of_sin_i: entity work.calc_freq_of_sin
+--	port map(
+--		clk =>clkq,
+--		reset =>reset,
+--  
+--		i_ce=>'1',
+--		i_sampleI=>sampleI_tx,
+--		i_sampleQ=>sampleQ_tx,
+--
+--		phase_for_dds_ce=>open,
+--		phase_for_dds=>phase_for_dds,
+--
+--
+--		o_freq_ce=>open,
+--		o_freq=>open
+--		);
 
 dds_I_inst:entity work.dds_synthesizer_pipe
   generic map(
@@ -152,12 +154,47 @@ dds_I_inst:entity work.dds_synthesizer_pipe
   port map(
     clk_i   =>clkq,
     rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
-    ftw_i   =>phase_for_dds,--conv_std_logic_vector(134217728,32), --#  =  (2**32)/100 =42949672
+	--#  =  ((2**32)*3e6)/100e6 = 128849019 i.e +3MHz generation  - I test it and it equal for generation start_sin_gen.vhd 
+    ftw_i   =>conv_std_logic_vector(-42949673,32), 
     phase_i =>x"4000",
     phase_o =>open,
-    ampl_o  =>open
+    ampl_o  =>dds_cos
     );
 
+dds_Q_inst:entity work.dds_synthesizer_pipe
+  generic map(
+    ftw_width =>32
+    )
+  port map(
+    clk_i   =>clkq,
+    rst_i   =>reset,
+    ftw_i   =>conv_std_logic_vector(-42949673,32), --#  =  ((2**32)*3e6)/100e6 = 128849019
+    phase_i =>x"0000",
+    phase_o =>open,
+    ampl_o  =>dds_sin
+    );
+
+
+
+moveB: entity work.complex_mult
+	generic map(
+		SHIFT_MUL=>1,
+		NOT_USE_IT=>0,--GLOBAL_DEBUG,
+		CONJUGATION=>'0' --# умножение на сопряженное число, если '1' - то сопрягать
+	)
+	port map(
+		clk =>clkq,
+		i_ce =>'1',--down_ce,
+		A_I =>sampleI_tx,
+		B_Q =>sampleQ_tx,
+
+		C_I =>dds_sin,
+		D_Q =>dds_cos,
+
+		o_I =>sampleI_moveback,
+		o_Q =>sampleQ_moveback,
+		out_ce =>open --sampleQ_moveback_ce
+		);
 
 
 --ToTextFile_i: entity work.ToTextFile
@@ -170,6 +207,37 @@ dds_I_inst:entity work.dds_synthesizer_pipe
 --		 block_marker=>'0',
 --		 DataToSave =>samples
 --	     );
+
+modem_rx_top_i: entity work.modem_rx_top
+	generic map(
+		SIMULATION=>0
+	)
+    Port map(clk=>clkq,
+		  reset=>reset,
+		  sampleI=>sampleI_moveback(15 downto 4),
+		  sampleQ=>sampleQ_moveback(15 downto 4),
+
+		  test_mode=>"00",
+				--# 1 - output after signal normalizing
+				--# 2 - output after rcc filter
+				--# 3 - output after correlation
+
+		  test_I=>open,
+		  test_Q=>open,
+		  test_inner_pilot_pos=>open,
+		
+		  demod_phase=>open,
+		  demod_phase_ce=>open,
+
+		  bit_value_ce=>open,
+		  bit_value=>open,
+
+		  sync_find=>open,
+		  dds_cos_o=>open,
+		  dds_sin_o=>open,
+		  pilot_start=>open  --# Этот импульс будет задержан на InterpolateRate*PILOT_LEN+5+Sqrt_Latency тактов
+	);
+
 
 
 end tb;

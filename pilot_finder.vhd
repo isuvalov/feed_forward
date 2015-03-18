@@ -166,8 +166,8 @@ sqrt32_inst : sqrt32to16_altera PORT MAP (
 
 bih_filter_integrator_inst: entity work.bih_filter_integrator
 	generic map(
-		ALPHA_NUM=>8,  --# коэффициент интегрирования, чем он больше тем большую историю храним
-		SCALE_FACTOR=>5,  --# маштаб - чем он больше тем меньше значение на выходе
+		ALPHA_NUM=>8+6,  --# коэффициент интегрирования, чем он больше тем большую историю храним
+		SCALE_FACTOR=>5+6,  --# маштаб - чем он больше тем меньше значение на выходе
 		WIDTH=>correlation_sqrt'Length
 	)
 	port map(

@@ -114,9 +114,9 @@ begin
 		else    --# SIN_GEN
 			case cnt_1w is 
 			when "00" => sin_val_mux<=sin_val_inv;
-			when "01" => sin_val_mux<=sin_val;
+			when "01" => sin_val_mux<=0-sin_val;
 			when "10" => sin_val_mux<=0-sin_val_inv;
-			when "11" => sin_val_mux<=0-sin_val;
+			when "11" => sin_val_mux<=sin_val;
 			when others=>
 			end case;			
 		end if; --# SIN_GEN

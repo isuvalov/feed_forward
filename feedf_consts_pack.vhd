@@ -14,7 +14,7 @@ constant NBITm1:natural:=NBIT-1;
 constant PERIOD_OF_PILOT:natural:=8192;
 
 constant FREQ_FD:natural:=100; --# frequncy of discretization
-constant PILOTSIN_FREQ:natural:=3;
+constant PILOTSIN_FREQ:natural:=4;
 
 --# '1' it is +1, '0' it is -1
 constant PILOT:std_logic_vector(0 to PILOT_LEN-1):="1100111001001001000010001100001010000001101011000100000100000001";

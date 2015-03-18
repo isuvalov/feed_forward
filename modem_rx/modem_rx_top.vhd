@@ -4,7 +4,7 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 library work;
 use work.feedf_consts_pack.all;
-use work.assert_pack.all;
+--use work.assert_pack.all;
 
 entity modem_rx_top is
 	generic (
@@ -81,6 +81,7 @@ signal time_for_freqcalc_ce:std_logic;
 signal time_for_freqcalc_cnt,time_for_freqcalc_cnt_reg:std_logic_vector(31 downto 0):=(others=>'0');
 
 --signal sampleI_moveback,sampleQ_moveback:std_logic_vector(dds_cos'Length+sampleI_delay_fe_reg'Length-1 downto 0);
+signal sampleI_32moveback,sampleQ_32moveback:std_logic_vector(15 downto 0);
 signal sampleI_moveback,sampleQ_moveback:std_logic_vector(15 downto 0);
 signal pilotU_I,pilotU_Q:std_logic_vector(15 downto 0);
 
@@ -116,21 +117,23 @@ signal bit_value_rx_1p,bit_value_rx:std_logic_vector(1 downto 0);
 signal demod_sampleI_1state,demod_sampleQ_1state,demod_sampleI,demod_sampleQ:std_logic_vector(15 downto 0);
 signal demod_sampleI_2state,demod_sampleQ_2state:std_logic_vector(15 downto 0);
 
-signal freq_corrector_ce:std_logic;
+signal freq_corrector_ce,see_sin_here:std_logic;
+
+signal ftw_correction:std_logic_vector(31 downto 0):=(others=>'0');
 
 begin
 
 sync_find<=s_sync_find;
 
-sampleIE<=SXT(sampleI,sampleIE'Length);
-sampleQE<=SXT(sampleQ,sampleQE'Length);
+sampleIE<=SXT(sampleI&"000",sampleIE'Length);
+sampleQE<=SXT(sampleQ&"000",sampleQE'Length);
 
-zero_remove02: if SIMULATION=1 generate
-	sampleI_zero<=sampleIE;
-	sampleQ_zero<=sampleQE;
-end generate; --#SIMULATION=1
+--zero_remove02: if SIMULATION=1 generate
+--	sampleI_zero<=sampleIE;
+--	sampleQ_zero<=sampleQE;
+--end generate; --#SIMULATION=1
 
-zero_remove01: if SIMULATION/=1 generate
+--zero_remove01: if SIMULATION/=1 generate
 	remove_zero_inst: entity work.remove_zero
 	generic map(
 		WIDTH=>sampleIE'Length
@@ -146,24 +149,27 @@ zero_remove01: if SIMULATION/=1 generate
 		filtered_Q =>sampleQ_zero,
 		ce_out =>open
 	);
-end generate; --#SIMULATION/=1
+--end generate; --#SIMULATION/=1
 
 
 rcc_up_filter_inst: entity work.rcc_up_filter_rx
 	generic map(
 		USE_IT=>1,
-		LEN=>sampleI'Length
+		LEN=>sampleI_zero'Length
 	)
 	port map(
 		clk =>clk,
 		reset =>reset,
-		i_samplesI=>sampleI_zero(sampleI'Length-1 downto 0),
-		i_samplesQ=>sampleQ_zero(sampleI'Length-1 downto 0),
+		i_samplesI=>sampleI_zero(sampleI_zero'Length-1 downto 0),
+		i_samplesQ=>sampleQ_zero(sampleI_zero'Length-1 downto 0),
 		o_sampleI=>sampleIfilt,
 		o_sampleQ=>sampleQfilt
 		);
 sampleIfilt2<=sampleIfilt(sampleIfilt'Length-2 downto 0)&"0";
 sampleQfilt2<=sampleQfilt(sampleIfilt'Length-2 downto 0)&"0";
+--sampleIfilt2<=sampleIfilt(sampleIfilt'Length-1 downto 0);
+--sampleQfilt2<=sampleQfilt(sampleIfilt'Length-1 downto 0);
+
 
 
 dds_I_inst:entity work.dds_synthesizer_pipe
@@ -173,7 +179,7 @@ dds_I_inst:entity work.dds_synthesizer_pipe
   port map(
     clk_i   =>clk,
     rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
-    ftw_i   =>conv_std_logic_vector(100,32),
+    ftw_i   =>ftw_correction,
     phase_i =>x"4000",
     phase_o =>open,
     ampl_o  =>dds_cos
@@ -186,12 +192,42 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
   port map(
     clk_i   =>clk,
     rst_i   =>reset,
-    ftw_i   =>conv_std_logic_vector(100,32),
+    ftw_i   =>ftw_correction,
     phase_i =>x"0000",
     phase_o =>open,
     ampl_o  =>dds_sin
     );
 
+
+
+moveB: entity work.complex_mult
+	generic map(
+		SHIFT_MUL=>1,
+		NOT_USE_IT=>0,--GLOBAL_DEBUG,
+		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
+	)
+	port map(
+		clk =>clk,
+		i_ce =>'1',--down_ce,
+		A_I =>sampleIfilt2,
+		B_Q =>sampleQfilt2,
+
+		C_I =>dds_sin_d,
+		D_Q =>dds_cos_d,
+
+		o_I =>sampleI_moveback,
+		o_Q =>sampleQ_moveback,
+		out_ce =>sampleQ_moveback_ce
+		);
+
+
+process(clk) is
+begin
+	if rising_edge(clk) then
+		dds_cos_d<=dds_cos;
+        dds_sin_d<=dds_sin;
+	end if;
+end process;
 
 pilot_finder_inst: entity work.pilot_finder
     Port map(clk=>clk,
@@ -201,8 +237,8 @@ pilot_finder_inst: entity work.pilot_finder
 		  corrI_o=>corrI_s,
 		  corrQ_o=>corrQ_s,
 
-		  sampleI=>sampleIfilt2,
-		  sampleQ=>sampleQfilt2,
+		  sampleI=>sampleI_moveback,
+		  sampleQ=>sampleQ_moveback,
 		  pilot_start=>s_pilot_start --# Этот импульс будет задержан на InterpolateRate*PILOT_LEN+3+Sqrt_Latency тактов
 	);
 pilot_start<=s_pilot_start;
@@ -216,27 +252,50 @@ delayer_find: entity work.delayer
 		clk =>clk,
 		reset =>reset,
 
-		i_sampleI=>sampleIfilt2,
-		i_sampleQ=>sampleQfilt2,
+		i_sampleI=>sampleI_moveback,
+		i_sampleQ=>sampleQ_moveback,
 
 		o_sampleI=>sampleI_delay,
 		o_sampleQ=>sampleQ_delay
 		);
 
 
-freq_corrector_ce<='1';
+freq_corrector_ce<=see_sin_here;
 
 calc_freq_of_sin_i: entity work.calc_freq_of_sin
 	port map(
 		clk =>clk,
 		reset =>reset,
 
-		i_ce => freq_corrector_ce,
-		i_sampleI=>sampleI_tx,
-		i_sampleQ=>sampleQ_tx,
+		i_ce => '1',--freq_corrector_ce, --1
+		i_sampleI=>sampleIfilt2,
+		i_sampleQ=>sampleQfilt2,
+
+		phase_for_dds_ce=>open,
+		phase_for_dds=>ftw_correction,
 
 		o_freq_ce=>open,
 		o_freq=>open
+		);
+
+
+pilotsync_inst: entity work.pilot_sync_every_time
+	generic map(
+		SIMULATION=>SIMULATION,
+		DELAY_AFTER_FREQESTIM=>DELAY_AFTER_FREQESTIM,
+		DELAY_LEN=>PILOT_PERIOD*InterpolateRate
+	) 
+	port map(
+		clk =>clk,
+		reset =>reset,
+
+		pilot_not_here => see_sin_here,
+
+		realpilot_event =>s_pilot_start,
+		
+		
+		start_pilotU =>start_pilotU,
+        sync_find =>s_sync_find
 		);
 
 
