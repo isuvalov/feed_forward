@@ -4,6 +4,8 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 library work;
 use work.feedf_consts_pack.all;
+use work.math_real.all;
+
 --use work.assert_pack.all;
 
 entity modem_rx_top is
@@ -120,6 +122,7 @@ signal demod_sampleI_2state,demod_sampleQ_2state:std_logic_vector(15 downto 0);
 signal freq_corrector_ce,see_sin_here:std_logic;
 
 signal ftw_correction:std_logic_vector(31 downto 0):=(others=>'0');
+signal dds_freq:real;
 
 begin
 
@@ -204,7 +207,7 @@ moveB: entity work.complex_mult
 	generic map(
 		SHIFT_MUL=>1,
 		NOT_USE_IT=>0,--GLOBAL_DEBUG,
-		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
+		CONJUGATION=>'0' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(
 		clk =>clk,
@@ -267,7 +270,7 @@ calc_freq_of_sin_i: entity work.calc_freq_of_sin
 		clk =>clk,
 		reset =>reset,
 
-		i_ce => '1',--freq_corrector_ce, --1
+		i_ce => freq_corrector_ce, --1
 		i_sampleI=>sampleIfilt2,
 		i_sampleQ=>sampleQfilt2,
 
@@ -277,6 +280,10 @@ calc_freq_of_sin_i: entity work.calc_freq_of_sin
 		o_freq_ce=>open,
 		o_freq=>open
 		);
+
+
+
+dds_freq<=0.25*1E6*real(FREQ_FD)*real(conv_integer(ftw_correction))/real((2**30));
 
 
 pilotsync_inst: entity work.pilot_sync_every_time

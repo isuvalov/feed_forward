@@ -155,7 +155,7 @@ dds_I_inst:entity work.dds_synthesizer_pipe
     clk_i   =>clkq,
     rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
 	--#  =  ((2**32)*3e6)/100e6 = 128849019 i.e +3MHz generation  - I test it and it equal for generation start_sin_gen.vhd 
-    ftw_i   =>conv_std_logic_vector(-42949673,32), 
+    ftw_i   =>conv_std_logic_vector(42949673,32), --# +1 
     phase_i =>x"4000",
     phase_o =>open,
     ampl_o  =>dds_cos
@@ -168,13 +168,11 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
   port map(
     clk_i   =>clkq,
     rst_i   =>reset,
-    ftw_i   =>conv_std_logic_vector(-42949673,32), --#  =  ((2**32)*3e6)/100e6 = 128849019
+    ftw_i   =>conv_std_logic_vector(42949673,32), --#  =  ((2**32)*3e6)/100e6 = 128849019
     phase_i =>x"0000",
     phase_o =>open,
     ampl_o  =>dds_sin
     );
-
-
 
 moveB: entity work.complex_mult
 	generic map(

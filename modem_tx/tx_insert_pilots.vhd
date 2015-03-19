@@ -207,6 +207,33 @@ rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 10 тактов
 		);
 
 
+--dds_I_inst:entity work.dds_synthesizer_pipe
+--  generic map(
+--    ftw_width =>32
+--    )
+--  port map(
+--    clk_i   =>clk,
+--    rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
+--    ftw_i   =>conv_std_logic_vector(4*((2**30)/FREQ_FD)*PILOTSIN_FREQ,32),
+--    phase_i =>x"4000",
+--    phase_o =>open,
+--    ampl_o  =>s_sampleI_cos
+--    );
+--
+--dds_Q_inst:entity work.dds_synthesizer_pipe
+--  generic map(
+--    ftw_width =>32
+--    )
+--  port map(
+--    clk_i   =>clk,
+--    rst_i   =>reset,
+--    ftw_i   =>conv_std_logic_vector(4*((2**30)/FREQ_FD)*PILOTSIN_FREQ,32),
+--    phase_i =>x"0000",
+--    phase_o =>open,
+--    ampl_o  =>s_sampleI_sin
+--    );
+
+
 
 start_sin_gen_i:entity work.start_sin_gen
 	generic map(

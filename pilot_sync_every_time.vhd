@@ -72,7 +72,7 @@ begin
 process (clk) is 
 begin		
 	if rising_edge(clk) then
-		pilot_not_here<=main_cnt(13);--not m_start_pilotU_have;
+		pilot_not_here<=(not g_start_pilotU_have) or not(s_sync_find);
 		if m_start_pilotU='1' then
 --			good_come<='1';
 		else

@@ -41,6 +41,8 @@ vcom ../modem_tx/modem_tx_top.vhd
 
 vcom ../bih_filter_freq.vhd
 vcom ../modem_rx/sinfilt_rxfilter.vhd 
+vlog ../pam_demodulation/cordic_v/cordic.v
+vcom ../pam_demodulation/cordic_v/cordic_wrapper.vhd
 vcom ../modem_rx/calc_freq_of_sin.vhd
 
 
