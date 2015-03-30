@@ -212,8 +212,8 @@ modem_rx_top_i: entity work.modem_rx_top
 	)
     Port map(clk=>clkq,
 		  reset=>reset,
-		  sampleI=>sampleI_moveback(15 downto 4),
-		  sampleQ=>sampleQ_moveback(15 downto 4),
+		  sampleI=>sampleI_tx(15 downto 4),--  sampleI_moveback(15 downto 4),
+		  sampleQ=>sampleQ_tx(15 downto 4),-- sampleQ_moveback(15 downto 4),
 
 		  test_mode=>"00",
 				--# 1 - output after signal normalizing
