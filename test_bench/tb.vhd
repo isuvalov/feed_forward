@@ -169,6 +169,7 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
     clk_i   =>clkq,
     rst_i   =>reset,
     ftw_i   =>conv_std_logic_vector(42949673,32), --#  =  ((2**32)*3e6)/100e6 = 128849019
+
     phase_i =>x"0000",
     phase_o =>open,
     ampl_o  =>dds_sin
@@ -177,7 +178,7 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
 moveB: entity work.complex_mult
 	generic map(
 		SHIFT_MUL=>1,
-		NOT_USE_IT=>0,--GLOBAL_DEBUG,
+		NOT_USE_IT=>1,--GLOBAL_DEBUG,
 		CONJUGATION=>'0' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(
@@ -208,7 +209,7 @@ moveB: entity work.complex_mult
 
 modem_rx_top_i: entity work.modem_rx_top
 	generic map(
-		SIMULATION=>0
+		SIMULATION=>1
 	)
     Port map(clk=>clkq,
 		  reset=>reset,

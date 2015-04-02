@@ -291,8 +291,18 @@ add wave -noupdate /tb/modem_rx_top_i/dds_I_inst/ampl_o(15)
 add wave -noupdate /tb/modem_rx_top_i/dds_freq
 add wave -noupdate /tb/dds_I_inst/ampl_o(15)
 add wave -noupdate /tb/dds_I_inst/ampl_o
+add wave -noupdate /tb/modem_rx_top_i/sampleI_delayD
+add wave -noupdate /tb/modem_rx_top_i/sampleQ_delayD
+add wave -noupdate /tb/modem_rx_top_i/bests_corrs_I
+add wave -noupdate /tb/modem_rx_top_i/bests_corrs_Q
+add wave -noupdate -radix unsigned -childformat {{/tb/modem_rx_top_i/sample_sq_a(9) -radix unsigned} {/tb/modem_rx_top_i/sample_sq_a(8) -radix unsigned} {/tb/modem_rx_top_i/sample_sq_a(7) -radix unsigned} {/tb/modem_rx_top_i/sample_sq_a(6) -radix unsigned} {/tb/modem_rx_top_i/sample_sq_a(5) -radix unsigned} {/tb/modem_rx_top_i/sample_sq_a(4) -radix unsigned} {/tb/modem_rx_top_i/sample_sq_a(3) -radix unsigned} {/tb/modem_rx_top_i/sample_sq_a(2) -radix unsigned} {/tb/modem_rx_top_i/sample_sq_a(1) -radix unsigned} {/tb/modem_rx_top_i/sample_sq_a(0) -radix unsigned}} -expand -subitemconfig {/tb/modem_rx_top_i/sample_sq_a(9) {-radix unsigned} /tb/modem_rx_top_i/sample_sq_a(8) {-radix unsigned} /tb/modem_rx_top_i/sample_sq_a(7) {-radix unsigned} /tb/modem_rx_top_i/sample_sq_a(6) {-radix unsigned} /tb/modem_rx_top_i/sample_sq_a(5) {-radix unsigned} /tb/modem_rx_top_i/sample_sq_a(4) {-radix unsigned} /tb/modem_rx_top_i/sample_sq_a(3) {-radix unsigned} /tb/modem_rx_top_i/sample_sq_a(2) {-radix unsigned} /tb/modem_rx_top_i/sample_sq_a(1) {-radix unsigned} /tb/modem_rx_top_i/sample_sq_a(0) {-radix unsigned}} /tb/modem_rx_top_i/sample_sq_a
+add wave -noupdate /tb/modem_rx_top_i/sampleI_sq_a
+add wave -noupdate /tb/modem_rx_top_i/sampleQ_sq_a
+add wave -noupdate /tb/modem_rx_top_i/pilotsync_inst/sync_find
+add wave -noupdate /tb/modem_rx_top_i/pilot_here
+add wave -noupdate /tb/modem_rx_top_i/start_pilotU
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {1379628000 ps} 0}
+WaveRestoreCursors {{Cursor 1} {12528884000 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 233
 configure wave -valuecolwidth 100
@@ -308,4 +318,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {4161582600 ps}
+WaveRestoreZoom {12526939521 ps} {12529295205 ps}

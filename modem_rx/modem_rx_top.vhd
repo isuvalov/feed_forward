@@ -45,6 +45,7 @@ signal sampleIE,sampleQE,sampleI_zero,sampleQ_zero: std_logic_vector(15 downto 0
 
 signal sampleIfilt,sampleQfilt: std_logic_vector(15 downto 0);
 signal sampleIfilt2,sampleQfilt2: std_logic_vector(15 downto 0);
+constant BEST_F:natural:=10;
 constant SQRT_LATENCY:natural:=16;
 constant FILTRCC_LATENCY:natural:=33/2+1-5;
 constant DELAY_LEN:natural:=InterpolateRate*PILOT_LEN+SQRT_LATENCY+FILTRCC_LATENCY;
@@ -123,6 +124,15 @@ signal freq_corrector_ce,see_sin_here:std_logic;
 
 signal ftw_correction:std_logic_vector(31 downto 0):=(others=>'0');
 signal dds_freq:real;
+
+signal pilot_here:std_logic;
+signal pilot_here_cnt:std_logic_vector(log2roundup(PILOT_LEN*InterpolateRate)-1 downto 0);
+
+type Tbests_corrs is array(BEST_F-1 downto 0) of std_logic_vector(15 downto 0);
+signal sampleI_delayD,sampleQ_delayD,bests_corrs_I,bests_corrs_Q:Tbests_corrs;
+
+type TsampleI_sq_a is array(BEST_F-1 downto 0) of std_logic_vector(31 downto 0);
+signal sample_sq_a,sampleI_sq_a,sampleQ_sq_a:TsampleI_sq_a;
 
 begin
 
@@ -249,7 +259,7 @@ pilot_start<=s_pilot_start;
 
 delayer_find: entity work.delayer
 	generic map(
-		DELAY_LEN=>DELAY_LEN
+		DELAY_LEN=>DELAY_LEN-7
 	)
 	port map(
 		clk =>clk,
@@ -266,6 +276,9 @@ delayer_find: entity work.delayer
 freq_corrector_ce<=see_sin_here;
 
 calc_freq_of_sin_i: entity work.calc_freq_of_sin
+	generic map(
+		SIMULATION=>SIMULATION
+	)
 	port map(
 		clk =>clk,
 		reset =>reset,
@@ -283,7 +296,7 @@ calc_freq_of_sin_i: entity work.calc_freq_of_sin
 
 
 
-dds_freq<=0.25*1E6*real(FREQ_FD)*real(conv_integer(ftw_correction))/real((2**30));
+--dds_freq<=0.25*1E6*real(FREQ_FD)*real(conv_integer(ftw_correction))/real((2**30));
 
 
 pilotsync_inst: entity work.pilot_sync_every_time
@@ -306,6 +319,58 @@ pilotsync_inst: entity work.pilot_sync_every_time
 		);
 
 
+
+
+
+
+delayt: process(clk) is
+begin
+	if rising_edge(clk) then
+		if start_pilotU='1' then
+			pilot_here<='1';
+			pilot_here_cnt<=conv_std_logic_vector(PILOT_LEN*InterpolateRate-1,pilot_here_cnt'Length);
+		else
+			if unsigned(pilot_here_cnt)>0 then
+				pilot_here_cnt<=pilot_here_cnt-1;
+				pilot_here<='1';
+			else
+				pilot_here<='0';
+			end if;
+		end if;
+	end if;
+end process;
+
+
+sampleI_delayD(0)<=sampleI_delay;
+sampleQ_delayD(0)<=sampleQ_delay;
+
+find_best_pos: for i in 0 to BEST_F-2 generate
+delayt: process(clk) is
+begin
+	if rising_edge(clk) then
+		sampleI_delayD(i+1)<=sampleI_delayD(i);
+		sampleQ_delayD(i+1)<=sampleQ_delayD(i);
+
+		sampleI_sq_a(i)<=signed(bests_corrs_I(i))*signed(bests_corrs_I(i));
+		sampleQ_sq_a(i)<=signed(bests_corrs_Q(i))*signed(bests_corrs_Q(i));
+		sample_sq_a(i)<=sampleI_sq_a(i)+sampleQ_sq_a(i);
+
+
+	end if;
+end process;
+
+pilot_correlator_i: entity work.pilot_correlator
+	port map(
+		clk =>clk,
+		reset =>reset,
+		ce => '1',--pilot_here,
+		i_samplesI=>sampleI_delayD(i),
+		i_samplesQ=>sampleQ_delayD(i),
+		o_sampleI=>bests_corrs_I(i),  --# выход в два раза меньше максимума
+		o_sampleQ=>bests_corrs_Q(i)
+		);
+	
+end generate;
 
 end modem_rx_top;
 

@@ -7,6 +7,9 @@ use work.math_real.all;
 use work.feedf_consts_pack.all;
 
 entity calc_freq_of_sin is
+	generic (
+		SIMULATION:integer:=0
+	);
 	port(
 		clk : in STD_LOGIC;
 		reset : in std_logic;
@@ -110,7 +113,11 @@ begin
 
 		sin_phase_delta_filt_c<=sin_phase_delta_filt+34320;
 
-        phase_for_dds<=signed(sin_phase_delta_filt_c(sin_phase_delta_filt_c'Length-1-4 downto 0)&"0000")*unsigned(conv_std_logic_vector((2**10)/(3),10)); --FREQ_FD
+		if SIMULATION=1 then
+			phase_for_dds<=(others=>'0');
+		else
+	        phase_for_dds<=signed(sin_phase_delta_filt_c(sin_phase_delta_filt_c'Length-1-4 downto 0)&"0000")*unsigned(conv_std_logic_vector((2**10)/(3),10)); --FREQ_FD
+		end if;
 		
 	end if;	--clk
 end process;

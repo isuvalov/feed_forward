@@ -5,8 +5,9 @@ vmap work work
 
 
 vcom ../feedf_consts_pack.vhd
+vcom ../bih_filter_freq.vhd
 vlog -sv generate_strobs/system_strob_gen.v 
-vcom pilot_sync_every_time.vhd 
+vcom pilot_sync_every_time_ver2.vhd
 
 
 vcom tb.vhd 

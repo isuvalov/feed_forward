@@ -228,7 +228,8 @@ begin
 	end if;
 end process;
 
-start_pilotU<=m_start_pilotU when good_come='0' and stm=CATCH and m_start_pilotU_have_1w='0' else g_start_pilotU;
+--start_pilotU<=m_start_pilotU when good_come='0' and stm=CATCH and m_start_pilotU_have_1w='0' else g_start_pilotU;
+start_pilotU<=m_start_pilotU when good_come='0' and stm=CATCH else g_start_pilotU;
 
 sync_find<=s_sync_find;
 	

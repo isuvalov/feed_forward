@@ -37,11 +37,11 @@ port (
 end component;
 
 
-signal cnt,cntreg:integer:=0;
+signal cnt,cntreg,cnt_local_test:integer:=0;
 signal clkq,clk125,clk125_div2,clk125_div4:std_logic:='0';
 signal strob,strob_mean,reset:std_logic:='1'; 
 
-signal frame_start_p1_0,frame_start_p1,mean_lock,mean_lock_1w,sync_gen_reset : std_logic;
+signal frame_start_p1_0,frame_start_p1,mean_lock,mean_lock_1w,sync_gen_reset,strob2 : std_logic;
 signal to_gun:std_logic_vector(17 downto 0);
 
 begin
@@ -85,9 +85,9 @@ port map(
  clk=>clkq,
  period	=>		conv_std_logic_vector(PILOT_PERIOD,32),
  fd =>			conv_std_logic_vector(125e6,32),
--- freqoffset=>	conv_std_logic_vector(0000,32),
- freqoffset=>	conv_std_logic_vector(1e6,32),
- error_val=>	conv_std_logic_vector(8,32),
+ freqoffset=>	conv_std_logic_vector(0000,32),
+-- freqoffset=>	conv_std_logic_vector(0e6,32),
+ error_val=>	conv_std_logic_vector(0,32),
  p_loss=>		conv_std_logic_vector(65535/3,32),
 -- p_loss=>		conv_std_logic_vector(0,32),
  start_delay=>	conv_std_logic_vector(0000,32),
@@ -104,6 +104,15 @@ begin
 		else
 			cnt<=cnt+1;
 		end if;
+
+		if cnt_local_test<PILOT_PERIOD-1 then
+			cnt_local_test<=cnt_local_test+1;
+			strob2<='0';
+		else
+			cnt_local_test<=0;
+			strob2<='1';
+		end if;
+
 	end if;
 end process;
 
@@ -118,11 +127,11 @@ begin
 	end if;
 end process;
 
-pilotsync_inst: entity work.pilot_sync_every_time
+pilotsync_inst: entity work.pilot_sync_every_time_ver2
 	generic map(
 		SIMULATION=>0,
-		DELAY_AFTER_FREQESTIM=>PILOT_PERIOD/3,
-		DELAY_LEN=>PILOT_PERIOD
+--		DELAY_AFTER_FREQESTIM=>PILOT_PERIOD/3,
+		PERIOD=>PILOT_PERIOD
 	) 
 	port map(
 		clk =>clkq,
