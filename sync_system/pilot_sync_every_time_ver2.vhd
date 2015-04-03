@@ -26,10 +26,18 @@ end pilot_sync_every_time_ver2;
 
 architecture pilot_sync_every_time_ver2 of pilot_sync_every_time_ver2 is
 
-signal phase_cnt_pre,phase_cnt,phase_cnt_get,phase_cnt_recalc:std_logic_vector(log2roundup(PERIOD)-1 downto 0):=(others=>'0');
-signal realpilot_event_1w,filtit_ce,pilot_come:std_logic:='0';
+signal phase_cnt_pre,phase_cnt,phase_cnt_get,phase_cnt_recalc,phase_cnt_recalc_reg,phase_cnt_wait:std_logic_vector(log2roundup(PERIOD)-1 downto 0):=(others=>'1');
+signal phase_gradient,phase_gradient_abs:std_logic_vector(log2roundup(PERIOD) downto 0):=(others=>'1');
+signal realpilot_event_1w,filtit_ce,pilot_come,prev_bit:std_logic:='0';
 
 signal phase_cnt_getE,phase_cnt_getadd,phase_cnt_getadd_1w,phase_cnt_filt:std_logic_vector(log2roundup(PERIOD)+1 downto 0):=(others=>'0');
+
+type Treset_stm is (CALCING,RESETING);
+signal reset_stm:Treset_stm;
+
+
+signal error_cnt:std_logic_vector(3 downto 0);
+signal local_reset:std_logic;
 
 begin
 
@@ -38,10 +46,69 @@ begin
 process (clk) is 
 begin		
 	if rising_edge(clk) then
-		phase_cnt_getadd_1w<=phase_cnt_getadd;
 		if reset='1' then
+			reset_stm<=CALCING;
+			local_reset<='1';
+			sync_find<='0';
+			phase_gradient_abs<=(others=>'1');
+		else
+			case reset_stm is
+			when CALCING=>
+				if filtit_ce='1' and (prev_bit xor phase_cnt_getE(phase_cnt'Length-1))='1' then
+					error_cnt<=error_cnt+2;
+				else
+					if unsigned(error_cnt)>0 then
+						error_cnt<=error_cnt-1;
+					end if;
+				end if;
+				if unsigned(error_cnt)>=10 then
+					reset_stm<=RESETING;					
+				end if;
+				local_reset<='0';
+				phase_cnt_wait<=conv_std_logic_vector(PERIOD/2,phase_cnt_wait'Length);
+			when RESETING=>
+				if unsigned(phase_cnt_wait)>0 then
+					phase_cnt_wait<=phase_cnt_wait-1;
+					local_reset<='0';
+				else
+					local_reset<='1';
+					reset_stm<=CALCING;
+				end if;				
+			when others=>
+			end case;
+
+
+			if signed(phase_gradient)<0 then
+				phase_gradient_abs<=0-phase_gradient;
+			else
+				phase_gradient_abs<=phase_gradient;
+			end if;
+
+
+			if unsigned(phase_gradient_abs)<6 then
+				sync_find<='1';
+			else
+				sync_find<='0';
+			end if;
+
+
+		end if;
+
+
+		if filtit_ce='1' then
+			phase_cnt_recalc_reg<=phase_cnt_recalc;
+			phase_gradient<=SXT(phase_cnt_recalc_reg,phase_cnt_recalc'Length+1)-SXT(phase_cnt_recalc,phase_cnt_recalc'Length+1);
+		end if;
+
+
+
+
+		prev_bit<=phase_cnt_getE(phase_cnt'Length-1);
+
+		phase_cnt_getadd_1w<=phase_cnt_getadd;
+		if local_reset='1' then
 			phase_cnt<=conv_std_logic_vector(0,phase_cnt'Length);
-			phase_cnt_pre<=conv_std_logic_vector(0,phase_cnt'Length);
+			phase_cnt_pre<=conv_std_logic_vector(1,phase_cnt'Length);
 		else
 			if unsigned(phase_cnt_pre)<PERIOD-1 then
 				phase_cnt_pre<=phase_cnt_pre+1;
@@ -52,22 +119,14 @@ begin
 
 			if unsigned(phase_cnt)<PERIOD-1 then
 				phase_cnt<=phase_cnt+1;
-				if realpilot_event='1' and realpilot_event_1w='0' then
-					pilot_come<='1';
-					phase_cnt_getadd<=(others=>'0');
-				end if;
 			else
 				phase_cnt<=(others=>'0');
-				pilot_come<='0';
-				if pilot_come='1' then
-					phase_cnt_getadd<=conv_std_logic_vector(PERIOD-1,phase_cnt_getadd'Length);
-				end if;
 			end if;
 		end if;
 
 		realpilot_event_1w<=realpilot_event;
 		if realpilot_event='1' and realpilot_event_1w='0' then
-			phase_cnt_getE<=EXT(phase_cnt,phase_cnt_getE'Length)+phase_cnt_getadd_1w;
+			phase_cnt_getE<=EXT(phase_cnt,phase_cnt_getE'Length);
 			filtit_ce<='1';
 		else
 			filtit_ce<='0';
@@ -88,8 +147,8 @@ end process;
 
 bih_filter_small:entity work.bih_filter_freq
 	generic map(
-		ALPHA_NUM=>7-3+1+1,  --# коэффициент интегрирования, чем он больше тем большую историю храним
-		SCALE_FACTOR=>5-3+1+1,  --# маштаб - чем он больше тем меньше значение на выходе
+		ALPHA_NUM=>7-3+1,  --# коэффициент интегрирования, чем он больше тем большую историю храним
+		SCALE_FACTOR=>5-3+1,  --# маштаб - чем он больше тем меньше значение на выходе
 
 		WIDTH=>phase_cnt_getE'Length --width_cnt_reg'Length
 	)
@@ -100,9 +159,10 @@ bih_filter_small:entity work.bih_filter_freq
 		ce =>filtit_ce,
 		sample =>phase_cnt_getE,--width_cnt_reg, --# this is unsigned value!!!
 
-		filtered=>phase_cnt_filt,--s_freq,
+		filtered=>phase_cnt_filt,
 		ce_out =>open
 	);
+--phase_cnt_filt<=phase_cnt_getE;
 
 	
 end pilot_sync_every_time_ver2;

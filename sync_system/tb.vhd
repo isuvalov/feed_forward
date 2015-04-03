@@ -83,7 +83,7 @@ port map(
 --# error_val - size of whole window(in two ways +/-) where strob generate, in samples
 --# p_loss - probability of loss strob, value 65535 is 100%, 0 meens that loss=0 
  clk=>clkq,
- period	=>		conv_std_logic_vector(PILOT_PERIOD,32),
+ period	=>		conv_std_logic_vector(PILOT_PERIOD-1,32),
  fd =>			conv_std_logic_vector(125e6,32),
  freqoffset=>	conv_std_logic_vector(0000,32),
 -- freqoffset=>	conv_std_logic_vector(0e6,32),
