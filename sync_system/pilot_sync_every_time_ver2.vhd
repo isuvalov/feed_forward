@@ -15,7 +15,7 @@ entity pilot_sync_every_time_ver2 is
 		reset : in std_logic;
 
 		realpilot_event: in std_logic; 
-		
+		pilot_not_here: out std_logic;		
 		
 		start_pilotU: out std_logic;
         sync_find: out std_logic
@@ -54,11 +54,13 @@ begin
 		else
 			case reset_stm is
 			when CALCING=>
-				if filtit_ce='1' and (prev_bit xor phase_cnt_getE(phase_cnt'Length-1))='1' then
-					error_cnt<=error_cnt+2;
-				else
-					if unsigned(error_cnt)>0 then
-						error_cnt<=error_cnt-1;
+				if filtit_ce='1' then
+					if (prev_bit xor (phase_cnt_getE(phase_cnt'Length-1) and phase_cnt_getE(phase_cnt'Length-2)))='1' then
+						error_cnt<=error_cnt+2;
+					else
+						if unsigned(error_cnt)>0 then
+							error_cnt<=error_cnt-1;
+						end if;
 					end if;
 				end if;
 				if unsigned(error_cnt)>=10 then
@@ -100,10 +102,7 @@ begin
 			phase_gradient<=SXT(phase_cnt_recalc_reg,phase_cnt_recalc'Length+1)-SXT(phase_cnt_recalc,phase_cnt_recalc'Length+1);
 		end if;
 
-
-
-
-		prev_bit<=phase_cnt_getE(phase_cnt'Length-1);
+		prev_bit<=phase_cnt_getE(phase_cnt'Length-1) and phase_cnt_getE(phase_cnt'Length-2);
 
 		phase_cnt_getadd_1w<=phase_cnt_getadd;
 		if local_reset='1' then
@@ -132,8 +131,12 @@ begin
 			filtit_ce<='0';
 		end if;
 
+		if SIMULATION=0 then
+			phase_cnt_recalc<=phase_cnt_filt(phase_cnt_recalc'Length-1 downto 0);
+		else
+			phase_cnt_recalc<=phase_cnt_getE(phase_cnt_recalc'Length-1 downto 0);
+		end if;
 
-		phase_cnt_recalc<=phase_cnt_filt(phase_cnt_recalc'Length-1 downto 0);
 		if phase_cnt_pre=phase_cnt_recalc then
 			start_pilotU<='1';
 		else
@@ -164,5 +167,6 @@ bih_filter_small:entity work.bih_filter_freq
 	);
 --phase_cnt_filt<=phase_cnt_getE;
 
+pilot_not_here<='0';
 	
 end pilot_sync_every_time_ver2;

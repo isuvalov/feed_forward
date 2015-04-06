@@ -10,6 +10,7 @@ use work.math_real.all;
 
 entity modem_rx_top is
 	generic (
+		FREQ_SIMULATION:integer:=0;
 		SIMULATION:integer:=0
 	);
     Port (clk: in std_logic;
@@ -259,7 +260,7 @@ pilot_start<=s_pilot_start;
 
 delayer_find: entity work.delayer
 	generic map(
-		DELAY_LEN=>DELAY_LEN-7
+		DELAY_LEN=>DELAY_LEN+5
 	)
 	port map(
 		clk =>clk,
@@ -299,11 +300,10 @@ calc_freq_of_sin_i: entity work.calc_freq_of_sin
 --dds_freq<=0.25*1E6*real(FREQ_FD)*real(conv_integer(ftw_correction))/real((2**30));
 
 
-pilotsync_inst: entity work.pilot_sync_every_time
+pilotsync_inst: entity work.pilot_sync_every_time_ver2
 	generic map(
 		SIMULATION=>SIMULATION,
-		DELAY_AFTER_FREQESTIM=>DELAY_AFTER_FREQESTIM,
-		DELAY_LEN=>PILOT_PERIOD*InterpolateRate
+		PERIOD=>PILOT_PERIOD*InterpolateRate
 	) 
 	port map(
 		clk =>clk,
@@ -363,7 +363,7 @@ pilot_correlator_i: entity work.pilot_correlator
 	port map(
 		clk =>clk,
 		reset =>reset,
-		ce => '1',--pilot_here,
+		ce => pilot_here,
 		i_samplesI=>sampleI_delayD(i),
 		i_samplesQ=>sampleQ_delayD(i),
 		o_sampleI=>bests_corrs_I(i),  --# выход в два раза меньше максимума

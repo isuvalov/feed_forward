@@ -46,7 +46,7 @@ vcom ../pam_demodulation/cordic_v/cordic_wrapper.vhd
 vcom ../modem_rx/calc_freq_of_sin.vhd
 
 
-vcom ../pilot_sync_every_time.vhd 
+vcom ../sync_system/pilot_sync_every_time_ver2.vhd 
 
 vcom ../modem_rx/modem_rx_top.vhd
 

@@ -209,7 +209,8 @@ moveB: entity work.complex_mult
 
 modem_rx_top_i: entity work.modem_rx_top
 	generic map(
-		SIMULATION=>1
+		FREQ_SIMULATION=>1,
+		SIMULATION=>0
 	)
     Port map(clk=>clkq,
 		  reset=>reset,
