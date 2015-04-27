@@ -83,6 +83,8 @@ signal test_bits: std_logic_vector(1 downto 0);
 signal ce_d,after_farrow_ce:std_logic;
 signal after_farrow_i,after_farrow_q:std_logic_vector(15 downto 0);
 
+signal ted_mu_filt,ted_mu:std_logic_vector(15 downto 0);
+
 
 signal ttt:std_logic_vector(15 downto 0):=x"0000";
 
@@ -232,6 +234,36 @@ ADC_EMUL_im:entity work.FromTextFile
 --		o_sample=>open,
 --		o_ce=>open
 --		);
+
+gardner_ted_i: entity work.gardner_ted
+	port map(
+		clk =>clk,
+		reset =>reset,
+
+		i_sampleI=>adc_re,
+		i_sampleQ=>adc_im,
+		i_ce=>ce_d,
+
+		o_mu=>ted_mu,
+		o_ce=>open
+		);
+
+bih_filter_freq_i:entity work.bih_filter_freq
+	generic map(
+		ALPHA_NUM=>7+3+4,
+		SCALE_FACTOR=>7+4,
+
+		WIDTH=>ted_mu'Length
+	)
+	port map(
+		clk =>clk,
+		reset=>reset,
+		ce =>ce_d,
+		sample =>ted_mu,
+
+		filtered=>ted_mu_filt,
+		ce_out =>open
+	);
 
 
 to_zero_fraction_i: entity work.to_zero_fraction

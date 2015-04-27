@@ -41,8 +41,8 @@ farrow16_i:entity work.farrow_32bit
 	port map(
 		clk =>clk,
 		reset =>reset,
-
-		i_mu=>mesured_mu(7 downto 0), --# signed 2.14 i.e. 14bit for fraction
+		                              --# log2((2**14)/1143)=3.8
+		i_mu=>mesured_muE(15-4 downto 8-4), --# signed 2.14 i.e. 14bit for fraction
 		
 		i_sample=>i_sampleI, --sampleI_tx,--
 		i_ce=>i_ce,
@@ -59,8 +59,8 @@ farrow16_q:entity work.farrow_32bit
 	port map(
 		clk =>clk,
 		reset =>reset,
-
-		i_mu=>mesured_mu(7 downto 0), --# signed 2.14 i.e. 14bit for fraction
+		                              --# log2((2**14)/1143)=3.8
+		i_mu=>mesured_muE(15-4 downto 8-4), --# signed 2.14 i.e. 14bit for fraction
 		
 		i_sample=>i_sampleQ, --sampleI_tx,--
 		i_ce=>i_ce,
@@ -70,18 +70,32 @@ farrow16_q:entity work.farrow_32bit
 		);
 
 
-gardner_ted_stm_i: entity work.gardner_ted_stm
+gardner_ted_i: entity work.gardner_ted
 	port map(
 		clk =>clk,
 		reset =>reset,
 
-		i_sampleI=>sampleI_shifted,
-		i_sampleQ=>sampleQ_shifted,
+		i_sampleI =>i_sampleI,
+		i_sampleQ =>i_sampleQ,
 		i_ce=>i_ce,
 
-		o_mu=>mesured_mu,
-		o_ce=>mesured_mu_ce
+		o_mu=>open,
+		err_val_filt =>mesured_muE,
+		o_ce =>open
 		);
+
+--gardner_ted_stm_i: entity work.gardner_ted_stm
+--	port map(
+--		clk =>clk,
+--		reset =>reset,
+--  
+--		i_sampleI=>sampleI_shifted,
+--		i_sampleQ=>sampleQ_shifted,
+--		i_ce=>i_ce,
+--
+--		o_mu=>mesured_mu,
+--		o_ce=>mesured_mu_ce
+--		);
 
 o_sampleI<=sampleI_shifted;
 o_sampleQ<=sampleQ_shifted;
