@@ -22,15 +22,6 @@ constant CE_LEN:natural:=188;
 constant DataLen:natural:=16;
 
 constant SHFT:integer:=8;
-component mult31_25
-	PORT
-	(
-		areset		: IN STD_LOGIC  := '0';
-		inclk0		: IN STD_LOGIC  := '0';
-		c0		: OUT STD_LOGIC ;
-		locked		: OUT STD_LOGIC 
-	);
-end component;
 
 
 FUNCTION gen_lfsr(PSPNum: integer; pol : std_logic_vector; en : std_logic; nb_iter : natural) RETURN std_logic_vector IS
@@ -60,6 +51,7 @@ RETURN (pol_int);
 END gen_lfsr;
 
 signal cnt_ce:integer;--std_logic_vector(1 downto 0):=(others=>'0');
+signal cnt_d:std_logic_vector(1 downto 0):="00";
 
 signal adc_im,adc_re:std_logic_vector(15 downto 0):=(others=>'0');
 
@@ -88,6 +80,10 @@ signal bit_value_rx:std_logic_vector(1 downto 0);
 signal test_bits_ce,reset_n,local_ce,ttt_ce: std_logic;
 signal test_bits: std_logic_vector(1 downto 0);
 
+signal ce_d,after_farrow_ce:std_logic;
+signal after_farrow_i,after_farrow_q:std_logic_vector(15 downto 0);
+
+
 signal ttt:std_logic_vector(15 downto 0):=x"0000";
 
 begin
@@ -106,10 +102,25 @@ begin
 		if reset='1' then
 			local_ce<='0';
 			cnt_ce<=0;
+			cnt_d<="00";
+			ce_d<='0';
 		else
+			if local_ce='1' then
+				cnt_d<=cnt_d+1;
+				if cnt_d="11" then
+					ce_d<='1';
+				else
+					ce_d<='0';
+				end if;
+			else
+				ce_d<='0';
+			end if;
 			local_ce<='1';
 			cnt_ce<=cnt_ce+1;
 		end if;
+
+		
+
 
 	    ttt<=ttt+1;	
 		if ttt(3 downto 0)=0 then
@@ -168,59 +179,97 @@ make_powers_i: entity work.make_powers
 ADC_EMUL_re:entity work.FromTextFile
 	generic map(BitLen =>16,
 			IsSigned=>1, -- you can choose signed or unsigned value you have in text file
-			NameOfFile =>"rects.txt")
+--			NameOfFile =>"../gadarg/no_channel/gadarg_signal_re.txt")
+			NameOfFile =>"before_farrow_i.txt")
 	 port map(
 		 clk =>clk,
-		 CE =>local_ce,--'1',
+		 CE =>'1',
 		 DataFromFile =>adc_re
 	     );
 
 ADC_EMUL_im:entity work.FromTextFile
 	generic map(BitLen =>16,
 			IsSigned=>1, -- you can choose signed or unsigned value you have in text file
-			NameOfFile =>"../gadarg/no_channel/gadarg_signal_im.txt")
+--			NameOfFile =>"../gadarg/no_channel/gadarg_signal_im.txt")
+			NameOfFile =>"before_farrow_q.txt")
 	 port map(
 		 clk =>clk,
-		 CE =>local_ce,--'1',
+		 CE =>'1',
 		 DataFromFile =>adc_im
 	     );
 
-farrow_i:entity work.farrow_32bit
-	generic map(
-		MU_SIZE=>8
-	)
+--farrow_i:entity work.farrow_32bit
+--	generic map(
+--		MU_SIZE=>8
+--	)
+--	port map(
+--		clk =>clk,
+--		reset =>reset,
+--
+--		i_mu=>mu(15 downto 8), --# signed 2.14 i.e. 14bit for fraction
+--		
+--		i_sample=>adc_im, --sampleI_tx,--
+--		i_ce=>local_ce_1w,
+--
+--		o_sample=>open,
+--		o_ce=>open
+--		);
+
+
+--farrow16_i:entity work.farrow
+--	generic map(
+--		MU_SIZE=>8
+--	)
+--	port map(
+--		clk =>clk,
+--		reset =>reset,
+--
+--		i_mu=>mu(15 downto 8), --# signed 2.14 i.e. 14bit for fraction
+--		
+--		i_sample=>adc_im, --sampleI_tx,--
+--		i_ce=>ce_d,--local_ce_1w,
+--
+--		o_sample=>open,
+--		o_ce=>open
+--		);
+
+
+to_zero_fraction_i: entity work.to_zero_fraction
 	port map(
 		clk =>clk,
 		reset =>reset,
 
-		i_mu=>mu(15 downto 8), --# signed 2.14 i.e. 14bit for fraction
-		
-		i_sample=>adc_im, --sampleI_tx,--
-		i_ce=>local_ce_1w,
+		i_sampleI=>adc_re,
+		i_sampleQ=>adc_im,
+		i_ce =>ce_d,--local_ce_1w,
 
-		o_sample=>open,
-		o_ce=>open
+		o_sampleI=>after_farrow_i,
+		o_sampleQ=>after_farrow_q,
+		o_ce=>after_farrow_ce
 		);
 
 
-farrow16_i:entity work.farrow
-	generic map(
-		MU_SIZE=>8
-	)
-	port map(
-		clk =>clk,
-		reset =>reset,
+ToTextFile_i: entity work.ToTextFile
+	generic map(BitLen =>16,
+			WriteHex=>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile=>"after_farrow_i.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>after_farrow_ce, 
+		 block_marker=>'0',
+		 DataToSave=>after_farrow_i
+	     );
 
-		i_mu=>mu(15 downto 8), --# signed 2.14 i.e. 14bit for fraction
-		
-		i_sample=>adc_im, --sampleI_tx,--
-		i_ce=>local_ce_1w,
-
-		o_sample=>open,
-		o_ce=>open
-		);
-
-
+ToTextFile_q: entity work.ToTextFile
+	generic map(BitLen =>16,
+			WriteHex=>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile=>"after_farrow_q.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>after_farrow_ce, 
+		 block_marker=>'0',
+		 DataToSave=>after_farrow_q
+	     );
 
 end tb;
 

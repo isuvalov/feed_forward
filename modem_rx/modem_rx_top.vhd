@@ -278,7 +278,7 @@ freq_corrector_ce<=see_sin_here;
 
 calc_freq_of_sin_i: entity work.calc_freq_of_sin
 	generic map(
-		SIMULATION=>SIMULATION
+		SIMULATION=>FREQ_SIMULATION
 	)
 	port map(
 		clk =>clk,
@@ -302,6 +302,7 @@ calc_freq_of_sin_i: entity work.calc_freq_of_sin
 
 pilotsync_inst: entity work.pilot_sync_every_time_ver2
 	generic map(
+		FILTER_QUICK=>FREQ_SIMULATION,
 		SIMULATION=>SIMULATION,
 		PERIOD=>PILOT_PERIOD*InterpolateRate
 	) 

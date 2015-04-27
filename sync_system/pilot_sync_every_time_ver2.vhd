@@ -7,8 +7,9 @@ use work.feedf_consts_pack.all;
 
 entity pilot_sync_every_time_ver2 is
 	generic(
-		SIMULATION:integer:=0;
-		PERIOD:integer:=100
+		FILTER_QUICK:integer:=0;  --# use quick IIF, use it for simulation
+		SIMULATION:integer:=0;    --# not use IIF, use it for very quick simulation
+		PERIOD:integer:=100       --# must be setup!
 	);
 	port(
 		clk : in STD_LOGIC;
@@ -28,12 +29,14 @@ architecture pilot_sync_every_time_ver2 of pilot_sync_every_time_ver2 is
 
 signal phase_cnt_pre,phase_cnt,phase_cnt_get,phase_cnt_recalc,phase_cnt_recalc_reg,phase_cnt_wait:std_logic_vector(log2roundup(PERIOD)-1 downto 0):=(others=>'1');
 signal phase_gradient,phase_gradient_abs:std_logic_vector(log2roundup(PERIOD) downto 0):=(others=>'1');
-signal realpilot_event_1w,filtit_ce,pilot_come,prev_bit:std_logic:='0';
+signal realpilot_event_1w,filtit_ce,pilot_come,prev_bit,some_about_correct:std_logic:='0';
 
-signal phase_cnt_getE,phase_cnt_getadd,phase_cnt_getadd_1w,phase_cnt_filt:std_logic_vector(log2roundup(PERIOD)+1 downto 0):=(others=>'0');
+signal phase_cnt_getE,phase_cnt_getadd,phase_cnt_getadd_1w,phase_cnt_filt,cnt_point_delta,cnt_point_delta_abs:std_logic_vector(log2roundup(PERIOD)+1 downto 0):=(others=>'0');
 
 type Treset_stm is (CALCING,RESETING);
 signal reset_stm:Treset_stm;
+
+signal ALPHA_NUM,SCALE_FACTOR:natural;
 
 
 signal error_cnt:std_logic_vector(3 downto 0);
@@ -79,7 +82,6 @@ begin
 			when others=>
 			end case;
 
-
 			if signed(phase_gradient)<0 then
 				phase_gradient_abs<=0-phase_gradient;
 			else
@@ -99,7 +101,6 @@ begin
 
 		if filtit_ce='1' then
 			phase_cnt_recalc_reg<=phase_cnt_recalc;
-			phase_gradient<=SXT(phase_cnt_recalc_reg,phase_cnt_recalc'Length+1)-SXT(phase_cnt_recalc,phase_cnt_recalc'Length+1);
 		end if;
 
 		prev_bit<=phase_cnt_getE(phase_cnt'Length-1) and phase_cnt_getE(phase_cnt'Length-2);
@@ -123,7 +124,12 @@ begin
 			end if;
 		end if;
 
+		if realpilot_event='1' and realpilot_event_1w='0' and some_about_correct='1' then
+			phase_gradient<=SXT(phase_cnt_recalc_reg,phase_cnt_recalc'Length+1)-SXT(phase_cnt_getE,phase_cnt_recalc'Length+1);
+		end if;
+
 		realpilot_event_1w<=realpilot_event;
+
 		if realpilot_event='1' and realpilot_event_1w='0' then
 			phase_cnt_getE<=EXT(phase_cnt,phase_cnt_getE'Length);
 			filtit_ce<='1';
@@ -137,6 +143,21 @@ begin
 			phase_cnt_recalc<=phase_cnt_getE(phase_cnt_recalc'Length-1 downto 0);
 		end if;
 
+
+		cnt_point_delta<=SXT(phase_cnt_pre,phase_cnt_recalc'Length+1)-SXT(phase_cnt_recalc,phase_cnt_recalc'Length+1);
+
+		if signed(cnt_point_delta)<0 then
+			cnt_point_delta_abs<=0-cnt_point_delta;
+		else
+			cnt_point_delta_abs<=cnt_point_delta;
+		end if;
+
+		if unsigned(cnt_point_delta_abs)<PILOT_LEN*InterpolateRate/2 then
+			some_about_correct<='1';
+		else
+			some_about_correct<='0';
+		end if;
+
 		if phase_cnt_pre=phase_cnt_recalc then
 			start_pilotU<='1';
 		else
@@ -147,11 +168,17 @@ begin
 	end if;
 end process;
 
+ALPHA_NUM<=7-3-2 when FILTER_QUICK=1 else 7-3-1+4;
+SCALE_FACTOR<=5-2-2 when FILTER_QUICK=1 else 5-2-1+4;
 
 bih_filter_small:entity work.bih_filter_freq
 	generic map(
-		ALPHA_NUM=>7-3+1,  --# коэффициент интегрирования, чем он больше тем большую историю храним
-		SCALE_FACTOR=>5-3+1,  --# маштаб - чем он больше тем меньше значение на выходе
+		ALPHA_NUM=>7-3-1,  --# коэффициент интегрирования, чем он больше тем большую историю храним
+		SCALE_FACTOR=>5-2-1,  --# маштаб - чем он больше тем меньше значение на выходе
+
+--		ALPHA_NUM=>7-3,  --# коэффициент интегрирования, чем он больше тем большую историю храним
+--		SCALE_FACTOR=>5-2,  --# маштаб - чем он больше тем меньше значение на выходе
+
 
 		WIDTH=>phase_cnt_getE'Length --width_cnt_reg'Length
 	)
