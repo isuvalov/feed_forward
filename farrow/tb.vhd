@@ -109,7 +109,7 @@ begin
 		else
 			if local_ce='1' then
 				cnt_d<=cnt_d+1;
-				if cnt_d="11" then
+				if cnt_d="10" then
 					ce_d<='1';
 				else
 					ce_d<='0';

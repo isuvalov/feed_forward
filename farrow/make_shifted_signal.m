@@ -27,7 +27,7 @@ R=0.2;
 mod_engine=modem.pskmod('M',M,'PhaseOffset', pi/4);
 demod_engine=modem.pskdemod('M',M,'PhaseOffset', pi/4);
 
-fdelay = 0.75; % Fractional delay
+fdelay = 0.5; % Fractional delay
 d = fdesign.fracdelay(fdelay,'N',3);
 Hd_farrow = design(d, 'lagrange', 'FilterStructure', 'farrowfd');
 

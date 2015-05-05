@@ -28,6 +28,7 @@ architecture farrow of farrow is
 
 constant MSHFT:integer:=23;
 
+constant SHFTLAST:integer:=8;
 constant SHFT:integer:=3;
 constant SHFT0:integer:=2;
 
@@ -183,7 +184,7 @@ begin
 
 		mulmu_sum<=SXT(mulmu_sum_1m2,25)+SXT(mulmu_sum_3m4,25);
 
-		s_sample<=mulmu_sum(mulmu_sum'Length-1-1 downto mulmu_sum'Length-16-1);
+		s_sample<=mulmu_sum(mulmu_sum'Length-1-1-SHFTLAST downto mulmu_sum'Length-16-1-SHFTLAST);
 		o_sample<=s_sample(s_sample'Length-1 downto s_sample'Length-o_sample'Length); --s_sample(s_sample'Length-1 downto s_sample'Length-16);
 	
 		delay_ce<=delay_ce(delay_ce'Length-2 downto 0)&i_ce;

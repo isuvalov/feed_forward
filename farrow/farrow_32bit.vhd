@@ -27,7 +27,7 @@ architecture farrow_32bit of farrow_32bit is
 
 constant MSHFT:integer:=23;
 
-constant SHFT:integer:=3;
+constant SHFT:integer:=3+10;
 constant SHFT0:integer:=2;
 
 constant MU_SIZE_TABLE:integer:=6;

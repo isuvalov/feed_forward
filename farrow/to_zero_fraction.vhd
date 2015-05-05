@@ -42,7 +42,7 @@ farrow16_i:entity work.farrow_32bit
 		clk =>clk,
 		reset =>reset,
 		                              --# log2((2**14)/1143)=3.8
-		i_mu=>mesured_muE(15-4 downto 8-4), --# signed 2.14 i.e. 14bit for fraction
+		i_mu=>mesured_muE(15-2 downto 8-2), --# signed 2.14 i.e. 14bit for fraction
 		
 		i_sample=>i_sampleI, --sampleI_tx,--
 		i_ce=>i_ce,
@@ -60,7 +60,7 @@ farrow16_q:entity work.farrow_32bit
 		clk =>clk,
 		reset =>reset,
 		                              --# log2((2**14)/1143)=3.8
-		i_mu=>mesured_muE(15-4 downto 8-4), --# signed 2.14 i.e. 14bit for fraction
+		i_mu=>mesured_muE(15-2 downto 8-2), --# signed 2.14 i.e. 14bit for fraction
 		
 		i_sample=>i_sampleQ, --sampleI_tx,--
 		i_ce=>i_ce,
