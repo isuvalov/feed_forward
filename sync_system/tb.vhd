@@ -13,8 +13,9 @@ architecture tb of tb is
 
 -- clkq = 31/25*clk125 
 
-constant CLK_PERIOD_clk125: TIME := 8 ns; 
-constant CLK_PERIOD_clkq: TIME := 6.45161290322580645 ns; --# < 1/(125e6*(9/8)*(204/186))
+constant CLK_PERIOD_clk125: TIME := 7.001 ns; 
+--constant CLK_PERIOD_clkq: TIME := 6.45161290322580645 ns; --# < 1/(125e6*(9/8)*(204/186))
+constant CLK_PERIOD_clkq: TIME := 7 ns; --# < 1/(125e6*(9/8)*(204/186))
 --constant CLK_PERIOD_clkq: TIME := 80 ns; --# < 1/(125e6*(9/8)*(204/186))
 
 
@@ -87,17 +88,17 @@ port map(
  fd =>			conv_std_logic_vector(125e6,32),
  freqoffset=>	conv_std_logic_vector(0000,32),
 -- freqoffset=>	conv_std_logic_vector(0e6,32),
- error_val=>	conv_std_logic_vector(0,32),
--- p_loss=>		conv_std_logic_vector(65535/3,32),
- p_loss=>		conv_std_logic_vector(0,32),
+ error_val=>	conv_std_logic_vector(2,32),
+ p_loss=>		conv_std_logic_vector(65535/3,32),
+-- p_loss=>		conv_std_logic_vector(0,32),
  start_delay=>	conv_std_logic_vector(0000,32),
  ce=>'1',
  strob=>strob
 );
 
-process(clkq)
+process(clk125)
 begin
-    if rising_edge(clkq) then
+    if rising_edge(clk125) then
 		if strob='1' then
 			cnt<=0;
 			cntreg<=cnt;
@@ -127,7 +128,7 @@ begin
 	end if;
 end process;
 
-pilotsync_inst: entity work.pilot_sync_every_time_ver3
+pilotsync_inst: entity work.pilot_sync_every_time_ver4
 	generic map(
 		SIMULATION=>0,
 --		DELAY_AFTER_FREQESTIM=>PILOT_PERIOD/3,
@@ -137,7 +138,7 @@ pilotsync_inst: entity work.pilot_sync_every_time_ver3
 		clk =>clkq,
 		reset =>reset,
 
-		realpilot_event =>strob2,--strob,
+		realpilot_event =>strob,--strob
 		
 		
 		start_pilotU =>open,

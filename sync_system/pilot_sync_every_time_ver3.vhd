@@ -46,6 +46,8 @@ signal q_all_ce,q_all,work_ce_f:std_logic;
 signal realpilot_event_wide_cnt:std_logic_vector(log2roundup(PERIOD)-2 downto 0):=(others=>'0');
 signal realpilot_event_wide:std_logic;
 
+signal realpilot_event_c:std_logic:='0';
+
 begin
 
 
@@ -64,6 +66,15 @@ start_pilotU<=clock_cnt(31);
 process (clk) is 
 begin		
 	if rising_edge(clk) then
+
+		if reset='1' then
+			realpilot_event_c<='0';
+		else
+			if realpilot_event='1' then
+				realpilot_event_c<=not realpilot_event_c;
+			end if;
+		end if;
+
 		if clock_cnt_1w(clock_cnt'Length-1)='0' and clock_cnt(clock_cnt'Length-1)='1' then
 			work_ce<='1';
 		else
@@ -114,7 +125,7 @@ process (clk) is
 begin
 	if rising_edge(clk) then
 		if work_ce='1' then
-			a<=realpilot_event_wide;
+			a<=realpilot_event_c;
 		end if;
 		if work_ce_f='1' then
 			dot<=a;
@@ -122,7 +133,7 @@ begin
 
 	end if;
 end process;
-phase_error<=a xor realpilot_event_wide;
+phase_error<=a xor realpilot_event_c;
 phase_ref<=a xor dot;
 
 process (clk) is
@@ -139,8 +150,8 @@ end process;
 
 bih_filter_small:entity work.bih_filter_freq
 	generic map(
-		ALPHA_NUM=>14,  --# коэффициент интегрирования, чем он больше тем большую историю храним
-		SCALE_FACTOR=>10-5-4,  --# маштаб - чем он больше тем меньше значение на выходе
+		ALPHA_NUM=>14+5-2,  --# коэффициент интегрирования, чем он больше тем большую историю храним
+		SCALE_FACTOR=>10-5-4+5-2,  --# маштаб - чем он больше тем меньше значение на выходе
 
 		WIDTH=>errors_acum_filt'Length --mult_cnt_count_regE'Length --width_cnt_reg'Length
 	)
