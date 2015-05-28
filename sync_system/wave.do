@@ -7,9 +7,8 @@ add wave -noupdate /tb/pilotsync_inst/pilot_not_here
 add wave -noupdate /tb/pilotsync_inst/start_pilotU
 add wave -noupdate /tb/pilotsync_inst/sync_find
 add wave -noupdate /tb/pilotsync_inst/main_cnt
-add wave -noupdate -radix unsigned /tb/pilotsync_inst/NEW_PERIOD
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {2981739658 ps} 0}
+WaveRestoreCursors {{Cursor 1} {9518338286 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 184
 configure wave -valuecolwidth 100
@@ -25,4 +24,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {2981516737 ps} {2982252263 ps}
+WaveRestoreZoom {7471917364 ps} {11564771636 ps}

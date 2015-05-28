@@ -88,7 +88,7 @@ port map(
  fd =>			conv_std_logic_vector(125e6,32),
  freqoffset=>	conv_std_logic_vector(0000,32),
 -- freqoffset=>	conv_std_logic_vector(0e6,32),
- error_val=>	conv_std_logic_vector(2,32),
+ error_val=>	conv_std_logic_vector(10,32),
  p_loss=>		conv_std_logic_vector(65535/3,32),
 -- p_loss=>		conv_std_logic_vector(0,32),
  start_delay=>	conv_std_logic_vector(0000,32),

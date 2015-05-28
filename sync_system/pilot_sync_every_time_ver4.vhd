@@ -27,11 +27,13 @@ end pilot_sync_every_time_ver4;
 
 architecture pilot_sync_every_time_ver4 of pilot_sync_every_time_ver4 is
 
-constant INTEGRATION_C:integer:=16;
+constant INTEGRATION_C:integer:=5;
+constant DIVC:integer:=InterpolateRate/2;
 
 constant NEW_PERIOD:integer:=conv_integer(conv_std_logic_vector(PERIOD,log2roundup(PERIOD)+1)&EXT("0",INTEGRATION_C));
 
 signal main_cnt:std_logic_vector(INTEGRATION_C+log2roundup(PERIOD)-1 downto 0);
+signal s_start_pilotU:std_logic:='0';
 
 begin
 
@@ -44,8 +46,11 @@ begin
 			main_cnt<=conv_std_logic_vector(1000,main_cnt'Length);
 		else
 			if realpilot_event='1' then
-				if unsigned(main_cnt(log2roundup(PERIOD)-log2roundup(InterpolateRate)*2 downto 0))<(PERIOD/(InterpolateRate*InterpolateRate)) then 
-					main_cnt(log2roundup(PERIOD)-1 downto 0)<=conv_std_logic_vector(0,log2roundup(PERIOD));
+				if unsigned(main_cnt(log2roundup(PERIOD)-log2roundup(DIVC) downto 0))<(PERIOD/(DIVC)) then 
+--				if unsigned(main_cnt(log2roundup(PERIOD)-1 downto 0))<(PERIOD/2) then 
+					main_cnt(log2roundup(PERIOD)-log2roundup(DIVC) downto 0)<=conv_std_logic_vector(0,log2roundup(2*PERIOD/(DIVC)));
+				else
+					main_cnt(log2roundup(PERIOD)-log2roundup(DIVC) downto 0)<=conv_std_logic_vector(2*PERIOD/(DIVC)-1,log2roundup(2*PERIOD/(DIVC)));
 				end if;				
 			else
 				if unsigned(main_cnt)<NEW_PERIOD-1 then
@@ -56,10 +61,12 @@ begin
 			end if;
 		end if;
 
-		if main_cnt(log2roundup(PERIOD)-1 downto 0)=PERIOD-2 then
+		if main_cnt(log2roundup(PERIOD)-1 downto 0)=PERIOD-1 and s_start_pilotU='0' then
 			start_pilotU<='1';
+			s_start_pilotU<='1';
 		else
 			start_pilotU<='0';
+			s_start_pilotU<='0';
 		end if;
 
 	end if;
