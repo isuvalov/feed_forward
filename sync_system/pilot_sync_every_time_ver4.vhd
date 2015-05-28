@@ -44,11 +44,9 @@ begin
 			main_cnt<=conv_std_logic_vector(1000,main_cnt'Length);
 		else
 			if realpilot_event='1' then
-				if unsigned(main_cnt(log2roundup(PERIOD)-log2roundup(InterpolateRate)*2 downto 0))<PERIOD/(InterpolateRate*InterpolateRate) then 
+				if unsigned(main_cnt(log2roundup(PERIOD)-log2roundup(InterpolateRate)*2 downto 0))<(PERIOD/(InterpolateRate*InterpolateRate)) then 
 					main_cnt(log2roundup(PERIOD)-1 downto 0)<=conv_std_logic_vector(0,log2roundup(PERIOD));
-				else
-					main_cnt(log2roundup(PERIOD)-1 downto 0)<=conv_std_logic_vector(0,log2roundup(PERIOD));
-				end if;
+				end if;				
 			else
 				if unsigned(main_cnt)<NEW_PERIOD-1 then
 					main_cnt<=main_cnt+1;
