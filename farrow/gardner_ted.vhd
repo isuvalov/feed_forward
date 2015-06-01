@@ -97,6 +97,10 @@ bih_filter_freq_i:entity work.bih_filter_freq
 		ALPHA_NUM=>7+3+4,
 		SCALE_FACTOR=>7+4,
 
+--		ALPHA_NUM=>7+3-1,
+--		SCALE_FACTOR=>7-1,
+
+
 		WIDTH=>err_val'Length
 	)
 	port map(

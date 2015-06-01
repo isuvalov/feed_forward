@@ -17,6 +17,7 @@ entity modem_rx_top is
 		  reset: in std_logic;
 		  sampleI: in std_logic_vector(11 downto 0);
 		  sampleQ: in std_logic_vector(11 downto 0);
+		  pilot_ce_test: in std_logic; --# only for test purpose
 
 		  test_mode: in std_logic_vector(1 downto 0);
 				--# 1 - output after signal normalizing
@@ -135,6 +136,15 @@ signal sampleI_delayD,sampleQ_delayD,bests_corrs_I,bests_corrs_Q:Tbests_corrs;
 type TsampleI_sq_a is array(BEST_F-1 downto 0) of std_logic_vector(31 downto 0);
 signal sample_sq_a,sampleI_sq_a,sampleQ_sq_a:TsampleI_sq_a;
 
+signal pilot_ce_test_1w,pilot_ce_test_2w,pilot_ce_test_after_removezerro:std_logic;
+signal pilot_ce_test_after_removezerro_a:std_logic_vector(9 downto 0);
+signal pilot_ce_test_after_frx_3w,pilot_ce_test_after_frx_2w,pilot_ce_test_after_frx_1w,pilot_ce_test_after_frx:std_logic;
+signal pilot_ce_test_after_delayer,pilot_ce_test_after_cmul:std_logic;
+
+signal after_farrow_i,after_farrow_q:std_logic_vector(15 downto 0);
+signal local_ce,after_farrow_ce:std_logic;
+signal ce_cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);
+
 begin
 
 sync_find<=s_sync_find;
@@ -163,6 +173,7 @@ sampleQE<=SXT(sampleQ&"000",sampleQE'Length);
 		filtered_Q =>sampleQ_zero,
 		ce_out =>open
 	);
+pilot_ce_test_after_removezerro<=pilot_ce_test_2w;
 --end generate; --#SIMULATION/=1
 
 
@@ -181,6 +192,9 @@ rcc_up_filter_inst: entity work.rcc_up_filter_rx
 		);
 sampleIfilt2<=sampleIfilt(sampleIfilt'Length-2 downto 0)&"0";
 sampleQfilt2<=sampleQfilt(sampleIfilt'Length-2 downto 0)&"0";
+pilot_ce_test_after_frx<=pilot_ce_test_after_removezerro_a(9);
+
+
 --sampleIfilt2<=sampleIfilt(sampleIfilt'Length-1 downto 0);
 --sampleQfilt2<=sampleQfilt(sampleIfilt'Length-1 downto 0);
 
@@ -233,11 +247,20 @@ moveB: entity work.complex_mult
 		o_Q =>sampleQ_moveback,
 		out_ce =>sampleQ_moveback_ce
 		);
+pilot_ce_test_after_cmul<=pilot_ce_test_after_frx_3w;
 
+--pilot_ce_test_after_frx
 
 process(clk) is
 begin
 	if rising_edge(clk) then
+		pilot_ce_test_1w<=pilot_ce_test;
+		pilot_ce_test_2w<=pilot_ce_test_1w;
+		pilot_ce_test_after_removezerro_a<=pilot_ce_test_after_removezerro_a(pilot_ce_test_after_removezerro_a'Length-2 downto 0)&pilot_ce_test_after_removezerro;
+		pilot_ce_test_after_frx_1w<=pilot_ce_test_after_frx;
+		pilot_ce_test_after_frx_2w<=pilot_ce_test_after_frx_1w;
+		pilot_ce_test_after_frx_3w<=pilot_ce_test_after_frx_2w;
+
 		dds_cos_d<=dds_cos;
         dds_sin_d<=dds_sin;
 	end if;
@@ -260,11 +283,14 @@ pilot_start<=s_pilot_start;
 
 delayer_find: entity work.delayer
 	generic map(
-		DELAY_LEN=>DELAY_LEN+5
+		DELAY_LEN=>DELAY_LEN-12+23+22
 	)
 	port map(
 		clk =>clk,
 		reset =>reset,
+
+		istrob_test =>pilot_ce_test_after_cmul,
+		ostrob_test =>pilot_ce_test_after_delayer,
 
 		i_sampleI=>sampleI_moveback,
 		i_sampleQ=>sampleQ_moveback,
@@ -284,7 +310,7 @@ calc_freq_of_sin_i: entity work.calc_freq_of_sin
 		clk =>clk,
 		reset =>reset,
 
-		i_ce => freq_corrector_ce, --1
+		i_ce => '1',--freq_corrector_ce, --1
 		i_sampleI=>sampleIfilt2,
 		i_sampleQ=>sampleQfilt2,
 
@@ -300,7 +326,7 @@ calc_freq_of_sin_i: entity work.calc_freq_of_sin
 --dds_freq<=0.25*1E6*real(FREQ_FD)*real(conv_integer(ftw_correction))/real((2**30));
 
 
-pilotsync_inst: entity work.pilot_sync_every_time_ver2
+pilotsync_inst: entity work.pilot_sync_every_time_ver4
 	generic map(
 		FILTER_QUICK=>FREQ_SIMULATION,
 		SIMULATION=>SIMULATION,
@@ -320,13 +346,63 @@ pilotsync_inst: entity work.pilot_sync_every_time_ver2
 		);
 
 
+to_zero_fraction_i: entity work.to_zero_fraction
+	port map(
+		clk =>clk,
+		reset =>reset,
 
+		i_sampleI=>sampleI_delay,
+		i_sampleQ=>sampleQ_delay,
+		i_ce =>local_ce,
+
+		o_sampleI=>after_farrow_i,
+		o_sampleQ=>after_farrow_q,
+		o_ce=>after_farrow_ce
+		);
+
+
+ToTextFile_i: entity work.ToTextFile
+	generic map(BitLen =>16,
+			WriteHex=>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile=>"after_farrow_i.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>after_farrow_ce, 
+		 block_marker=>'0',
+		 DataToSave=>after_farrow_i
+	     );
+
+ToTextFile_q: entity work.ToTextFile
+	generic map(BitLen =>16,
+			WriteHex=>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
+			NameOfFile=>"after_farrow_q.txt")
+	 port map(
+		 clk =>clk,
+		 CE =>after_farrow_ce, 
+		 block_marker=>'0',
+		 DataToSave=>after_farrow_q
+	     );
 
 
 
 delayt: process(clk) is
 begin
 	if rising_edge(clk) then
+
+		if start_pilotU='1' then
+			local_ce<='1';
+			ce_cnt<=conv_std_logic_vector(1,log2roundup(InterpolateRate));
+		else
+			if unsigned(ce_cnt)<InterpolateRate-1 then
+				ce_cnt<=ce_cnt+1;
+				local_ce<='0';
+			else
+				ce_cnt<=(others=>'0');
+				local_ce<='1';
+			end if;
+		end if;
+
+
 		if start_pilotU='1' then
 			pilot_here<='1';
 			pilot_here_cnt<=conv_std_logic_vector(PILOT_LEN*InterpolateRate-1,pilot_here_cnt'Length);
@@ -352,7 +428,7 @@ begin
 		sampleI_delayD(i+1)<=sampleI_delayD(i);
 		sampleQ_delayD(i+1)<=sampleQ_delayD(i);
 
-		sampleI_sq_a(i)<=signed(bests_corrs_I(i))*signed(bests_corrs_I(i));
+		sampleI_sq_a(i)<=signed(bests_corrs_I(i))*signed(bests_corrs_I(i));  --# I find that 6 the best!
 		sampleQ_sq_a(i)<=signed(bests_corrs_Q(i))*signed(bests_corrs_Q(i));
 		sample_sq_a(i)<=sampleI_sq_a(i)+sampleQ_sq_a(i);
 

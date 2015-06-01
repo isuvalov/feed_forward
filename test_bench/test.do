@@ -45,8 +45,13 @@ vlog ../pam_demodulation/cordic_v/cordic.v
 vcom ../pam_demodulation/cordic_v/cordic_wrapper.vhd
 vcom ../modem_rx/calc_freq_of_sin.vhd
 
+vcom ../farrow/make_powers.vhd 
+vcom ../farrow/farrow_32bit.vhd
+vcom ../farrow/gardner_ted.vhd 
+vcom ../farrow/to_zero_fraction.vhd 
 
-vcom ../sync_system/pilot_sync_every_time_ver2.vhd 
+
+vcom ../sync_system/pilot_sync_every_time_ver4.vhd 
 
 vcom ../modem_rx/modem_rx_top.vhd
 

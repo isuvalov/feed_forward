@@ -74,6 +74,7 @@ signal samples,sampleI_tx,sampleQ_tx:std_logic_vector(15 downto 0):=(others=>'0'
 signal phase_for_dds:std_logic_vector(31 downto 0):=(others=>'0');
 
 signal dds_cos,dds_sin,sampleI_moveback,sampleQ_moveback:std_logic_vector(15 downto 0);
+signal pilot_ce_test:std_logic;
 
 begin
 
@@ -123,7 +124,7 @@ tx_top_i: entity work.modem_tx_top
 
 		  init_complite =>'0', --# from modem_rx
 
-		  pilot_ce_test=>open,
+		  pilot_ce_test=>pilot_ce_test,
 
 		  sampleI_tx_o=>sampleI_tx,
 		  sampleQ_tx_o=>sampleQ_tx 
@@ -216,6 +217,7 @@ modem_rx_top_i: entity work.modem_rx_top
 		  reset=>reset,
 		  sampleI=>sampleI_tx(15 downto 4),--  sampleI_moveback(15 downto 4),
 		  sampleQ=>sampleQ_tx(15 downto 4),-- sampleQ_moveback(15 downto 4),
+		  pilot_ce_test=>pilot_ce_test,
 
 		  test_mode=>"00",
 				--# 1 - output after signal normalizing

@@ -60,6 +60,7 @@ signal duplicate_iq:std_logic;
 signal delay_cnt:std_logic_vector(3 downto 0);
 
 signal test_seq:std_logic;
+signal s_pilot_ce_array:std_logic_vector(8 downto 0);
 
 type Tstm is (INIT_INSERT_PILOT,INIT_SIN,INSERT_PILOT,INSERT_DATA);
 signal stm:Tstm;
@@ -193,18 +194,21 @@ qam4_mapper_inst:entity work.qam4_mapper
 --sin_mux
 
 
-rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 10 тактов
+rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 9 тактов
 	generic map(
 		LEN=>mod_samplesI'Length
 	)
 	port map(
 		clk =>clk,
-		reset =>reset,
+		reset =>reset,		
 		i_samplesI=>mod_samplesI,
 		i_samplesQ=>mod_samplesQ,
 		o_sampleI=>s_sampleI_filt,
 		o_sampleQ=>s_sampleQ_filt
 		);
+
+
+
 
 
 --dds_I_inst:entity work.dds_synthesizer_pipe
@@ -232,6 +236,7 @@ rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 10 тактов
 --    phase_o =>open,
 --    ampl_o  =>s_sampleI_sin
 --    );
+
 
 
 
@@ -269,7 +274,6 @@ start_sin_gen2_i:entity work.start_sin_gen
 process(clk) is
 begin
 	if rising_edge(clk) then
-		pilot_ce<=s_pilot_ce;
 		if sin_mux='0' then
 			s_sampleI_mux<=s_sampleI_filt(s_sampleI_o'Length-1-1 downto 0)&"0";
 			s_sampleQ_mux<=s_sampleQ_filt(s_sampleI_o'Length-1-1 downto 0)&"0";
@@ -277,9 +281,12 @@ begin
 			s_sampleI_mux<=s_sampleI_sin;
 			s_sampleQ_mux<=s_sampleI_cos;
 		end if;
+
+		s_pilot_ce_array<=s_pilot_ce_array(s_pilot_ce_a'Length-2 downto 0)&s_pilot_ce;
+
 	end if;
 end process;
-
+pilot_ce<=s_pilot_ce_array(s_pilot_ce_a'Length-1);
 
 sampleI_o<=s_sampleI_mux;
 sampleQ_o<=s_sampleQ_mux;
