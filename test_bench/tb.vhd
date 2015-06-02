@@ -122,7 +122,7 @@ tx_top_i: entity work.modem_tx_top
         port map(clk =>clkq,
 		  reset =>reset,
 
-		  init_complite =>'0', --# from modem_rx
+		  init_complite =>'1', --# from modem_rx
 
 		  pilot_ce_test=>pilot_ce_test,
 

@@ -67,7 +67,8 @@ type Tcoefs is array(FILTER_LEN-1 downto 0) of std_logic_vector(FILTER_ACUM_WIDT
 constant DEFAULT_COEFS:Tcoefs:=(
 conv_std_logic_vector(0,FILTER_ACUM_WIDTH),
 conv_std_logic_vector(0,FILTER_ACUM_WIDTH),
-conv_std_logic_vector(8388608,FILTER_ACUM_WIDTH),
+--conv_std_logic_vector(838860800,FILTER_ACUM_WIDTH),
+conv_std_logic_vector(1073741824,FILTER_ACUM_WIDTH),
 conv_std_logic_vector(0,FILTER_ACUM_WIDTH)
 );
 

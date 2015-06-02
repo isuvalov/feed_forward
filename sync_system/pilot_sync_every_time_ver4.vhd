@@ -29,7 +29,7 @@ architecture pilot_sync_every_time_ver4 of pilot_sync_every_time_ver4 is
 
 constant INTEGRATION_C:integer:=5;
 constant DIVC:integer:=InterpolateRate/2;
-constant CLOCK:integer:=InterpolateRate;
+constant C_LOCK:integer:=InterpolateRate;
 
 constant NEW_PERIOD:integer:=conv_integer(conv_std_logic_vector(PERIOD,log2roundup(PERIOD)+1)&EXT("0",INTEGRATION_C));
 
@@ -39,7 +39,7 @@ signal s_start_pilotU:std_logic:='0';
 type Tstm is (FINDING,LOCK);
 signal stm:Tstm;
 signal lockcnt:std_logic_vector(7 downto 0);
-signal abscnt:std_logic_vector(log2roundup(PERIOD)-1-log2roundup(CLOCK) downto 0);
+signal abscnt:std_logic_vector(log2roundup(PERIOD)-1-log2roundup(C_LOCK) downto 0);
 begin
 
 	
@@ -73,10 +73,10 @@ begin
 			s_start_pilotU<='0';
 		end if;
 
-		if signed(main_cnt(log2roundup(PERIOD)-1 downto log2roundup(CLOCK)))<0 then
-			abscnt<=0-main_cnt(log2roundup(PERIOD)-1 downto log2roundup(CLOCK));
+		if signed(main_cnt(log2roundup(PERIOD)-1 downto log2roundup(C_LOCK)))<0 then
+			abscnt<=0-main_cnt(log2roundup(PERIOD)-1 downto log2roundup(C_LOCK));
 		else
-			abscnt<=main_cnt(log2roundup(PERIOD)-1 downto log2roundup(CLOCK));
+			abscnt<=main_cnt(log2roundup(PERIOD)-1 downto log2roundup(C_LOCK));
 		end if;
 
 		if reset='1' then

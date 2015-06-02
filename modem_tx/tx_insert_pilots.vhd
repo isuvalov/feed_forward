@@ -109,7 +109,11 @@ begin
 				else
 					bits<="10";
 				end if;
-				sin_mux<='0';
+				if init_complite='1' then
+					sin_mux<='0';
+				else
+					sin_mux<='1';
+				end if;
 				s_pilot_ce<='1';
 				duplicate_iq<='1';
 				rd_o<='0';
@@ -117,7 +121,11 @@ begin
 
 			when INIT_SIN=>
 				test_seq<='Z';
-				sin_mux<='1';
+				if init_complite='1' then
+					sin_mux<='0';
+				else
+					sin_mux<='1';
+				end if;
 				s_pilot_ce<='0';
 				duplicate_iq<='0';
 				rd_o<='1';
@@ -132,7 +140,12 @@ begin
 
 
 			when INSERT_PILOT=>
-				sin_mux<='0';
+				if init_complite='1' then
+					sin_mux<='0';
+				else
+					sin_mux<='1';
+				end if;
+
 				if unsigned(cnt)<PILOT_LEN-1 then
 				else
 					stm<=INSERT_DATA;--PREAMBULE01;
@@ -150,7 +163,11 @@ begin
 				delay_cnt<=(others=>'1');
 			when INSERT_DATA=>
 				test_seq<='Z';
-				sin_mux<='1';
+				if init_complite='1' then
+					sin_mux<='0';
+				else
+					sin_mux<='1';
+				end if;
 				s_pilot_ce<='0';
 				duplicate_iq<='0';
 				rd_o<='1';

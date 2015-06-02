@@ -142,7 +142,7 @@ signal pilot_ce_test_after_frx_3w,pilot_ce_test_after_frx_2w,pilot_ce_test_after
 signal pilot_ce_test_after_delayer,pilot_ce_test_after_cmul:std_logic;
 
 signal after_farrow_i,after_farrow_q:std_logic_vector(15 downto 0);
-signal local_ce,after_farrow_ce:std_logic;
+signal local_ce,after_farrow_ce,reset_bysync:std_logic;
 signal ce_cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);
 
 begin
@@ -346,19 +346,41 @@ pilotsync_inst: entity work.pilot_sync_every_time_ver4
 		);
 
 
-to_zero_fraction_i: entity work.to_zero_fraction
+
+
+--to_zero_fraction_i: entity work.to_zero_fraction
+--	port map(
+--		clk =>clk,
+--		reset =>reset,
+--  
+--		i_sampleI=>sampleI_delay,
+--		i_sampleQ=>sampleQ_delay,
+--		i_ce =>local_ce,
+--  
+--		o_sampleI=>after_farrow_i,
+--		o_sampleQ=>after_farrow_q,
+--		o_ce=>after_farrow_ce
+--		);
+
+
+gadarg_i: entity work.gadarg
+	generic map(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
+		RM=>5856428,     --# RM=1.34*PS/(4*KKK) , like target maximum of signal
+		STEP=>471, --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
+		KKK=>3   --# ceil(log2(STEP)/2) , must be more or equal than 2
+	)
 	port map(
 		clk =>clk,
-		reset =>reset,
+		reset =>reset_bysync,
 
 		i_sampleI=>sampleI_delay,
 		i_sampleQ=>sampleQ_delay,
 		i_ce =>local_ce,
 
-		o_sampleI=>after_farrow_i,
-		o_sampleQ=>after_farrow_q,
-		o_ce=>after_farrow_ce
+		o_sampleI =>after_farrow_i,
+		o_sampleQ =>after_farrow_q
 		);
+
 
 
 ToTextFile_i: entity work.ToTextFile
@@ -367,7 +389,7 @@ ToTextFile_i: entity work.ToTextFile
 			NameOfFile=>"after_farrow_i.txt")
 	 port map(
 		 clk =>clk,
-		 CE =>after_farrow_ce, 
+		 CE =>local_ce, 
 		 block_marker=>'0',
 		 DataToSave=>after_farrow_i
 	     );
@@ -378,7 +400,7 @@ ToTextFile_q: entity work.ToTextFile
 			NameOfFile=>"after_farrow_q.txt")
 	 port map(
 		 clk =>clk,
-		 CE =>after_farrow_ce, 
+		 CE =>local_ce, 
 		 block_marker=>'0',
 		 DataToSave=>after_farrow_q
 	     );
@@ -388,6 +410,7 @@ ToTextFile_q: entity work.ToTextFile
 delayt: process(clk) is
 begin
 	if rising_edge(clk) then
+        reset_bysync<=not s_sync_find;
 
 		if start_pilotU='1' then
 			local_ce<='1';

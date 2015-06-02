@@ -53,6 +53,8 @@ vcom ../farrow/to_zero_fraction.vhd
 
 vcom ../sync_system/pilot_sync_every_time_ver4.vhd 
 
+vcom ../gadarg/gadarg_quick_complex_4ce.vhd 
+
 vcom ../modem_rx/modem_rx_top.vhd
 
 vcom tb.vhd
