@@ -370,83 +370,119 @@ add wave -noupdate -group tx_insert_pilots /tb/tx_top_i/wrapper_tx_stream_i/dela
 add wave -noupdate -group tx_insert_pilots /tb/tx_top_i/wrapper_tx_stream_i/test_seq
 add wave -noupdate -group tx_insert_pilots /tb/tx_top_i/wrapper_tx_stream_i/s_pilot_ce_array
 add wave -noupdate -group tx_insert_pilots /tb/tx_top_i/wrapper_tx_stream_i/stm
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/clk
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/reset
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/i_sampleI
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/i_sampleQ
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/i_ce
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/o_sampleI
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/o_sampleQ
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/latency_delay_re
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/latency_delay_im
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_i_1w
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_q_1w
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_i
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_q
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_i_copy
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_q_copy
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_I
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_Q
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_I_copy
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_Q_copy
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_work
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_i
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_q
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_i
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_q
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_ii
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_qq
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_qi
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_iq
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/cdiv_mul_ii
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/cdiv_mul_qq
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/cdiv_mul_qi
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/cdiv_mul_iq
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/step_cnt
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_sum_i
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_sum_q
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_i_1w
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_i
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_q
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_i_copy
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_q_copy
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sq_sumed_muls_i
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sq_sumed_muls_q
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr3r_m
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi3r_m
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr3r
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr3i
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi3r
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi3i
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2r
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2r
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2i
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2i
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/short_array
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/short_array0
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0r_div
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0i_div
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0r_div
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0i_div
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0r_div_1w
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0i_div_1w
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0r_div_1w
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0i_div_1w
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WRr
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WRi
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WIr
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WIi
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2r_mul
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2r_mul
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2i_mul
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2i_mul
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/stm
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sampl_cnt
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/work_cnt
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/reset_local
-add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/reset_reg
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/clk
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/reset
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/i_sampleI
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/i_sampleQ
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/i_ce
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/o_sampleI
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/o_sampleQ
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/latency_delay_re
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/latency_delay_im
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_i_1w
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_q_1w
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_i
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_q
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_i_copy
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_q_copy
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_I
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_Q
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_I_copy
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_Q_copy
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_work
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_i
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_q
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_i
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_q
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_ii
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_qq
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_qi
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_iq
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/cdiv_mul_ii
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/cdiv_mul_qq
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/cdiv_mul_qi
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/cdiv_mul_iq
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/step_cnt
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_sum_i
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_sum_q
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_i_1w
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_i
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_q
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_i_copy
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_q_copy
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sq_sumed_muls_i
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sq_sumed_muls_q
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr3r_m
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi3r_m
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr3r
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr3i
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi3r
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi3i
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2r
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2r
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2i
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2i
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/short_array
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/short_array0
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0r_div
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0i_div
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0r_div
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0i_div
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0r_div_1w
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0i_div_1w
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0r_div_1w
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0i_div_1w
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WRr
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WRi
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WIr
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WIi
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2r_mul
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2r_mul
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2i_mul
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2i_mul
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/stm
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sampl_cnt
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/work_cnt
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/reset_local
+add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/reset_reg
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/clk
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/reset
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/after_pilot_start
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/i_ce
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/i_samplesI
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/i_samplesQ
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/i_init_phaseI
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/i_init_phaseQ
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/o_samplesI
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/o_samplesQ
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/out_ce
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/mulval_a
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_re_1w
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_im_1w
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_re_new
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_im_new
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_re
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_im
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/sample_rotI
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/sample_rotQ
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_re_mula
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_im_mula
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/table_re
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/table_im
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/to_tab_re
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/to_tab_im
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/table_reE
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/table_imE
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/ce_1w
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/ce_table
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/ce_acum
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/shift1
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/shift2
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/poval
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/povval_x
+add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/povval_y
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {256642878 ps} 0}
+WaveRestoreCursors {{Cursor 1} {2712052596 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 233
 configure wave -valuecolwidth 100
@@ -462,4 +498,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {674331 ns}
+WaveRestoreZoom {0 ps} {9929888778 ps}

@@ -56,6 +56,8 @@ constant DELAY_AFTER_FREQESTIM:natural:=25413+DDS_LATENCY+1; --# Высчитывается п
 constant PILOTUP_START_DELAY:natural:=9+3; --# Время которое надо для того чтоб генератор интерполированного пилота начал выдавать отсчеты
 constant DELAY_COMPLEX_NORMALIZER:natural:=51+2; 
 
+signal sampleI_delay_div2,sampleQ_delay_div2:std_logic_vector(sampleIfilt'Length-1 downto 0);
+
 signal sampleI_delay,sampleQ_delay:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal sampleI_delay_fe,sampleQ_delay_fe:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal sampleI_delay_fe_reg,sampleQ_delay_fe_reg:std_logic_vector(sampleIfilt'Length-1 downto 0);
@@ -69,7 +71,7 @@ signal freq_ce,freq_ce_f,freq_ce_f_1w,freq_ce_f_2w,good_values:std_logic;
 signal dds_cos,dds_sin:std_logic_vector(15 downto 0);
 signal dds_cos_d,dds_sin_d:std_logic_vector(15 downto 0);
 
-signal s_pilot_start_norm_1w,s_pilot_start_norm,pilot_wr,start_pilotU,start_pilotU_1w:std_logic;
+signal s_pilot_start_norm_1w,s_pilot_start_norm,pilot_wr,start_pilotU:std_logic;
 signal sampleI_norm,sampleQ_norm:std_logic_vector(15 downto 0);
 
 type Tsample_norm_W is array(0 to 40) of std_logic_vector(15 downto 0);
@@ -142,8 +144,10 @@ signal pilot_ce_test_after_frx_3w,pilot_ce_test_after_frx_2w,pilot_ce_test_after
 signal pilot_ce_test_after_delayer,pilot_ce_test_after_cmul:std_logic;
 
 signal after_farrow_i,after_farrow_q:std_logic_vector(15 downto 0);
-signal local_ce,after_farrow_ce,reset_bysync:std_logic;
+signal local_ce,after_farrow_ce,reset_bysync,start_pilotU_1w,start_pilotU_2w:std_logic;
 signal ce_cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);
+
+signal pilot_valid_byupper:std_logic;
 
 begin
 
@@ -207,7 +211,8 @@ dds_I_inst:entity work.dds_synthesizer_pipe
   port map(
     clk_i   =>clk,
     rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
-    ftw_i   =>ftw_correction,
+--    ftw_i   =>ftw_correction,
+    ftw_i   =>x"00010000",
     phase_i =>x"4000",
     phase_o =>open,
     ampl_o  =>dds_cos
@@ -220,7 +225,8 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
   port map(
     clk_i   =>clk,
     rst_i   =>reset,
-    ftw_i   =>ftw_correction,
+--    ftw_i   =>ftw_correction,
+    ftw_i   =>x"00010000",
     phase_i =>x"0000",
     phase_o =>open,
     ampl_o  =>dds_sin
@@ -231,7 +237,7 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
 moveB: entity work.complex_mult
 	generic map(
 		SHIFT_MUL=>1,
-		NOT_USE_IT=>0,--GLOBAL_DEBUG,
+		NOT_USE_IT=>1,--GLOBAL_DEBUG,
 		CONJUGATION=>'0' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(
@@ -362,27 +368,84 @@ pilotsync_inst: entity work.pilot_sync_every_time_ver4
 --		o_ce=>after_farrow_ce
 --		);
 
-
-gadarg_i: entity work.gadarg
-	generic map(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
-		RM=>5856428,     --# RM=1.34*PS/(4*KKK) , like target maximum of signal
-		STEP=>471, --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
-		KKK=>3   --# ceil(log2(STEP)/2) , must be more or equal than 2
-	)
+pilot_upper_inst: entity work.pilot_upper
 	port map(
 		clk =>clk,
-		reset =>reset_bysync,
+		reset =>start_pilotU_1w,
 
-		i_sampleI=>sampleI_delay,
-		i_sampleQ=>sampleQ_delay,
-		i_ce =>local_ce,
-
-		o_sampleI =>after_farrow_i,
-		o_sampleQ =>after_farrow_q
+		pilot_valid=>pilot_valid_byupper,
+		sampleI_o=>pilotU_I,
+		sampleQ_o=>pilotU_Q
 		);
 
 
+scalar_mult_inst: entity work.scalar_mult
+	generic map(
+		CONJ_PORT_B=>1  --# Если 1 то bQ будет умножен на (-1)
+		)
+	port map(
+		clk =>clk,
+		reset =>reset,
 
+		ce=>pilot_valid_byupper,
+
+		aI=>sampleI_delay,
+		aQ=>sampleQ_delay,
+
+		bI=>pilotU_I,
+		bQ=>pilotU_Q,
+
+		sum_ce=>scalar_sum_ce,
+		sumI_o=>scalar_sumI,
+		sumQ_o=>scalar_sumQ
+		);
+
+
+sampleI_delay_div2<=SXT(sampleI_delay(sampleI_delay'Length-1 downto 1),sampleI_delay_div2'Length);
+sampleQ_delay_div2<=SXT(sampleQ_delay(sampleI_delay'Length-1 downto 1),sampleI_delay_div2'Length);
+
+feed_back: entity work.average_itertive_demod
+	generic map(
+		SIMULATION=>0
+	)
+	port map(
+		clk =>clk,
+		reset =>reset,
+		after_pilot_start =>scalar_sum_ce,--start_pilotU_1w, --# он должен быть над первым i_ce
+		i_ce =>local_ce,
+		i_samplesI =>sampleI_delay,
+		i_samplesQ =>sampleQ_delay,
+
+		i_init_phaseI =>scalar_sumI(scalar_sumI'Length-1 downto scalar_sumI'Length-16),--x"0FFF",
+		i_init_phaseQ =>scalar_sumQ(scalar_sumI'Length-1 downto scalar_sumI'Length-16),--x"0000",
+
+		o_samplesI =>after_farrow_i,
+		o_samplesQ =>after_farrow_q,
+
+		out_ce =>open
+		);
+
+
+--
+--gadarg_i: entity work.gadarg
+--	generic map(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
+--		RM=>5856428,     --# RM=1.34*PS/(4*KKK) , like target maximum of signal
+--		STEP=>471, --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
+--		KKK=>3   --# ceil(log2(STEP)/2) , must be more or equal than 2
+--	)
+--	port map(
+--		clk =>clk,
+--		reset =>reset_bysync,
+--
+--		i_sampleI=>sampleI_delay,
+--		i_sampleQ=>sampleQ_delay,
+--		i_ce =>local_ce,
+--
+--		o_sampleI =>after_farrow_i,
+--		o_sampleQ =>after_farrow_q
+--		);
+--
+--
 ToTextFile_i: entity work.ToTextFile
 	generic map(BitLen =>16,
 			WriteHex=>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
@@ -412,8 +475,17 @@ begin
 	if rising_edge(clk) then
         reset_bysync<=not s_sync_find;
 
-		if start_pilotU='1' then
-			local_ce<='1';
+		start_pilotU_1w<=start_pilotU;
+		start_pilotU_2w<=start_pilotU_1w;
+
+		if scalar_sum_ce='1' then
+			if ce_cnt=3 then
+--			if ce_cnt=1 then
+--			if ce_cnt=2 then
+				local_ce<='1';
+			else
+				local_ce<='0';
+			end if;
 			ce_cnt<=conv_std_logic_vector(1,log2roundup(InterpolateRate));
 		else
 			if unsigned(ce_cnt)<InterpolateRate-1 then
