@@ -144,7 +144,7 @@ signal pilot_ce_test_after_frx_3w,pilot_ce_test_after_frx_2w,pilot_ce_test_after
 signal pilot_ce_test_after_delayer,pilot_ce_test_after_cmul:std_logic;
 
 signal after_farrow_i,after_farrow_q:std_logic_vector(15 downto 0);
-signal local_ce,after_farrow_ce,reset_bysync,start_pilotU_1w,start_pilotU_2w:std_logic;
+signal local_ce,after_farrow_ce,reset_bysync,start_pilotU_1w,start_pilotU_2w,start_pilotU_3w,start_pilotU_4w:std_logic;
 signal ce_cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);
 
 signal pilot_valid_byupper:std_logic;
@@ -181,7 +181,7 @@ pilot_ce_test_after_removezerro<=pilot_ce_test_2w;
 --end generate; --#SIMULATION/=1
 
 
-rcc_up_filter_inst: entity work.rcc_up_filter_rx
+rcc_up_filter_short_inst: entity work.rcc_up_filter_rx_short
 	generic map(
 		USE_IT=>1,
 		LEN=>sampleI_zero'Length
@@ -194,6 +194,21 @@ rcc_up_filter_inst: entity work.rcc_up_filter_rx
 		o_sampleI=>sampleIfilt,
 		o_sampleQ=>sampleQfilt
 		);
+
+
+--rcc_up_filter_inst: entity work.rcc_up_filter_rx
+--	generic map(
+--		USE_IT=>1,
+--		LEN=>sampleI_zero'Length
+--	)
+--	port map(
+--		clk =>clk,
+--		reset =>reset,
+--		i_samplesI=>sampleI_zero(sampleI_zero'Length-1 downto 0),
+--		i_samplesQ=>sampleQ_zero(sampleI_zero'Length-1 downto 0),
+--		o_sampleI=>open,--sampleIfilt,
+--		o_sampleQ=>open --sampleQfilt
+--		);
 sampleIfilt2<=sampleIfilt(sampleIfilt'Length-2 downto 0)&"0";
 sampleQfilt2<=sampleQfilt(sampleIfilt'Length-2 downto 0)&"0";
 pilot_ce_test_after_frx<=pilot_ce_test_after_removezerro_a(9);
@@ -371,7 +386,7 @@ pilotsync_inst: entity work.pilot_sync_every_time_ver4
 pilot_upper_inst: entity work.pilot_upper
 	port map(
 		clk =>clk,
-		reset =>start_pilotU_1w,
+		reset =>start_pilotU_4w,--start_pilotU_1w,
 
 		pilot_valid=>pilot_valid_byupper,
 		sampleI_o=>pilotU_I,
@@ -381,7 +396,7 @@ pilot_upper_inst: entity work.pilot_upper
 
 scalar_mult_inst: entity work.scalar_mult
 	generic map(
-		CONJ_PORT_B=>1  --# Если 1 то bQ будет умножен на (-1)
+		CONJ_PORT_B=>0  --# Если 1 то bQ будет умножен на (-1)
 		)
 	port map(
 		clk =>clk,
@@ -477,16 +492,18 @@ begin
 
 		start_pilotU_1w<=start_pilotU;
 		start_pilotU_2w<=start_pilotU_1w;
+		start_pilotU_3w<=start_pilotU_2w;
+		start_pilotU_4w<=start_pilotU_3w;
 
 		if scalar_sum_ce='1' then
-			if ce_cnt=3 then
+--			if ce_cnt=3 then
 --			if ce_cnt=1 then
 --			if ce_cnt=2 then
 				local_ce<='1';
-			else
-				local_ce<='0';
-			end if;
-			ce_cnt<=conv_std_logic_vector(1,log2roundup(InterpolateRate));
+--			else
+--				local_ce<='0';
+--			end if;
+			ce_cnt<=conv_std_logic_vector(0,log2roundup(InterpolateRate));
 		else
 			if unsigned(ce_cnt)<InterpolateRate-1 then
 				ce_cnt<=ce_cnt+1;

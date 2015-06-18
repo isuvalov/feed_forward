@@ -370,119 +370,195 @@ add wave -noupdate -group tx_insert_pilots /tb/tx_top_i/wrapper_tx_stream_i/dela
 add wave -noupdate -group tx_insert_pilots /tb/tx_top_i/wrapper_tx_stream_i/test_seq
 add wave -noupdate -group tx_insert_pilots /tb/tx_top_i/wrapper_tx_stream_i/s_pilot_ce_array
 add wave -noupdate -group tx_insert_pilots /tb/tx_top_i/wrapper_tx_stream_i/stm
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/clk
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/reset
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/i_sampleI
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/i_sampleQ
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/i_ce
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/o_sampleI
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/o_sampleQ
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/latency_delay_re
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/latency_delay_im
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_i_1w
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_q_1w
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_i
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_q
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_i_copy
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_q_copy
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_I
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_Q
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_I_copy
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_Q_copy
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_work
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_i
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_q
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_i
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_q
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_ii
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_qq
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_qi
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_iq
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/cdiv_mul_ii
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/cdiv_mul_qq
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/cdiv_mul_qi
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/cdiv_mul_iq
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/step_cnt
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_sum_i
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_sum_q
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_i_1w
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_i
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_q
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_i_copy
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_q_copy
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sq_sumed_muls_i
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sq_sumed_muls_q
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr3r_m
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi3r_m
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr3r
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr3i
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi3r
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi3i
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2r
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2r
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2i
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2i
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/short_array
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/short_array0
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0r_div
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0i_div
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0r_div
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0i_div
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0r_div_1w
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0i_div_1w
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0r_div_1w
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0i_div_1w
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WRr
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WRi
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WIr
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/WIi
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2r_mul
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2r_mul
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2i_mul
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2i_mul
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/stm
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/sampl_cnt
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/work_cnt
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/reset_local
-add wave -noupdate -group gadarg /tb/modem_rx_top_i/gadarg_i/reset_reg
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/clk
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/reset
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/after_pilot_start
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/i_ce
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/i_samplesI
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/i_samplesQ
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/i_init_phaseI
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/i_init_phaseQ
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/o_samplesI
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/o_samplesQ
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/out_ce
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/mulval_a
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_re_1w
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_im_1w
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_re_new
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_im_new
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_re
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_im
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/sample_rotI
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/sample_rotQ
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_re_mula
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/acum_im_mula
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/table_re
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/table_im
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/to_tab_re
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/to_tab_im
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/table_reE
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/table_imE
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/ce_1w
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/ce_table
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/ce_acum
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/shift1
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/shift2
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/poval
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/povval_x
-add wave -noupdate -expand -group feedback /tb/modem_rx_top_i/feed_back/povval_y
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/clk
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/i_ce
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/A_I
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/B_Q
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/C_I
+add wave -noupdate -group moveB -format Analog-Step -height 50 -max 32000.0 -min -32000.0 -radix decimal /tb/modem_rx_top_i/moveB/D_Q
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/o_I
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/o_Q
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/out_ce
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/A_I_1w
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/B_Q_1w
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/A_I_2w
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/B_Q_2w
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/AC
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/AD
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/BC
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/BD
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/ACmBD
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/ADpBC
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/ACpBD
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/BCmAD
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/ce_1w
+add wave -noupdate -group moveB /tb/modem_rx_top_i/moveB/ce_2w
+add wave -noupdate -radix unsigned /tb/modem_rx_top_i/scalar_mult_inst/sumI_o
+add wave -noupdate -radix unsigned /tb/modem_rx_top_i/scalar_mult_inst/sumQ_o
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/clk
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/reset
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/ce
+add wave -noupdate -group scalar_mult -format Analog-Step -height 50 -max 32000.0 -min -32000.0 -radix decimal /tb/modem_rx_top_i/scalar_mult_inst/aI
+add wave -noupdate -group scalar_mult -format Analog-Step -height 50 -max 32000.0 -min -32000.0 -radix decimal /tb/modem_rx_top_i/scalar_mult_inst/aQ
+add wave -noupdate -group scalar_mult -format Analog-Step -height 50 -max 32000.0 -min -32000.0 -radix decimal /tb/modem_rx_top_i/scalar_mult_inst/bI
+add wave -noupdate -group scalar_mult -format Analog-Step -height 50 -max 32000.0 -min -32000.0 -radix decimal /tb/modem_rx_top_i/scalar_mult_inst/bQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/sum_ce
+add wave -noupdate -group scalar_mult -radix unsigned /tb/modem_rx_top_i/scalar_mult_inst/sumI_o
+add wave -noupdate -group scalar_mult -radix unsigned /tb/modem_rx_top_i/scalar_mult_inst/sumQ_o
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/sum_regI
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/sum_regQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/mul_regI
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/mul_regQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/aIbI
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/aQbQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/aIbQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/aQbI
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/aIbI_m_aQbQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/aIbQ_p_aQbI
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/aIbI_p_aQbQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/aQbI_m_aIbQ
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/ce_w1
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/ce_w2
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/ce_w3
+add wave -noupdate -group scalar_mult /tb/modem_rx_top_i/scalar_mult_inst/ce_w4
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/clk
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/reset
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/after_pilot_start
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/i_ce
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/ce_cnt
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/i_samplesI
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/i_samplesQ
+add wave -noupdate -group feed_back -radix decimal /tb/modem_rx_top_i/feed_back/i_init_phaseI
+add wave -noupdate -group feed_back -radix decimal /tb/modem_rx_top_i/feed_back/i_init_phaseQ
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/o_samplesI
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/o_samplesQ
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/out_ce
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/mulval_a
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/acum_re_1w
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/acum_im_1w
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/acum_re_new
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/acum_im_new
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/acum_re
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/acum_im
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/sample_rotI
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/sample_rotQ
+add wave -noupdate -group feed_back -radix decimal -childformat {{/tb/modem_rx_top_i/feed_back/acum_re_mula(24) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(23) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(22) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(21) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(20) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(19) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(18) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(17) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(16) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(15) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(14) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(13) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(12) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(11) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(10) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(9) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(8) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(7) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(6) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(5) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(4) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(3) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(2) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(1) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_re_mula(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/feed_back/acum_re_mula(24) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(23) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(22) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(21) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(20) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(19) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(18) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(17) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(16) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_re_mula(0) {-height 15 -radix decimal}} /tb/modem_rx_top_i/feed_back/acum_re_mula
+add wave -noupdate -group feed_back -radix decimal -childformat {{/tb/modem_rx_top_i/feed_back/acum_im_mula(24) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(23) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(22) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(21) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(20) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(19) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(18) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(17) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(16) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(15) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(14) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(13) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(12) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(11) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(10) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(9) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(8) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(7) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(6) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(5) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(4) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(3) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(2) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(1) -radix decimal} {/tb/modem_rx_top_i/feed_back/acum_im_mula(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/feed_back/acum_im_mula(24) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(23) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(22) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(21) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(20) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(19) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(18) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(17) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(16) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/acum_im_mula(0) {-height 15 -radix decimal}} /tb/modem_rx_top_i/feed_back/acum_im_mula
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/table_re
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/table_im
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/to_tab_re
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/to_tab_im
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/table_reE
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/table_imE
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/ce_1w
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/ce_table
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/ce_acum
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/shift1
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/shift2
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/poval
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/povval_x
+add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/povval_y
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/clk
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/reset
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/i_samplesI
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/i_samplesQ
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/o_sampleI
+add wave -noupdate -group filt_up -format Analog-Step -height 50 -max 16000.0 -min -16000.0 -radix decimal /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/o_sampleQ
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/muls_I
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/muls_Q
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/delaylineI
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/delaylineQ
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/sumsI_1
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/sumsQ_1
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/sumsI_2
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/sumsQ_2
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/sumsI_3
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/sumsQ_3
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/sumsI_4
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/sumsQ_4
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/sumsI_5
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/sumsQ_5
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/s_o_sampleI
+add wave -noupdate -group filt_up /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_inst/s_o_sampleQ
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/clk
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/cnt
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/data_ena
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/data_ena_tmp
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/reset
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/i_samplesI
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/i_samplesQ
+add wave -noupdate -group gilt_up_short -format Analog-Step -height 50 -max 16000.0 -min -16000.0 -radix decimal -childformat {{/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(15) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(14) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(13) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(12) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(11) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(10) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(9) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(8) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(7) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(6) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(5) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(4) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(3) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(2) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(1) -radix decimal} {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(0) -radix decimal}} -subitemconfig {/tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(15) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(14) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(13) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(12) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(11) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(10) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(9) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(8) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(7) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(6) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(5) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(4) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(3) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(2) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(1) {-height 15 -radix decimal} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI(0) {-height 15 -radix decimal}} /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleI
+add wave -noupdate -group gilt_up_short -radix decimal /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/o_sampleQ
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/muls_I
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/muls_Q
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/delaylineI
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/delaylineQ
+add wave -noupdate -group gilt_up_short -expand /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/sumsI_1
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/sumsQ_1
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/sumsI_2
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/sumsQ_2
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/sumsI_3
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/sumsQ_3
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/sumsI_4
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/sumsQ_4
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/sumsI_5
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/sumsQ_5
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/s_o_sampleI
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/s_o_sampleQ
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/emuI_delay
+add wave -noupdate -group gilt_up_short /tb/tx_top_i/wrapper_tx_stream_i/rcc_up_filter_sh_inst/emuQ_delay
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/clk
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/reset
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/i_samplesI
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/i_samplesQ
+add wave -noupdate -group filt_rx_short_up -format Analog-Step -height 50 -max 16000.0 -min -16000.0 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_short_inst/o_sampleI
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/o_sampleQ
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/muls_I
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/muls_Q
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/delaylineI
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/delaylineQ
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/sumsI_1
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/sumsQ_1
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/sumsI_2
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/sumsQ_2
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/sumsI_3
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/sumsQ_3
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/sumsI_4
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/sumsQ_4
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/sumsI_5
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/sumsQ_5
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/s_o_sampleI
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/s_o_sampleQ
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/un_del_I
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/un_del_Q
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/emuI_delay
+add wave -noupdate -group filt_rx_short_up /tb/modem_rx_top_i/rcc_up_filter_short_inst/emuQ_delay
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/clk
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/reset
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/i_samplesI
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/i_samplesQ
+add wave -noupdate -group filt_rx_up -format Analog-Step -height 50 -max 16000.0 -min -16000.0 -radix decimal /tb/modem_rx_top_i/rcc_up_filter_inst/o_sampleI
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/o_sampleQ
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/muls_I
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/muls_Q
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/delaylineI
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/delaylineQ
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/sumsI_1
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/sumsQ_1
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/sumsI_2
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/sumsQ_2
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/sumsI_3
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/sumsQ_3
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/sumsI_4
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/sumsQ_4
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/sumsI_5
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/sumsQ_5
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/s_o_sampleI
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/s_o_sampleQ
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_I
+add wave -noupdate -group filt_rx_up /tb/modem_rx_top_i/rcc_up_filter_inst/un_del_Q
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {2712052596 ps} 0}
+WaveRestoreCursors {{Cursor 1} {9999652213 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 233
 configure wave -valuecolwidth 100
@@ -498,4 +574,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {9929888778 ps}
+WaveRestoreZoom {9999564786 ps} {10000022906 ps}

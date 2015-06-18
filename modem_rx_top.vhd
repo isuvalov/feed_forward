@@ -160,6 +160,22 @@ rcc_up_filter_inst: entity work.rcc_up_filter_rx
 		o_sampleI=>sampleIfilt,
 		o_sampleQ=>sampleQfilt
 		);
+
+
+
+rcc_up_filter_inst: entity work.rcc_up_filter_rx
+	generic map(
+		USE_IT=>1,
+		LEN=>sampleI'Length
+	)
+	port map(
+		clk =>clk,
+		reset =>reset,
+		i_samplesI=>sampleI_zero(sampleI'Length-1 downto 0),
+		i_samplesQ=>sampleQ_zero(sampleI'Length-1 downto 0),
+		o_sampleI=>sampleIfilt,
+		o_sampleQ=>sampleQfilt
+		);
 sampleIfilt2<=sampleIfilt(sampleIfilt'Length-2 downto 0)&"0";
 sampleQfilt2<=sampleQfilt(sampleIfilt'Length-2 downto 0)&"0";
 --sampleIfilt2<=sampleIfilt;

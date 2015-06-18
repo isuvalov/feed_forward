@@ -211,7 +211,8 @@ qam4_mapper_inst:entity work.qam4_mapper
 --sin_mux
 
 
-rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 9 тактов
+
+rcc_up_filter_sh_inst: entity work.rcc_up_filter_short --# задерживаем на 9 тактов
 	generic map(
 		LEN=>mod_samplesI'Length
 	)
@@ -224,6 +225,20 @@ rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 9 тактов
 		o_sampleQ=>s_sampleQ_filt
 		);
 
+
+--rcc_up_filter_inst: entity work.rcc_up_filter --# задерживаем на 9 тактов
+--	generic map(
+--		LEN=>mod_samplesI'Length
+--	)
+--	port map(
+--		clk =>clk,
+--		reset =>reset,		
+--		i_samplesI=>mod_samplesI,
+--		i_samplesQ=>mod_samplesQ,
+--		o_sampleI=>open,
+--		o_sampleQ=>open
+--		);
+--
 
 
 

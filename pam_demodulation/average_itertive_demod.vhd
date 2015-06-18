@@ -264,10 +264,10 @@ begin
 				acum_im_mula<=signed(acum_im_new)*signed('0'&mulval_a);
 
 --# was
---				acum_re<=v_acum_re_mula(acum_re_mula'Length-1-(NORMBIT-1) downto acum_re_mula'Length-acum_re'Length-(NORMBIT-1));
---				acum_im<=v_acum_im_mula(acum_re_mula'Length-1-(NORMBIT-1) downto acum_re_mula'Length-acum_re'Length-(NORMBIT-1));
-				acum_re<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(acum_re_new)))/sqrt(real(conv_integer(signed(acum_re_new)))*real(conv_integer(signed(acum_re_new)))+real(conv_integer(signed(acum_im_new)))*real(conv_integer(signed(acum_im_new))) )), acum_re'Length);
-				acum_im<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(acum_im_new)))/sqrt(real(conv_integer(signed(acum_re_new)))*real(conv_integer(signed(acum_re_new)))+real(conv_integer(signed(acum_im_new)))*real(conv_integer(signed(acum_im_new))) )), acum_re'Length);
+				acum_re<=v_acum_re_mula(acum_re_mula'Length-1-(NORMBIT-1) downto acum_re_mula'Length-acum_re'Length-(NORMBIT-1));
+				acum_im<=v_acum_im_mula(acum_re_mula'Length-1-(NORMBIT-1) downto acum_re_mula'Length-acum_re'Length-(NORMBIT-1));
+--				acum_re<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(acum_re_new)))/sqrt(real(conv_integer(signed(acum_re_new)))*real(conv_integer(signed(acum_re_new)))+real(conv_integer(signed(acum_im_new)))*real(conv_integer(signed(acum_im_new))) )), acum_re'Length);
+--				acum_im<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(acum_im_new)))/sqrt(real(conv_integer(signed(acum_re_new)))*real(conv_integer(signed(acum_re_new)))+real(conv_integer(signed(acum_im_new)))*real(conv_integer(signed(acum_im_new))) )), acum_re'Length);
 
 
 

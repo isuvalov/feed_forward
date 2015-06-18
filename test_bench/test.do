@@ -17,8 +17,13 @@ vcom ../lfsr/testLFSR.vhd
 vcom ../feedf_consts_pack.vhd 
 
 vcom ../qam4_mapper.vhd
-vcom ../rcc_up_filter.vhd
-vcom ../rcc_up_filter_rx.vhd 
+
+#vcom ../rcc_up_filter.vhd
+#vcom ../rcc_up_filter_rx.vhd 
+vcom ../rcc_up_filter_short.vhd
+vcom ../rcc_up_filter_rx_short.vhd 
+
+
 vcom ../ce_manager.vhd 
 
 vcom ../sqrt32to16_altera.vhd
