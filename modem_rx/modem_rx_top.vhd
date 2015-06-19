@@ -226,8 +226,8 @@ dds_I_inst:entity work.dds_synthesizer_pipe
   port map(
     clk_i   =>clk,
     rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
---    ftw_i   =>ftw_correction,
-    ftw_i   =>x"00010000",
+    ftw_i   =>ftw_correction,
+--    ftw_i   =>x"00100000",
     phase_i =>x"4000",
     phase_o =>open,
     ampl_o  =>dds_cos
@@ -240,8 +240,8 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
   port map(
     clk_i   =>clk,
     rst_i   =>reset,
---    ftw_i   =>ftw_correction,
-    ftw_i   =>x"00010000",
+    ftw_i   =>ftw_correction,
+--    ftw_i   =>x"00100000",
     phase_i =>x"0000",
     phase_o =>open,
     ampl_o  =>dds_sin
