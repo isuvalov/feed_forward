@@ -149,6 +149,10 @@ signal ce_cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);
 
 signal pilot_valid_byupper:std_logic;
 
+signal bit_demod:std_logic_vector(1 downto 0);
+signal bit_demod_ce:std_logic;
+
+
 begin
 
 sync_find<=s_sync_find;
@@ -439,6 +443,31 @@ feed_back: entity work.average_itertive_demod
 
 		out_ce =>open
 		);
+
+
+pam_demod_i: entity work.pam_demod
+	port map(
+		clk =>clk,
+		i_ce =>local_ce,
+		i_samplesI =>after_farrow_i,
+		i_samplesQ =>after_farrow_q,
+
+		bit_value=>bit_demod,
+		out_ce=>bit_demod_ce
+		);
+
+
+testLFSR_i:entity work.testLFSR
+	Generic map(
+	NumberOfInputputBits=>2
+	)
+	 port map(
+	 	 clk =>clk,
+	 	 ce=>bit_demod_ce,
+		 LFSR_Mask =>x"8000000D",
+		 datain =>bit_demod,
+		 error =>open
+	     );
 
 
 --

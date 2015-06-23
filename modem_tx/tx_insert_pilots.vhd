@@ -65,6 +65,11 @@ signal s_pilot_ce_array:std_logic_vector(8 downto 0);
 type Tstm is (INIT_INSERT_PILOT,INIT_SIN,INSERT_PILOT,INSERT_DATA);
 signal stm:Tstm;
 
+signal mod_samplesIe,mod_samplesQe:std_logic_vector(15 downto 0);
+signal bit_demod:std_logic_vector(1 downto 0);
+signal bit_demod_ce:std_logic;
+
+
 begin
 
 
@@ -209,6 +214,37 @@ qam4_mapper_inst:entity work.qam4_mapper
 		);
 
 --sin_mux
+mod_samplesIe<=mod_samplesI&x"000"&"00";
+mod_samplesQe<=mod_samplesQ&x"000"&"00";
+
+pam_demod_i: entity work.pam_demod
+	port map(
+		clk =>clk,
+		i_ce =>sm_qam_ce,
+		i_samplesI =>mod_samplesIe,
+		i_samplesQ =>mod_samplesQe,
+
+		bit_value=>bit_demod,
+		out_ce=>bit_demod_ce
+		);
+
+
+testLFSR_i:entity work.testLFSR
+	Generic map(
+	NumberOfInputputBits=>2
+	)
+	 port map(
+	 	 clk =>clk,
+	 	 ce=>bit_demod_ce,
+		 LFSR_Mask =>x"8000000D",
+		 datain =>bit_demod,
+		 error =>open
+	     );
+
+
+
+
+
 
 
 

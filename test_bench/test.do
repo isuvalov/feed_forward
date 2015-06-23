@@ -65,10 +65,11 @@ vcom ../pam_demodulation/save_complexdata.vhd
 vcom ../pam_demodulation/complex_mult_q.vhd 
 vcom ../pam_demodulation/table_demod.vhd 
 vcom ../pam_demodulation/average_itertive_demod.vhd
-
+vcom ../pam_demodulation/pam_demod.vhd
 
 vcom ../pilot_upper.vhd 
 vcom ../scalar_mult.vhd
+
 vcom ../modem_rx/modem_rx_top.vhd
 
 vcom tb.vhd
