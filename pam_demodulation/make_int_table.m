@@ -28,7 +28,7 @@ for z=0:max_val
         c_phase_error=c_phase_error./abs(c_phase_error);    
     end;
     c_phase_error_int=round(most_val*c_phase_error);
-    table_array(z+1)=big_signed2unsigned(real(c_phase_error_int),BIT_OUT)+1i*big_signed2unsigned(imag(c_phase_error_int),BIT_OUT);
+     table_array(z+1)=big_signed2unsigned(real(c_phase_error_int),BIT_OUT)+1i*big_signed2unsigned(imag(c_phase_error_int),BIT_OUT);
 end %z
 
 %% print to file

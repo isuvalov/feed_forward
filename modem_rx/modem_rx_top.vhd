@@ -143,7 +143,7 @@ signal pilot_ce_test_after_removezerro_a:std_logic_vector(9 downto 0);
 signal pilot_ce_test_after_frx_3w,pilot_ce_test_after_frx_2w,pilot_ce_test_after_frx_1w,pilot_ce_test_after_frx:std_logic;
 signal pilot_ce_test_after_delayer,pilot_ce_test_after_cmul:std_logic;
 
-signal after_farrow_i,after_farrow_q:std_logic_vector(15 downto 0);
+signal after_farrow_i_r,after_farrow_q_r,after_farrow_i,after_farrow_q:std_logic_vector(15 downto 0);
 signal local_ce,after_farrow_ce,reset_bysync,start_pilotU_1w,start_pilotU_2w,start_pilotU_3w,start_pilotU_4w:std_logic;
 signal ce_cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);
 
@@ -185,22 +185,7 @@ pilot_ce_test_after_removezerro<=pilot_ce_test_2w;
 --end generate; --#SIMULATION/=1
 
 
-rcc_up_filter_short_inst: entity work.rcc_up_filter_rx_short
-	generic map(
-		USE_IT=>1,
-		LEN=>sampleI_zero'Length
-	)
-	port map(
-		clk =>clk,
-		reset =>reset,
-		i_samplesI=>sampleI_zero(sampleI_zero'Length-1 downto 0),
-		i_samplesQ=>sampleQ_zero(sampleI_zero'Length-1 downto 0),
-		o_sampleI=>sampleIfilt,
-		o_sampleQ=>sampleQfilt
-		);
-
-
---rcc_up_filter_inst: entity work.rcc_up_filter_rx
+--rcc_up_filter_short_inst: entity work.rcc_up_filter_rx_short
 --	generic map(
 --		USE_IT=>1,
 --		LEN=>sampleI_zero'Length
@@ -210,11 +195,29 @@ rcc_up_filter_short_inst: entity work.rcc_up_filter_rx_short
 --		reset =>reset,
 --		i_samplesI=>sampleI_zero(sampleI_zero'Length-1 downto 0),
 --		i_samplesQ=>sampleQ_zero(sampleI_zero'Length-1 downto 0),
---		o_sampleI=>open,--sampleIfilt,
---		o_sampleQ=>open --sampleQfilt
+--		o_sampleI=>sampleIfilt,
+--		o_sampleQ=>sampleQfilt
 --		);
-sampleIfilt2<=sampleIfilt(sampleIfilt'Length-2 downto 0)&"0";
-sampleQfilt2<=sampleQfilt(sampleIfilt'Length-2 downto 0)&"0";
+--sampleIfilt2<=sampleIfilt(sampleIfilt'Length-2 downto 0)&"0";
+--sampleQfilt2<=sampleQfilt(sampleIfilt'Length-2 downto 0)&"0";
+
+
+sampleIfilt2<=sampleI_zero(sampleI_zero'Length-1 downto 0);
+sampleQfilt2<=sampleQ_zero(sampleI_zero'Length-1 downto 0);
+
+rcc_up_filter_inst: entity work.rcc_up_filter_rx
+	generic map(
+		USE_IT=>1,
+		LEN=>sampleI_zero'Length
+	)
+	port map(
+		clk =>clk,
+		reset =>reset,
+		i_samplesI=>sampleI_zero(sampleI_zero'Length-1 downto 0),
+		i_samplesQ=>sampleQ_zero(sampleI_zero'Length-1 downto 0),
+		o_sampleI=>open,--sampleIfilt,
+		o_sampleQ=>open --sampleQfilt
+		);
 pilot_ce_test_after_frx<=pilot_ce_test_after_removezerro_a(9);
 
 
@@ -230,8 +233,8 @@ dds_I_inst:entity work.dds_synthesizer_pipe
   port map(
     clk_i   =>clk,
     rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
-    ftw_i   =>ftw_correction,
---    ftw_i   =>x"00100000",
+--    ftw_i   =>ftw_correction,
+    ftw_i   =>x"00100000",
     phase_i =>x"4000",
     phase_o =>open,
     ampl_o  =>dds_cos
@@ -244,8 +247,8 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
   port map(
     clk_i   =>clk,
     rst_i   =>reset,
-    ftw_i   =>ftw_correction,
---    ftw_i   =>x"00100000",
+--    ftw_i   =>ftw_correction,
+    ftw_i   =>x"00100000",
     phase_i =>x"0000",
     phase_o =>open,
     ampl_o  =>dds_sin
@@ -256,7 +259,7 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
 moveB: entity work.complex_mult
 	generic map(
 		SHIFT_MUL=>1,
-		NOT_USE_IT=>1,--GLOBAL_DEBUG,
+		NOT_USE_IT=>0,--GLOBAL_DEBUG,
 		CONJUGATION=>'0' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(
@@ -400,7 +403,7 @@ pilot_upper_inst: entity work.pilot_upper
 
 scalar_mult_inst: entity work.scalar_mult
 	generic map(
-		CONJ_PORT_B=>0  --# Если 1 то bQ будет умножен на (-1)
+		CONJ_PORT_B=>1  --# Если 1 то bQ будет умножен на (-1)
 		)
 	port map(
 		clk =>clk,
@@ -445,12 +448,13 @@ feed_back: entity work.average_itertive_demod
 		);
 
 
+
 pam_demod_i: entity work.pam_demod
 	port map(
 		clk =>clk,
 		i_ce =>local_ce,
-		i_samplesI =>after_farrow_i,
-		i_samplesQ =>after_farrow_q,
+		i_samplesI =>after_farrow_i,--after_farrow_i_r,
+		i_samplesQ =>after_farrow_q,--after_farrow_q_r,
 
 		bit_value=>bit_demod,
 		out_ce=>bit_demod_ce

@@ -55,7 +55,7 @@ signal bits_gen2,bits_gen:std_logic_vector(1 downto 0):=(others=>'0');
 signal usedw : STD_LOGIC_VECTOR (3 DOWNTO 0);
 signal s_pilot_ce_test: std_logic;
 
-signal gen_ce,gen_ce_1w:std_logic;
+signal gen_ce,gen_ce_1w,gendivcnt:std_logic:='0';
 
 type Tstm is (RESETING,INIT_SEQUENCE,START_SYNC,WORKING);
 signal stm:Tstm;
@@ -70,7 +70,10 @@ begin
 		if s_pilot_ce_test='1' then
 			pos_cnt<=0;
 		elsif rd_req='1' then
-			bits_gen<=bits_gen+1;
+			gendivcnt<=not gendivcnt;
+			if gendivcnt='1' then
+				bits_gen<=bits_gen-1;
+			end if;
 			if pos_cnt<seq_len-1 then
 				pos_cnt<=pos_cnt+1;
 			else

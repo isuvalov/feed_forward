@@ -36,6 +36,24 @@ end average_itertive_demod;
 
 architecture average_itertive_demod of average_itertive_demod is
 
+function norming (val,x,y: std_logic_vector; rval:real) return std_logic_vector is
+--# rval - future vector size
+--# val - value that will be normalizate (or x or y)
+--# x,y - input complex value
+	variable abs_v:real;
+	variable rett:std_logic_vector(val'Length-1 downto 0);
+begin
+	abs_v:=sqrt(real(conv_integer(signed(x)))*real(conv_integer(signed(x)))+real(conv_integer(signed(y)))*real(conv_integer(signed(y))) );
+	if abs_v=0.0 then
+		rett:=conv_std_logic_vector(0,val'Length);
+	else
+		rett:=conv_std_logic_vector(integer( rval*real(conv_integer(signed(val)))/abs_v ),val'Length);
+	end if;
+	return rett;
+end norming;
+
+
+
 function signed_abs (L: std_logic_vector) return std_logic_vector is
 -- pragma label_applies_to abs
   
@@ -141,17 +159,17 @@ signal povval_x,povval_y:std_logic_vector(NORMBIT-1 downto 0);
 begin
 
 SIM01: if SIMULATION=1 generate
-	save_complexdata_i: entity work.save_complexdata
-		port map(
-		clk =>clk,
-		i_ce =>i_ce,
-		i_samplesI=>i_samplesI,
-		i_samplesQ=>i_samplesQ,
-
-		i_ce2 =>after_pilot_start,
-		i_samplesI2=>i_init_phaseI,
-		i_samplesQ2=>i_init_phaseQ
-		);
+--	save_complexdata_i: entity work.save_complexdata
+--		port map(
+--		clk =>clk,
+--		i_ce =>i_ce,
+--		i_samplesI=>i_samplesI,
+--		i_samplesQ=>i_samplesQ,
+--
+--		i_ce2 =>after_pilot_start,
+--		i_samplesI2=>i_init_phaseI,
+--		i_samplesQ2=>i_init_phaseQ
+--		);
 end generate;
 
 
@@ -166,6 +184,7 @@ complex_mult_q_i: entity work.complex_mult_q
 	port map(
 		clk =>clk,
 		i_ce =>i_ce,
+
 		A_I=>i_samplesI,
 		B_Q=>i_samplesQ,
 
@@ -177,13 +196,19 @@ complex_mult_q_i: entity work.complex_mult_q
 		out_ce=>open
 		);
 
-complex_mult_q_ii: entity work.complex_mult_q
+complex_mult_q_ii: entity work.complex_mult_qr
 	generic map(
 		SHIFT_MUL=>3, --# (числа указаны при 3)
 		CONJUGATION=>'0' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(
 		clk =>clk,
+
+		load =>after_pilot_start,
+
+		init_I=>i_init_phaseI,
+		init_Q=>i_init_phaseQ,
+
 		i_ce =>ce_table,
 		A_I=>acum_re_1w,       --# 6101+1i*1157  (верно)
 		B_Q=>acum_im_1w,
@@ -206,8 +231,13 @@ shift1<='1' when unsigned(signed_abs(sample_rotI(sample_rotI'Length-1 downto 6))
 --	unsigned(signed_abs(sample_rotI(sample_rotI'Length-1 downto 6)))>127 or unsigned(signed_abs(sample_rotQ(sample_rotQ'Length-1 downto 6)))>127 
 --	else sample_rotQ(6+BITSIZE-1 downto 6);
 
-to_tab_re<=sample_rotI(5+BITSIZE-1 downto 5);
+to_tab_re<=sample_rotI(5+BITSIZE-1 downto 5); --# !!!was
 to_tab_im<=sample_rotQ(5+BITSIZE-1 downto 5);
+
+
+--to_tab_re<=norming(sample_rotI(5+BITSIZE-1 downto 5),sample_rotI(5+BITSIZE-1 downto 5),sample_rotQ(5+BITSIZE-1 downto 5),8192.0);
+--to_tab_im<=norming(sample_rotQ(5+BITSIZE-1 downto 5),sample_rotI(5+BITSIZE-1 downto 5),sample_rotQ(5+BITSIZE-1 downto 5),8192.0);
+
 
 table_demod_i:entity work.table_demod
 	generic map(
@@ -225,11 +255,16 @@ table_demod_i:entity work.table_demod
 		 );
 		
 
---for i in 0 to 255 generate
---	snorm_table
---end generate;
-povval_x<=acum_re_new(acum_re_new'Length-1-1 downto acum_re_new'Length-NORMBIT-1);
+
+
+
+povval_x<=acum_re_new(acum_re_new'Length-1-1 downto acum_re_new'Length-NORMBIT-1);  --# was
 povval_y<=acum_im_new(acum_re_new'Length-1-1 downto acum_re_new'Length-NORMBIT-1);
+
+
+
+
+
 poval<=acum_im_new(acum_re_new'Length-1-1 downto acum_re_new'Length-NORMBIT-1)&acum_re_new(acum_re_new'Length-1-1 downto acum_re_new'Length-NORMBIT-1);
 mulval_a<=norm_mem(conv_integer(poval));
 
@@ -240,20 +275,34 @@ begin
 	if rising_edge(clk) then
 		ce_1w<=i_ce;
 		out_ce<=i_ce;
-		acum_re_1w<=acum_re;
-		acum_im_1w<=acum_im;
+
+
+o_samplesI<=norming(sample_rotI,sample_rotI,sample_rotQ,8192.0);
+o_samplesQ<=norming(sample_rotQ,sample_rotI,sample_rotQ,8192.0);
+
 
 --o_samplesI<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(sample_rotI)))/sqrt(real(conv_integer(signed(sample_rotI)))*real(conv_integer(signed(sample_rotI)))+real(conv_integer(signed(sample_rotQ)))*real(conv_integer(signed(sample_rotQ))) )), o_samplesI'Length);
 --o_samplesQ<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(sample_rotQ)))/sqrt(real(conv_integer(signed(sample_rotI)))*real(conv_integer(signed(sample_rotI)))+real(conv_integer(signed(sample_rotQ)))*real(conv_integer(signed(sample_rotQ))) )), o_samplesI'Length);
 
-		o_samplesI<=sample_rotI;
-		o_samplesQ<=sample_rotQ;
+--		o_samplesI<=sample_rotI;
+--		o_samplesQ<=sample_rotQ;
+
+--			acum_re_1w<=i_init_phaseI;
+--			acum_im_1w<=i_init_phaseQ;
 
 		if after_pilot_start='1' then
-			acum_re<=i_init_phaseI;
-			acum_im<=i_init_phaseQ;
-		else        --# reset
-			if ce_acum='1' then
+				acum_re_1w<=i_init_phaseI;
+				acum_im_1w<=i_init_phaseQ;
+		else
+				acum_re_1w<=acum_re;
+				acum_im_1w<=acum_im;
+		end if;
+
+--		if after_pilot_start='1' then
+--			acum_re<=(others=>'0');--i_init_phaseI;
+--			acum_im<=(others=>'0');--i_init_phaseQ;
+--		else        --# reset
+--			if ce_acum='1' then
 
 
 
@@ -264,18 +313,26 @@ begin
 				acum_im_mula<=signed(acum_im_new)*signed('0'&mulval_a);
 
 --# was
-				acum_re<=v_acum_re_mula(acum_re_mula'Length-1-(NORMBIT-1) downto acum_re_mula'Length-acum_re'Length-(NORMBIT-1));
-				acum_im<=v_acum_im_mula(acum_re_mula'Length-1-(NORMBIT-1) downto acum_re_mula'Length-acum_re'Length-(NORMBIT-1));
+--				acum_re<=v_acum_re_mula(acum_re_mula'Length-1-(NORMBIT-1) downto acum_re_mula'Length-acum_re'Length-(NORMBIT-1));
+--				acum_im<=v_acum_im_mula(acum_re_mula'Length-1-(NORMBIT-1) downto acum_re_mula'Length-acum_re'Length-(NORMBIT-1));
+
+				acum_re<=norming(acum_re_new,acum_re_new,acum_im_new,8192.0);
+				acum_im<=norming(acum_im_new,acum_re_new,acum_im_new,8192.0);
+
+
 --				acum_re<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(acum_re_new)))/sqrt(real(conv_integer(signed(acum_re_new)))*real(conv_integer(signed(acum_re_new)))+real(conv_integer(signed(acum_im_new)))*real(conv_integer(signed(acum_im_new))) )), acum_re'Length);
 --				acum_im<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(acum_im_new)))/sqrt(real(conv_integer(signed(acum_re_new)))*real(conv_integer(signed(acum_re_new)))+real(conv_integer(signed(acum_im_new)))*real(conv_integer(signed(acum_im_new))) )), acum_re'Length);
 
 
 
-			end if; --# i_ce
-		end if;     --# reset
+--			end if; --# i_ce
+--		end if;     --# reset
 	end if;
 end process;
 
+
+
 end average_itertive_demod;
+
 
 
