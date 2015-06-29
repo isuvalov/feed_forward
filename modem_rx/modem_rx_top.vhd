@@ -47,6 +47,7 @@ signal sampleIE,sampleQE,sampleI_zero,sampleQ_zero: std_logic_vector(15 downto 0
 
 signal sampleIfilt,sampleQfilt: std_logic_vector(15 downto 0);
 signal sampleIfilt2,sampleQfilt2: std_logic_vector(15 downto 0);
+signal sampleIfilt2m,sampleQfilt2m: std_logic_vector(15 downto 0);
 constant BEST_F:natural:=10;
 constant SQRT_LATENCY:natural:=16;
 constant FILTRCC_LATENCY:natural:=33/2+1-5;
@@ -234,7 +235,7 @@ dds_I_inst:entity work.dds_synthesizer_pipe
     clk_i   =>clk,
     rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
 --    ftw_i   =>ftw_correction,
-    ftw_i   =>x"00100000",
+    ftw_i   =>x"00003000",
     phase_i =>x"4000",
     phase_o =>open,
     ampl_o  =>dds_cos
@@ -248,13 +249,15 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
     clk_i   =>clk,
     rst_i   =>reset,
 --    ftw_i   =>ftw_correction,
-    ftw_i   =>x"00100000",
+    ftw_i   =>x"00003000",
     phase_i =>x"0000",
     phase_o =>open,
     ampl_o  =>dds_sin
     );
 
 
+sampleIfilt2m<=sampleIfilt2(sampleIfilt2'Length-2 downto 0)&"0";
+sampleQfilt2m<=sampleQfilt2(sampleIfilt2'Length-2 downto 0)&"0";
 
 moveB: entity work.complex_mult
 	generic map(
@@ -265,8 +268,8 @@ moveB: entity work.complex_mult
 	port map(
 		clk =>clk,
 		i_ce =>'1',--down_ce,
-		A_I =>sampleIfilt2,
-		B_Q =>sampleQfilt2,
+		A_I =>sampleIfilt2m,
+		B_Q =>sampleQfilt2m,
 
 		C_I =>dds_sin_d,
 		D_Q =>dds_cos_d,
