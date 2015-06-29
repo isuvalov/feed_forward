@@ -70,6 +70,7 @@ vcom ../pam_demodulation/pam_demod.vhd
 vcom ../pilot_upper.vhd 
 vcom ../scalar_mult.vhd
 
+vcom ../agc_digital.vhd
 vcom ../modem_rx/modem_rx_top.vhd
 
 vcom tb.vhd

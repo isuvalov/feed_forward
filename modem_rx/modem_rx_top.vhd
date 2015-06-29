@@ -255,9 +255,23 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
     ampl_o  =>dds_sin
     );
 
+agc_digital_i: entity work.agc_digital
+	port map(
+		clk =>clk,
+		reset =>reset,
+		i_ce =>'1',
+		i_sampleI =>sampleIfilt2,
+		i_sampleQ =>sampleQfilt2,
 
-sampleIfilt2m<=sampleIfilt2(sampleIfilt2'Length-2 downto 0)&"0";
-sampleQfilt2m<=sampleQfilt2(sampleIfilt2'Length-2 downto 0)&"0";
+		o_sampleI =>sampleIfilt2m,
+		o_sampleQ =>sampleQfilt2m,
+		o_ce=>open
+	);
+
+
+
+--sampleIfilt2m<=sampleIfilt2(sampleIfilt2'Length-2 downto 0)&"0"; --# was normal
+--sampleQfilt2m<=sampleQfilt2(sampleIfilt2'Length-2 downto 0)&"0";
 
 moveB: entity work.complex_mult
 	generic map(
