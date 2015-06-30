@@ -508,6 +508,7 @@ constant SH:integer:=3;
 
 signal mulval_a:std_logic_vector(NORMBITOUT-1 downto 0):=(others=>'0');
 signal acum_re_1w,acum_im_1w,acum_re_new,acum_im_new,acum_re,acum_im,sample_rotI,sample_rotQ:std_logic_vector(15 downto 0);
+signal sample_rotI_out,sample_rotQ_out:std_logic_vector(15 downto 0);
 signal acum_re_mula,acum_im_mula:std_logic_vector(15+NORMBITOUT+1 downto 0):=(others=>'0');
 signal table_re,table_im,to_tab_re,to_tab_im:std_logic_vector(BITSIZE-1 downto 0);
 signal table_reE,table_imE:std_logic_vector(15 downto 0);
@@ -538,6 +539,28 @@ end generate;
 
 table_reE<=table_re&EXT("0",16-BITSIZE);
 table_imE<=table_im&EXT("0",16-BITSIZE);
+
+
+complex_mult_forout_i: entity work.complex_mult_q
+	generic map(
+		SHIFT_MUL=>3,
+		CONJUGATION=>'1' --# умножение на сопряженное число, если '1' - то сопрягать
+	)
+	port map(
+		clk =>clk,
+		i_ce =>i_ce,
+
+		A_I=>i_samplesI,
+		B_Q=>i_samplesQ,
+
+		C_I=>acum_re,
+		D_Q=>acum_im,
+
+		o_I=>sample_rotI_out,
+		o_Q=>sample_rotQ_out,
+		out_ce=>open
+		);
+
 
 complex_mult_q_i: entity work.complex_mult_q
 	generic map(
@@ -653,8 +676,8 @@ begin
 --o_samplesI<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(sample_rotI)))/sqrt(real(conv_integer(signed(sample_rotI)))*real(conv_integer(signed(sample_rotI)))+real(conv_integer(signed(sample_rotQ)))*real(conv_integer(signed(sample_rotQ))) )), o_samplesI'Length);
 --o_samplesQ<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(sample_rotQ)))/sqrt(real(conv_integer(signed(sample_rotI)))*real(conv_integer(signed(sample_rotI)))+real(conv_integer(signed(sample_rotQ)))*real(conv_integer(signed(sample_rotQ))) )), o_samplesI'Length);
 
-		o_samplesI<=sample_rotI;
-		o_samplesQ<=sample_rotQ;
+		o_samplesI<=sample_rotI_out;
+		o_samplesQ<=sample_rotQ_out;
 
 --			acum_re_1w<=i_init_phaseI;
 --			acum_im_1w<=i_init_phaseQ;

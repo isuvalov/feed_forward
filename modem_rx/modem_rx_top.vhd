@@ -59,7 +59,7 @@ constant DELAY_COMPLEX_NORMALIZER:natural:=51+2;
 
 signal sampleI_delay_div2,sampleQ_delay_div2:std_logic_vector(sampleIfilt'Length-1 downto 0);
 
-signal sampleI_delay,sampleQ_delay:std_logic_vector(sampleIfilt'Length-1 downto 0);
+signal sampleI_delay,sampleQ_delay,sampleI_delay_1w,sampleQ_delay_1w:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal sampleI_delay_fe,sampleQ_delay_fe:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal sampleI_delay_fe_reg,sampleQ_delay_fe_reg:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal s_pilot_start:std_logic;
@@ -144,11 +144,12 @@ signal pilot_ce_test_after_removezerro_a:std_logic_vector(9 downto 0);
 signal pilot_ce_test_after_frx_3w,pilot_ce_test_after_frx_2w,pilot_ce_test_after_frx_1w,pilot_ce_test_after_frx:std_logic;
 signal pilot_ce_test_after_delayer,pilot_ce_test_after_cmul:std_logic;
 
-signal after_farrow_i_r,after_farrow_q_r,after_farrow_i,after_farrow_q:std_logic_vector(15 downto 0);
+signal after_farrow_i_r,after_farrow_q_r,after_farrow_i,after_farrow_q,after_feedback_i,after_feedback_q:std_logic_vector(15 downto 0);
+signal after_feedback_i_f,after_feedback_q_f:std_logic_vector(15 downto 0);
 signal local_ce,after_farrow_ce,reset_bysync,start_pilotU_1w,start_pilotU_2w,start_pilotU_3w,start_pilotU_4w:std_logic;
 signal ce_cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);
 
-signal pilot_valid_byupper:std_logic;
+signal pilot_valid_byupper,local_ce_f:std_logic;
 
 signal bit_demod:std_logic_vector(1 downto 0);
 signal bit_demod_ce:std_logic;
@@ -206,19 +207,19 @@ pilot_ce_test_after_removezerro<=pilot_ce_test_2w;
 sampleIfilt2<=sampleI_zero(sampleI_zero'Length-1 downto 0);
 sampleQfilt2<=sampleQ_zero(sampleI_zero'Length-1 downto 0);
 
-rcc_up_filter_inst: entity work.rcc_up_filter_rx
-	generic map(
-		USE_IT=>1,
-		LEN=>sampleI_zero'Length
-	)
-	port map(
-		clk =>clk,
-		reset =>reset,
-		i_samplesI=>sampleI_zero(sampleI_zero'Length-1 downto 0),
-		i_samplesQ=>sampleQ_zero(sampleI_zero'Length-1 downto 0),
-		o_sampleI=>open,--sampleIfilt,
-		o_sampleQ=>open --sampleQfilt
-		);
+--rcc_up_filter_inst: entity work.rcc_up_filter_rx
+--	generic map(
+--		USE_IT=>1,
+--		LEN=>sampleI_zero'Length
+--	)
+--	port map(
+--		clk =>clk,
+--		reset =>reset,
+--		i_samplesI=>sampleI_zero(sampleI_zero'Length-1 downto 0),
+--		i_samplesQ=>sampleQ_zero(sampleI_zero'Length-1 downto 0),
+--		o_sampleI=>open,--sampleIfilt,
+--		o_sampleQ=>open --sampleQfilt
+--		);
 pilot_ce_test_after_frx<=pilot_ce_test_after_removezerro_a(9);
 
 
@@ -235,7 +236,8 @@ dds_I_inst:entity work.dds_synthesizer_pipe
     clk_i   =>clk,
     rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
 --    ftw_i   =>ftw_correction,
-    ftw_i   =>x"00003000",
+--    ftw_i   =>x"00003000",
+    ftw_i   =>x"00000000",
     phase_i =>x"4000",
     phase_o =>open,
     ampl_o  =>dds_cos
@@ -249,7 +251,8 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
     clk_i   =>clk,
     rst_i   =>reset,
 --    ftw_i   =>ftw_correction,
-    ftw_i   =>x"00003000",
+--    ftw_i   =>x"00003000",
+    ftw_i   =>x"00000000",
     phase_i =>x"0000",
     phase_o =>open,
     ampl_o  =>dds_sin
@@ -458,10 +461,23 @@ feed_back: entity work.average_itertive_demod
 		i_init_phaseI =>scalar_sumI(scalar_sumI'Length-1 downto scalar_sumI'Length-16),--x"0FFF",
 		i_init_phaseQ =>scalar_sumQ(scalar_sumI'Length-1 downto scalar_sumI'Length-16),--x"0000",
 
-		o_samplesI =>after_farrow_i,
-		o_samplesQ =>after_farrow_q,
+		o_samplesI =>after_feedback_i,
+		o_samplesQ =>after_feedback_q,
 
 		out_ce =>open
+		);
+
+
+bits_ce_manager_i: entity work.bits_ce_manager
+	port map(
+		clk =>clk,
+		pilot =>scalar_sum_ce,
+		i_sampleI=>after_feedback_i,
+		i_sampleQ=>after_feedback_q,
+		o_sampleI=>after_feedback_i_f,
+		o_sampleQ=>after_feedback_q_f,
+		i_sample_ce=>local_ce,
+		o_sample_ce=>local_ce_f
 		);
 
 
@@ -469,9 +485,9 @@ feed_back: entity work.average_itertive_demod
 pam_demod_i: entity work.pam_demod
 	port map(
 		clk =>clk,
-		i_ce =>local_ce,
-		i_samplesI =>after_farrow_i,--after_farrow_i_r,
-		i_samplesQ =>after_farrow_q,--after_farrow_q_r,
+		i_ce =>local_ce_f,
+		i_samplesI =>after_feedback_i_f,
+		i_samplesQ =>after_feedback_q_f,
 
 		bit_value=>bit_demod,
 		out_ce=>bit_demod_ce
@@ -517,9 +533,9 @@ ToTextFile_i: entity work.ToTextFile
 			NameOfFile=>"after_farrow_i.txt")
 	 port map(
 		 clk =>clk,
-		 CE =>local_ce, 
+		 CE =>local_ce_f, 
 		 block_marker=>'0',
-		 DataToSave=>after_farrow_i
+		 DataToSave=>after_feedback_i_f
 	     );
 
 ToTextFile_q: entity work.ToTextFile
@@ -528,9 +544,9 @@ ToTextFile_q: entity work.ToTextFile
 			NameOfFile=>"after_farrow_q.txt")
 	 port map(
 		 clk =>clk,
-		 CE =>local_ce, 
+		 CE =>local_ce_f, 
 		 block_marker=>'0',
-		 DataToSave=>after_farrow_q
+		 DataToSave=>after_feedback_q_f
 	     );
 
 
@@ -539,6 +555,9 @@ delayt: process(clk) is
 begin
 	if rising_edge(clk) then
         reset_bysync<=not s_sync_find;
+
+		sampleI_delay_1w<=sampleI_delay;
+		sampleQ_delay_1w<=sampleQ_delay;
 
 		start_pilotU_1w<=start_pilotU;
 		start_pilotU_2w<=start_pilotU_1w;
@@ -554,6 +573,7 @@ begin
 --				local_ce<='0';
 --			end if;
 			ce_cnt<=conv_std_logic_vector(0,log2roundup(InterpolateRate));
+--			ce_cnt<=conv_std_logic_vector(1,log2roundup(InterpolateRate));
 		else
 			if unsigned(ce_cnt)<InterpolateRate-1 then
 				ce_cnt<=ce_cnt+1;

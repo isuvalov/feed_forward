@@ -41,6 +41,7 @@ vcom ../divider/serial_divide_uu.vhd
 vcom ../dds_synthesizers/sine_lut_16_x_16.vhd
 vcom ../dds_synthesizers/dds_synthesizer_pipe.vhd 
 
+vcom ../pam_demodulation/pam_demod.vhd
 vcom ../modem_tx/tx_insert_pilots.vhd
 vcom ../modem_tx/modem_tx_top.vhd
 
@@ -63,14 +64,16 @@ vcom ../gadarg/gadarg_quick_complex_4ce.vhd
 vcom ../pam_demodulation/assert_pack.vhd
 vcom ../pam_demodulation/save_complexdata.vhd 
 vcom ../pam_demodulation/complex_mult_q.vhd 
+vcom ../pam_demodulation/complex_mult_qr.vhd
 vcom ../pam_demodulation/table_demod.vhd 
 vcom ../pam_demodulation/average_itertive_demod.vhd
-vcom ../pam_demodulation/pam_demod.vhd
+
 
 vcom ../pilot_upper.vhd 
 vcom ../scalar_mult.vhd
 
 vcom ../agc_digital.vhd
+vcom ../bits_ce_manager.vhd
 vcom ../modem_rx/modem_rx_top.vhd
 
 vcom tb.vhd

@@ -8,6 +8,7 @@ constant GLOBAL_DEBUG:integer:=0;  --# При этом специально расстройка частоты по
 
 constant PILOT_LEN:natural:=64;
 constant InterpolateRate:natural:=4;
+constant GUARD_SAMPLES:natural:=6;
 constant Ndiv:natural:=0; --# Количество бит которые отсекаются еще до сложения в аккомуляторе
 constant NBIT:natural:=17; --# Разрядность матиматики в алгоритме расчета частотной расстройки
 constant NBITm1:natural:=NBIT-1;

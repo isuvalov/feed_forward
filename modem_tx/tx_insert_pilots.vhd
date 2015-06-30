@@ -62,7 +62,7 @@ signal delay_cnt:std_logic_vector(3 downto 0);
 signal test_seq:std_logic;
 signal s_pilot_ce_array:std_logic_vector(8 downto 0);
 
-type Tstm is (INIT_INSERT_PILOT,INIT_SIN,INSERT_PILOT,INSERT_DATA);
+type Tstm is (INIT_INSERT_PILOT,INIT_SIN,INSERT_PILOT,INSERT_DATA,INSERT_GUARD);
 signal stm:Tstm;
 
 signal mod_samplesIe,mod_samplesQe:std_logic_vector(15 downto 0);
@@ -133,7 +133,7 @@ begin
 				end if;
 				s_pilot_ce<='0';
 				duplicate_iq<='0';
-				rd_o<='1';
+				rd_o<='0';
                 bits<=bits_i;
 				if cnt=PILOT_PERIOD-1 then
 					if init_complite='1' then
@@ -153,7 +153,7 @@ begin
 
 				if unsigned(cnt)<PILOT_LEN-1 then
 				else
-					stm<=INSERT_DATA;--PREAMBULE01;
+					stm<=INSERT_GUARD;--INSERT_DATA;--PREAMBULE01;
 				end if;
 				test_seq<=PILOT((PILOT_LEN-1)-conv_integer(cnt(log2roundup(PILOT_LEN)-1 downto 0)));
 
@@ -166,6 +166,17 @@ begin
 				duplicate_iq<='1';
 				rd_o<='0';
 				delay_cnt<=(others=>'1');
+		   when INSERT_GUARD=>
+				if unsigned(cnt)<PILOT_LEN+GUARD_SAMPLES-1 then
+				else
+					stm<=INSERT_DATA;--PREAMBULE01;
+				end if;
+				rd_o<='0';
+				s_pilot_ce<='0';
+				duplicate_iq<='0';
+
+                bits<=cnt(bits'Length-1 downto 0);
+
 			when INSERT_DATA=>
 				test_seq<='Z';
 				if init_complite='1' then
