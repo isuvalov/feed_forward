@@ -13,6 +13,9 @@ entity delayer is
 		clk : in STD_LOGIC;
 		reset : in std_logic;
 
+		istrob_test: in std_logic;
+		ostrob_test: out std_logic;
+
 		i_sampleI: in std_logic_vector(15 downto 0);
 		i_sampleQ: in std_logic_vector(15 downto 0);
 
@@ -31,6 +34,7 @@ signal delaylineI,delaylineQ:Tdelayline:=(others=>(others=>'0'));
 signal p_wr:std_logic_vector(log2roundup(DELAY_LEN)-1 downto 0):=(others=>'0');
 signal p_rd:std_logic_vector(log2roundup(DELAY_LEN)-1 downto 0):=conv_std_logic_vector(DELAY_LEN-1,p_wr'Length);
 
+signal strobarray:std_logic_vector(DELAY_LEN-1 downto 0);
 
 begin
 
@@ -39,6 +43,8 @@ begin
 process (clk) is
 begin		
 	if rising_edge(clk) then
+		strobarray<=strobarray(strobarray'Length-2 downto 0)&istrob_test;
+		
 		if reset='1' then
 			p_wr<=(others=>'0');
 			p_rd<=conv_std_logic_vector(1,p_rd'Length);
@@ -63,6 +69,7 @@ begin
 	if rising_edge(clk) then
 		delaylineI(conv_integer(p_wr))<=i_sampleI;
 		o_sampleI<=delaylineI(conv_integer(p_rd));
+		ostrob_test<=strobarray(strobarray'Length-1);
 	end if;
 end process;
 

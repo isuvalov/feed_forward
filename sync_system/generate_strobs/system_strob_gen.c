@@ -97,7 +97,7 @@ int strob_gen(unsigned int period, int fd, int freqoffset, int error_val, int p_
 
 		prev_time=realtime;
 		rndval=rand();
-		d_p_loss=65534*((double)rndval/(double)RAND_MAX)+1;
+		d_p_loss=65536*((double)rndval/(double)RAND_MAX)+1;
 		if (p_loss<=d_p_loss)
 			ret=1;
 		else

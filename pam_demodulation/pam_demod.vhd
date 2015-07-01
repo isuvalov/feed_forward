@@ -46,6 +46,7 @@ constant mem:Tmem:=((1,0),(0,1),(-1,0),(0,-1));
 
 signal i_more_q,sign_i,sign_q:std_logic;
 signal signs:std_logic_vector(2 downto 0);
+signal signs2:std_logic_vector(1 downto 0);
 
 begin
 
@@ -55,6 +56,7 @@ sign_q<=i_samplesQ(i_samplesQ'Length-1);
 i_more_q<='1' when signed(signed_abs(i_samplesI))>signed(signed_abs(i_samplesQ)) else '0';
 
 signs<=i_more_q&sign_i&sign_q;
+signs2<=sign_i&sign_q;
 
 with signs select
   bit_value<="00" when "100",
@@ -66,9 +68,19 @@ with signs select
 		     "11" when "001",
 		     "01" when "010",
 		     "11" when "011",
-
+  
 		     "00" when others;
 
+--
+--with signs2 select
+--  bit_value<="00" when "00",
+-- 		     "00" when "01",
+-- 		     "10" when "10",
+--		     "10" when "11",
+--
+--		     "00" when others;
+--
+--
 
 out_ce<=i_ce;
 

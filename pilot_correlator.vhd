@@ -63,10 +63,10 @@ begin
 --					if PILOT(PILOT_LEN-y-1)='1' then
 					if PILOT(y)='1' then
 						multarrayI(0)(y*InterpolateRate+x)<=SXT(delaylineI(y*InterpolateRate+x),i_samplesI'Length+1);
-						multarrayQ(0)(y*InterpolateRate+x)<=SXT(delaylineQ(y*InterpolateRate+x),i_samplesI'Length+1);
+						multarrayQ(0)(y*InterpolateRate+x)<=0-SXT(delaylineQ(y*InterpolateRate+x),i_samplesI'Length+1); --# make conj
 					else
 						multarrayI(0)(y*InterpolateRate+x)<=0-SXT(delaylineI(y*InterpolateRate+x),i_samplesI'Length+1);
-						multarrayQ(0)(y*InterpolateRate+x)<=0-SXT(delaylineQ(y*InterpolateRate+x),i_samplesI'Length+1);
+						multarrayQ(0)(y*InterpolateRate+x)<=SXT(delaylineQ(y*InterpolateRate+x),i_samplesI'Length+1);   --# make conj
 					end if;
 				end loop;
 			end loop;

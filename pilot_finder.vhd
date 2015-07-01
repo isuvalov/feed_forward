@@ -36,12 +36,16 @@ end component;
 
 signal correlation_sqrt2,correlation_sqrt,correlation_sqrt_p2,correlation_sqrt_p1,correlation_sqrt_w1,correlation_sqrt_max: std_logic_vector(15 downto 0);
 signal sampleI_sq,sampleQ_sq,sample_sq: std_logic_vector(31 downto 0);
-signal cor_test,cor_filtered,sampleI_corr,sampleQ_corr: std_logic_vector(15 downto 0);
+signal cor_filtered,sampleI_corr,sampleQ_corr: std_logic_vector(15 downto 0);
+
 signal cor_filtered_ce,cor_sqrt_ce,sample_ce_w1: std_logic;
 --constant MULT_POROG:std_logic_vector(6 downto 0):=conv_std_logic_vector(30,7); --# Цель умножить на 1.1 т.е. примерно *71/64
 
-constant MULT_POROG:std_logic_vector(6 downto 0):=conv_std_logic_vector(70,7); --# Цель умножить на 1.1 т.е. примерно *71/64
+--constant MULT_POROG:std_logic_vector(6 downto 0):=conv_std_logic_vector(70,7); --# Цель умножить на 1.1 т.е. примерно *71/64
+--constant MULT_POROG:std_logic_vector(6 downto 0):=conv_std_logic_vector(113,7); --# Цель умножить на 1.1 т.е. примерно *71/64
+constant MULT_POROG:std_logic_vector(7 downto 0):=conv_std_logic_vector(200,8); --# Цель умножить на 1.1 т.е. примерно *71/64
 signal cor_filtered_mult:std_logic_vector(cor_filtered'Length+MULT_POROG'Length-1 downto 0);
+signal cor_test: std_logic_vector(cor_filtered_mult'Length-1-5 downto 0);
 
 signal more_than_porog:std_logic;
 signal time_out,time_out1:std_logic_vector(log2roundup(InterpolateRate*PILOT_LEN/2)-3 downto 0);
@@ -68,10 +72,10 @@ pilot_corr_inst: entity work.pilot_correlator
 		o_sampleQ=>sampleQ_corr
 		);
 
-corrI_o<=cor_test;--sampleI_corr;
+corrI_o<=cor_test(cor_test'Length-1 downto cor_test'Length-corrI_o'Length);--sampleI_corr;
 corrQ_o<=correlation_sqrt;--sampleQ_corr;
 
-cor_test<=EXT(cor_filtered_mult(cor_filtered_mult'Length-2 downto 5),cor_test'Length);
+cor_test<=EXT(cor_filtered_mult(cor_filtered_mult'Length-1 downto 5),cor_test'Length);
 process (clk) is
 begin		
 	if rising_edge(clk) then
@@ -168,8 +172,8 @@ sqrt32_inst : sqrt32to16_altera PORT MAP (
 
 bih_filter_integrator_inst: entity work.bih_filter_integrator
 	generic map(
-		ALPHA_NUM=>8,  --# коэффициент интегрирования, чем он больше тем большую историю храним
-		SCALE_FACTOR=>5,  --# маштаб - чем он больше тем меньше значение на выходе
+		ALPHA_NUM=>8+6,  --# коэффициент интегрирования, чем он больше тем большую историю храним
+		SCALE_FACTOR=>5+6,  --# маштаб - чем он больше тем меньше значение на выходе
 		WIDTH=>correlation_sqrt'Length
 	)
 	port map(

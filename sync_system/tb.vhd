@@ -13,8 +13,9 @@ architecture tb of tb is
 
 -- clkq = 31/25*clk125 
 
-constant CLK_PERIOD_clk125: TIME := 8 ns; 
-constant CLK_PERIOD_clkq: TIME := 6.45161290322580645 ns; --# < 1/(125e6*(9/8)*(204/186))
+constant CLK_PERIOD_clk125: TIME := 7.001 ns; 
+--constant CLK_PERIOD_clkq: TIME := 6.45161290322580645 ns; --# < 1/(125e6*(9/8)*(204/186))
+constant CLK_PERIOD_clkq: TIME := 7 ns; --# < 1/(125e6*(9/8)*(204/186))
 --constant CLK_PERIOD_clkq: TIME := 80 ns; --# < 1/(125e6*(9/8)*(204/186))
 
 
@@ -37,11 +38,11 @@ port (
 end component;
 
 
-signal cnt,cntreg:integer:=0;
+signal cnt,cntreg,cnt_local_test:integer:=0;
 signal clkq,clk125,clk125_div2,clk125_div4:std_logic:='0';
 signal strob,strob_mean,reset:std_logic:='1'; 
 
-signal frame_start_p1_0,frame_start_p1,mean_lock,mean_lock_1w,sync_gen_reset : std_logic;
+signal frame_start_p1_0,frame_start_p1,mean_lock,mean_lock_1w,sync_gen_reset,strob2 : std_logic;
 signal to_gun:std_logic_vector(17 downto 0);
 
 begin
@@ -83,11 +84,11 @@ port map(
 --# error_val - size of whole window(in two ways +/-) where strob generate, in samples
 --# p_loss - probability of loss strob, value 65535 is 100%, 0 meens that loss=0 
  clk=>clkq,
- period	=>		conv_std_logic_vector(PILOT_PERIOD,32),
+ period	=>		conv_std_logic_vector(PILOT_PERIOD-1,32),
  fd =>			conv_std_logic_vector(125e6,32),
--- freqoffset=>	conv_std_logic_vector(0000,32),
- freqoffset=>	conv_std_logic_vector(1e6,32),
- error_val=>	conv_std_logic_vector(8,32),
+ freqoffset=>	conv_std_logic_vector(0000,32),
+-- freqoffset=>	conv_std_logic_vector(0e6,32),
+ error_val=>	conv_std_logic_vector(10,32),
  p_loss=>		conv_std_logic_vector(65535/3,32),
 -- p_loss=>		conv_std_logic_vector(0,32),
  start_delay=>	conv_std_logic_vector(0000,32),
@@ -95,15 +96,24 @@ port map(
  strob=>strob
 );
 
-process(clkq)
+process(clk125)
 begin
-    if rising_edge(clkq) then
+    if rising_edge(clk125) then
 		if strob='1' then
 			cnt<=0;
 			cntreg<=cnt;
 		else
 			cnt<=cnt+1;
 		end if;
+
+		if cnt_local_test<PILOT_PERIOD-1 then
+			cnt_local_test<=cnt_local_test+1;
+			strob2<='0';
+		else
+			cnt_local_test<=0;
+			strob2<='1';
+		end if;
+
 	end if;
 end process;
 
@@ -118,17 +128,17 @@ begin
 	end if;
 end process;
 
-pilotsync_inst: entity work.pilot_sync_every_time
+pilotsync_inst: entity work.pilot_sync_every_time_ver4
 	generic map(
 		SIMULATION=>0,
-		DELAY_AFTER_FREQESTIM=>PILOT_PERIOD/3,
-		DELAY_LEN=>PILOT_PERIOD
+--		DELAY_AFTER_FREQESTIM=>PILOT_PERIOD/3,
+		PERIOD=>PILOT_PERIOD
 	) 
 	port map(
 		clk =>clkq,
 		reset =>reset,
 
-		realpilot_event =>strob,
+		realpilot_event =>strob,--strob
 		
 		
 		start_pilotU =>open,

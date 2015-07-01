@@ -21,7 +21,7 @@ end pilot_upper;
 
 architecture pilot_upper of pilot_upper is
 
-constant FILTER_DELAY:integer:=9;
+constant FILTER_DELAY:integer:=9+10+4+3;
 
 signal o_interp_ce,o_interp_ce_w1,o_interp_ce_w2,sm_qam_ce,test_val:std_logic;
 signal cnt_interp:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);	
@@ -30,7 +30,7 @@ signal mod_samplesI,mod_samplesQ:std_logic_vector(1 downto 0);
 signal bits:std_logic_vector(1 downto 0);
 signal s_sampleI_o,s_sampleQ_o:std_logic_vector(sampleI_o'Length-1 downto 0);
 
-signal cnt_delay:std_logic_vector(3 downto 0);
+signal cnt_delay:std_logic_vector(4 downto 0);
 signal cnt_pilot:std_logic_vector(log2roundup(PILOT_LEN*InterpolateRate) downto 0);
 
 begin
@@ -112,7 +112,7 @@ qam4_mapper_inst:entity work.qam4_mapper
 		);
 
 
-rcc_up_filter_inst: entity work.rcc_up_filter
+rcc_up_filter_inst: entity work.rcc_up_filter_short
 	generic map(
 		LEN=>mod_samplesI'Length
 	)

@@ -115,7 +115,7 @@ begin
 			
 			divisor_Q<=signed(i_samplesQ)*signed(NORM_CONST);
 			sign_save_I<=i_samplesI(i_samplesI'Length-1);
-			sign_save_Q<=i_samplesI(i_samplesQ'Length-1);
+			sign_save_Q<=i_samplesQ(i_samplesQ'Length-1);
 		end if;
 		if i_ce_1w='1' then
 			iq_sq<=i_sq+q_sq;

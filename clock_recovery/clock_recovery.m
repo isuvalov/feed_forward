@@ -13,7 +13,7 @@ tlen=(PilotsNum+1)*(tdelay+pilot_len); %201000; % длина всех отсчетов
 alpha1=0.2;      % коэффициент усреднения, чем он меньше тем больше усреднение
 alpha2=0.1;
  FreqOffset=0.5;
-  FreqOffset=0.0001;
+  FreqOffset=0.001;
 test_freq_d=0.00;
 M=4;
 FILTLEN=32;
@@ -32,12 +32,18 @@ T=InterpolateRate/2; % т.е. Частота среза Фильтра fd/InterpolateRate
 
 t=(-9:1/T:9);
 %% SQRT Raised Cosine
-hsqrt=4*R*(  cos((1+R)*pi.*t/T) + sin((1-R).*pi.*t/T)./(4*R.*t/T)  ) ./ (pi*sqrt(T).*(1-(4*R.*t/T).*(4*R.*t/T)) );
+hsqrt=4*R*(  cos((1+R)*pi.*t/T) + sin((1-R).*pi.*t/T)./(4*R.*t/T)  ) ./ (pi*sqrt(T).*(1-(4*R.*t/T).*(4*R.*t/T)) ); % sqrt SQRT Raised Cosine
 hsqrt_max=(pi+4*R-pi*R)/(pi*sqrt(T));
 hsqrt=hsqrt./hsqrt_max;
 hsqrt(round(length(hsqrt)/2))=1;
 hsqrt(14)=-0.1888; % добавлять при R=0.2
 hsqrt(24)=-0.1888; % добавлять при R=0.2
+
+% hsqrt=sinc(t/T).*( cos(pi*R*t/T) ) ./ ( 1-4*R*R.*t.*t./(T*T) );  % normal Raised Cosine
+% hsqrt=hsqrt/max(hsqrt);
+% hsqrt_one=[zeros(1,floor(length(hsqrt)/2)) 100 zeros(1,floor(length(hsqrt)/2)+1)];
+% hsqrt_one=hsqrt_one(1:length(hsqrt));
+hsqrt_one=hsqrt;
 
 %% Make pilot symbol
 some=reshape(hadamard(2^ceil(log2(sqrt(pilot_len)))),1,[]);   % придумываем какой-то маркер из +/-1
@@ -58,7 +64,8 @@ for z=1:N
     end
 	s_transfer=[s_transfer pilot x];
 end
- s_transfer=[s_transfer pilot modulate(mod_engine,repmat([0 1 2 3 3 2 1 0],1,floor(tdelay/8)))];
+%        s_transfer=[pilot modulate(mod_engine,repmat([0 1 2 3 3 2 1 0],1,floor(tdelay/8)))];
+%  s_transfer=[pilot modulate(mod_engine,repmat([0 6 2 4 3 5 1 7],1,floor(tdelay/8)))];
 
 
 s_transfer_filt1=zeros(1,length(s_transfer)*InterpolateRate);
@@ -100,8 +107,9 @@ rx_transfer=s_transfer_filt1.*exp(1i*t3*FreqOffset*2*pi);
 
 %% Receiver  прием
 
-rx_transfer_filt=conv(rx_transfer,hsqrt); % фильтр на приеме
-rx_transfer_filt=rx_transfer_filt(cut_f_l:end-cut_f_l);
+rx_transfer_filt=conv(rx_transfer,hsqrt_one); % фильтр на приеме
+rx_transfer_filt=rx_transfer_filt(cut_f_l+length(pilotUP):end-cut_f_l);
+rx_transfer_filt=rx_transfer_filt./max(real(rx_transfer_filt));
 % rx_transfer_filt=rx_transfer;
 
 
@@ -119,19 +127,24 @@ phase_error_CIC=0;
 phase_error_CIC_minus_prev=0;
 phase_error_CIC_minus_prev_ii_prev=0;
 phase_error_CIC_mod_prev=0;
-mu=0;
+mu=1;
+minusof_j=1;
 
+mu_array=[];
 farrow_a=zeros(4,1);
 
 feedforward_PIF=0;
-PSK_SIZE=4;
+PSK_SIZE=M;
 
-for zd=(1+2):length(rx_transfer_filt)
+for zd=(1):length(rx_transfer_filt)-20
     magnetude=abs(rx_transfer_filt(zd))^2;
     
-    phase_st=mod(pi/(2*pi/(2*pi/PSK_SIZE))+phase_st,2*pi); %# pi/2 because PSK-4
+%      phase_st=mod(pi/(pi/(2*pi/PSK_SIZE))+phase_st,2*pi); %# pi/2 because PSK-4
+     phase_st=mod((2*pi/PSK_SIZE)+phase_st,2*pi); %# pi/2 because PSK-4
     
-    resignal=magnetude*exp(1i*phase_st);
+    
+     resignal=(magnetude)*exp(minusof_j*1i*phase_st);
+%       resignal=20*exp(1i*phase_st);
 
     CIC_first=resignal-CICz(2^CIC_degree);
     CICz=[resignal CICz(1:(2^CIC_degree)-1)];
@@ -149,6 +162,14 @@ for zd=(1+2):length(rx_transfer_filt)
     else
         global_ce=0;
     end;
+
+%     if (mod(zd,InterpolateRate)==0)
+%         global_ce=1;
+%     else
+%         global_ce=0;
+%     end;
+
+
     angle_of_CICmod_prev=angle_of_CICmod;
     
     
@@ -159,11 +180,11 @@ for zd=(1+2):length(rx_transfer_filt)
 % %          Hd = dfilt.farrowfd(mu, coeffs);
 % %          fvtool(Hd, 'Analysis', 'grpdelay');
 
-    farrow_a=[rx_transfer_filt(zd-2); farrow_a(1:3)];
-    farrow_m1=farrow_a.*[1/6 -1/2 1/2 -1/6].'*(-1);
-    farrow_m2=farrow_a.*[0 1/2 -1 1/2].';
-    farrow_m3=farrow_a.*[-1/6 1 -1/2 -1/3].';
-    farrow_m4=farrow_a.*[0 0 1 0].';
+    farrow_a=[rx_transfer_filt(zd+2); farrow_a(1:3)];
+    farrow_m1=farrow_a.*([1/6 -1/2 1/2 -1/6].'*(-1));
+    farrow_m2=farrow_a.*([0 1/2 -1 1/2].');
+    farrow_m3=farrow_a.*([-1/6 1 -1/2 -1/3].');
+    farrow_m4=farrow_a.*([0 0 1 0].');
     
     f01=sum(farrow_m1)*mu;
     f02=(sum(farrow_m2)+f01)*mu;
@@ -175,24 +196,27 @@ for zd=(1+2):length(rx_transfer_filt)
     
     if (global_ce==1)        
         
-        mu=mod(angle_of_CICmod,2*pi/8)*(-8)/(2*pi);
+         mu=mod(angle_of_CICmod,2*pi/PSK_SIZE)*(-PSK_SIZE)/(2*pi);
+%          mu=mod(angle(rx_transfer_filt(zd+(InterpolateRate-1))),2*pi/PSK_SIZE)*(-PSK_SIZE)/(2*pi);
         
-        
+        mu_array=[mu_array mu];      
         
         feedforward_in=feedforward_PIF;
         
-        feedforward_in_mul=feedforward_in*exp(1i*phase_error_CIC_mod_prev);
-        phase_error_CIC_mod_prev=phase_error_CIC_mod;        
+        feedforward_in_mul=feedforward_in*exp(minusof_j*1i*phase_error_CIC_mod_prev);
         phase_error=mod(PSK_SIZE*angle(feedforward_in_mul),2*pi);
+
+
+        phase_error_CIC_minus_prev_ii=(phase_error_CIC_minus/(2^16))+phase_error_CIC_minus_prev_ii_prev;
+        phase_error_CIC_minus_prev_ii_prev=phase_error_CIC_minus_prev_ii;      
+        
+        phase_error_CIC=(phase_error_CIC_minus/(2^8))+phase_error_CIC_minus_prev_ii;%phase_error_CIC_minus_prev_ii_prev;
+
 
         phase_error_CIC_mod=mod(phase_error_CIC_mod_prev+phase_error_CIC,2*pi);
         phase_error_CIC_minus=phase_error-phase_error_CIC_mod_prev;
-
-        phase_error_CIC_minus_prev_ii=(phase_error_CIC_minus/(2^16))+phase_error_CIC_minus_prev_ii_prev;
-
-        phase_error_CIC=(phase_error_CIC_minus/(2^8))+phase_error_CIC_minus_prev_ii_prev;
-        phase_error_CIC_minus_prev_ii_prev=phase_error_CIC_minus_prev_ii;      
-
+        phase_error_CIC_mod_prev=phase_error_CIC_mod;                
+        
         phase_error_out=feedforward_in_mul;
 
 
@@ -210,7 +234,10 @@ end;  % zd
 
 % figure
 
-   scatterplot(sigg(end/3:end))
+%    scatterplot(sigg(end/3:end))
+scatterplot(sigg(end-2000:end))
+% plot(real(sigg(end-2000:end)))
+
 % scatterplot(data_transfer_filtdata)
 % plot(angle(c_acum_phase_array))
 % plot(mass2);
