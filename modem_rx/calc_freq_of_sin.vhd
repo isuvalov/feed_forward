@@ -116,7 +116,8 @@ begin
 		if SIMULATION=1 then
 			phase_for_dds<=(others=>'0');
 		else
-	        phase_for_dds<=signed(sin_phase_delta_filt_c(sin_phase_delta_filt_c'Length-1-4 downto 0)&"0000")*unsigned(conv_std_logic_vector((2**10)/(3),10)); --FREQ_FD
+--	        phase_for_dds<=signed(sin_phase_delta_filt_c(sin_phase_delta_filt_c'Length-1-4 downto 0)&"0000")*unsigned(conv_std_logic_vector((2**10)/(3),10)); --FREQ_FD
+	        phase_for_dds<=signed(sin_phase_delta_filt_c(sin_phase_delta_filt_c'Length-1-4 downto 0)&"0000")*unsigned(conv_std_logic_vector(integer(real(2**9)/3.14159265358979324),11)); --FREQ_FD
 		end if;
 		
 	end if;	--clk

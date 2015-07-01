@@ -219,24 +219,15 @@ modem_rx_top_i: entity work.modem_rx_top
 		  sampleQ=>sampleQ_tx(15 downto 4),-- sampleQ_moveback(15 downto 4),
 		  pilot_ce_test=>pilot_ce_test,
 
-		  test_mode=>"00",
-				--# 1 - output after signal normalizing
-				--# 2 - output after rcc filter
-				--# 3 - output after correlation
 
-		  test_I=>open,
-		  test_Q=>open,
-		  test_inner_pilot_pos=>open,
-		
-		  demod_phase=>open,
-		  demod_phase_ce=>open,
-
+		  demod_sample_I=>open,
+		  demod_sample_Q=>open,
+		  demod_sample_ce=>open,
+	
 		  bit_value_ce=>open,
 		  bit_value=>open,
 
 		  sync_find=>open,
-		  dds_cos_o=>open,
-		  dds_sin_o=>open,
 		  pilot_start=>open  --# Этот импульс будет задержан на InterpolateRate*PILOT_LEN+5+Sqrt_Latency тактов
 	);
 

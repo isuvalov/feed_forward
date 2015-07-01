@@ -25,6 +25,10 @@ entity average_itertive_demod is
 		i_init_phaseI: in std_logic_vector(15 downto 0);
 		i_init_phaseQ: in std_logic_vector(15 downto 0);
 
+		phase_error_i: out std_logic_vector(7 downto 0);
+		phase_error_q: out std_logic_vector(7 downto 0);
+
+
 		o_samplesI: out std_logic_vector(15 downto 0);
 		o_samplesQ: out std_logic_vector(15 downto 0);
 
@@ -610,24 +614,9 @@ complex_mult_q_ii: entity work.complex_mult_qr
 
 shift1<='1' when unsigned(signed_abs(sample_rotI(sample_rotI'Length-1 downto 6)))>127 or unsigned(signed_abs(sample_rotQ(sample_rotQ'Length-1 downto 6)))>127  else '0';
 
---to_tab_re<=SXT(sample_rotI(sample_rotI'Length-1 downto 9),BITSIZE) when 
---	unsigned(signed_abs(sample_rotI(sample_rotI'Length-1 downto 6)))>127 or unsigned(signed_abs(sample_rotQ(sample_rotQ'Length-1 downto 6)))>127 
---	else sample_rotI(6+BITSIZE-1 downto 6);
-
---to_tab_im<=SXT(sample_rotQ(sample_rotQ'Length-1 downto 9),BITSIZE) when 
---	unsigned(signed_abs(sample_rotI(sample_rotI'Length-1 downto 6)))>127 or unsigned(signed_abs(sample_rotQ(sample_rotQ'Length-1 downto 6)))>127 
---	else sample_rotQ(6+BITSIZE-1 downto 6);
-
---to_tab_re<=sample_rotI(5+BITSIZE-1 downto 5); --# !!!was
---to_tab_im<=sample_rotQ(5+BITSIZE-1 downto 5);
-
 
 to_tab_re<=sample_rotI(sample_rotI'Length-1 downto sample_rotI'Length-BITSIZE);
 to_tab_im<=sample_rotQ(sample_rotI'Length-1 downto sample_rotI'Length-BITSIZE);
-
-
---to_tab_re<=norming(sample_rotI(5+BITSIZE-1 downto 5),sample_rotI(5+BITSIZE-1 downto 5),sample_rotQ(5+BITSIZE-1 downto 5),8192.0);
---to_tab_im<=norming(sample_rotQ(5+BITSIZE-1 downto 5),sample_rotI(5+BITSIZE-1 downto 5),sample_rotQ(5+BITSIZE-1 downto 5),8192.0);
 
 
 table_demod_i:entity work.table_demod
@@ -653,10 +642,6 @@ povval_x<=acum_re_new(acum_re_new'Length-1 downto acum_re_new'Length-NORMBIT);  
 povval_y<=acum_im_new(acum_re_new'Length-1 downto acum_re_new'Length-NORMBIT);
 
 
-
-
-
---poval<=acum_im_new(acum_re_new'Length-1-1 downto acum_re_new'Length-NORMBIT-1)&acum_re_new(acum_re_new'Length-1-1 downto acum_re_new'Length-NORMBIT-1);
 poval<=acum_im_new(acum_re_new'Length-1 downto acum_re_new'Length-NORMBIT)&acum_re_new(acum_re_new'Length-1 downto acum_re_new'Length-NORMBIT);
 mulval_a<=norm_mem(conv_integer(acum_im_new(acum_re_new'Length-1 downto acum_re_new'Length-NORMBIT)&acum_re_new(acum_re_new'Length-1 downto acum_re_new'Length-NORMBIT)));
 
@@ -668,65 +653,34 @@ begin
 		ce_1w<=i_ce;
 		out_ce<=i_ce;
 
+        phase_error_i<=table_re;
+        phase_error_q<=table_im;
 
 --o_samplesI<=norming(sample_rotI,sample_rotI,sample_rotQ,8192.0);
 --o_samplesQ<=norming(sample_rotQ,sample_rotI,sample_rotQ,8192.0);
 
 
---o_samplesI<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(sample_rotI)))/sqrt(real(conv_integer(signed(sample_rotI)))*real(conv_integer(signed(sample_rotI)))+real(conv_integer(signed(sample_rotQ)))*real(conv_integer(signed(sample_rotQ))) )), o_samplesI'Length);
---o_samplesQ<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(sample_rotQ)))/sqrt(real(conv_integer(signed(sample_rotI)))*real(conv_integer(signed(sample_rotI)))+real(conv_integer(signed(sample_rotQ)))*real(conv_integer(signed(sample_rotQ))) )), o_samplesI'Length);
-
 		o_samplesI<=sample_rotI_out;
 		o_samplesQ<=sample_rotQ_out;
-
---			acum_re_1w<=i_init_phaseI;
---			acum_im_1w<=i_init_phaseQ;
 
 		if after_pilot_start='1' then
 				acum_re_1w<=i_init_phaseI;
 				acum_im_1w<=i_init_phaseQ;
---				acum_re_1w<=norming(i_init_phaseI,i_init_phaseI,i_init_phaseQ,8192.0);
---				acum_im_1w<=norming(i_init_phaseQ,i_init_phaseI,i_init_phaseQ,8192.0);
-
 		else
 				acum_re_1w<=acum_re;
 				acum_im_1w<=acum_im;
 		end if;
 
---		if after_pilot_start='1' then
---			acum_re<=(others=>'0');--i_init_phaseI;
---			acum_im<=(others=>'0');--i_init_phaseQ;
---		else        --# reset
---			if ce_acum='1' then
+		v_acum_re_mula:=signed(acum_re_new)*unsigned(mulval_a);
+		v_acum_im_mula:=signed(acum_im_new)*unsigned(mulval_a);
+
+		acum_re_mula<=signed(acum_re_new)*unsigned(mulval_a);
+		acum_im_mula<=signed(acum_im_new)*unsigned(mulval_a);
+
+		acum_re<=SXT(v_acum_re_mula(acum_re_mula'Length-1-NORMBIT downto acum_re_mula'Length-acum_re'Length-NORMBIT+1),acum_re'Length);
+		acum_im<=SXT(v_acum_im_mula(acum_re_mula'Length-1-NORMBIT downto acum_re_mula'Length-acum_re'Length-NORMBIT+1),acum_im'Length);
 
 
-
-				v_acum_re_mula:=signed(acum_re_new)*unsigned(mulval_a);
-				v_acum_im_mula:=signed(acum_im_new)*unsigned(mulval_a);
-
-				acum_re_mula<=signed(acum_re_new)*unsigned(mulval_a);
-				acum_im_mula<=signed(acum_im_new)*unsigned(mulval_a);
-
---# was
---				acum_re<=v_acum_re_mula(acum_re_mula'Length-1-(NORMBIT-1) downto acum_re_mula'Length-acum_re'Length-(NORMBIT-1));
---				acum_im<=v_acum_im_mula(acum_re_mula'Length-1-(NORMBIT-1) downto acum_re_mula'Length-acum_re'Length-(NORMBIT-1));
-
-				acum_re<=SXT(v_acum_re_mula(acum_re_mula'Length-1-NORMBIT downto acum_re_mula'Length-acum_re'Length-NORMBIT+1),acum_re'Length);
-				acum_im<=SXT(v_acum_im_mula(acum_re_mula'Length-1-NORMBIT downto acum_re_mula'Length-acum_re'Length-NORMBIT+1),acum_im'Length);
-
-
-
---				acum_re<=norming(acum_re_new,acum_re_new,acum_im_new,8192.0);
---				acum_im<=norming(acum_im_new,acum_re_new,acum_im_new,8192.0);
-
-
---				acum_re<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(acum_re_new)))/sqrt(real(conv_integer(signed(acum_re_new)))*real(conv_integer(signed(acum_re_new)))+real(conv_integer(signed(acum_im_new)))*real(conv_integer(signed(acum_im_new))) )), acum_re'Length);
---				acum_im<=conv_std_logic_vector( integer(8192.0*real(conv_integer(signed(acum_im_new)))/sqrt(real(conv_integer(signed(acum_re_new)))*real(conv_integer(signed(acum_re_new)))+real(conv_integer(signed(acum_im_new)))*real(conv_integer(signed(acum_im_new))) )), acum_re'Length);
-
-
-
---			end if; --# i_ce
---		end if;     --# reset
 	end if;
 end process;
 

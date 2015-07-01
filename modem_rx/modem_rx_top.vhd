@@ -19,24 +19,14 @@ entity modem_rx_top is
 		  sampleQ: in std_logic_vector(11 downto 0);
 		  pilot_ce_test: in std_logic; --# only for test purpose
 
-		  test_mode: in std_logic_vector(1 downto 0);
-				--# 1 - output after signal normalizing
-				--# 2 - output after rcc filter
-				--# 3 - output after correlation
-
-		  test_I: out std_logic_vector(15 downto 0);
-		  test_Q: out std_logic_vector(15 downto 0);
-		  test_inner_pilot_pos: out std_logic;
-		
-		  demod_phase :out std_logic_vector(15 downto 0);
-		  demod_phase_ce : out std_logic;
-
+		  demod_sample_I: out std_logic_vector(15 downto 0);
+		  demod_sample_Q: out std_logic_vector(15 downto 0);
+		  demod_sample_ce: out std_logic;
+	
 		  bit_value_ce: out std_logic;
 		  bit_value: out std_logic_vector(1 downto 0);
 
 		  sync_find: out std_logic;
-		  dds_cos_o: out std_logic_vector(15 downto 0);
-		  dds_sin_o: out std_logic_vector(15 downto 0);
 		  pilot_start: out std_logic --# Этот импульс будет задержан на InterpolateRate*PILOT_LEN+5+Sqrt_Latency тактов
 	);
 			--# В данный момент Sqrt_Latency=16
@@ -154,6 +144,7 @@ signal pilot_valid_byupper,local_ce_f:std_logic;
 signal bit_demod:std_logic_vector(1 downto 0);
 signal bit_demod_ce:std_logic;
 
+signal iterat_ph_error_i,iterat_ph_error_q:std_logic_vector(7 downto 0);
 
 begin
 
@@ -236,7 +227,7 @@ dds_I_inst:entity work.dds_synthesizer_pipe
     clk_i   =>clk,
     rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
 --    ftw_i   =>ftw_correction,
---    ftw_i   =>x"00003000",
+--    ftw_i   =>x"00001000",
     ftw_i   =>x"00000000",
     phase_i =>x"4000",
     phase_o =>open,
@@ -251,7 +242,7 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
     clk_i   =>clk,
     rst_i   =>reset,
 --    ftw_i   =>ftw_correction,
---    ftw_i   =>x"00003000",
+--    ftw_i   =>x"00001000",
     ftw_i   =>x"00000000",
     phase_i =>x"0000",
     phase_o =>open,
@@ -461,10 +452,26 @@ feed_back: entity work.average_itertive_demod
 		i_init_phaseI =>scalar_sumI(scalar_sumI'Length-1 downto scalar_sumI'Length-16),--x"0FFF",
 		i_init_phaseQ =>scalar_sumQ(scalar_sumI'Length-1 downto scalar_sumI'Length-16),--x"0000",
 
+		phase_error_i=>iterat_ph_error_i,
+		phase_error_q=>iterat_ph_error_q,
+
+
 		o_samplesI =>after_feedback_i,
 		o_samplesQ =>after_feedback_q,
 
 		out_ce =>open
+		);
+
+
+freq_estimator_by_phase_i: entity work.freq_estimator_by_phase
+	port map(
+		clk =>clk,
+		reset =>reset,
+		i_ce => local_ce,
+		i_samplesI=>iterat_ph_error_i,
+		i_samplesQ=>iterat_ph_error_q,
+		freq_ce=>open,
+		o_freq=>open
 		);
 
 
@@ -492,7 +499,6 @@ pam_demod_i: entity work.pam_demod
 		bit_value=>bit_demod,
 		out_ce=>bit_demod_ce
 		);
-
 
 testLFSR_i:entity work.testLFSR
 	Generic map(
@@ -554,6 +560,15 @@ ToTextFile_q: entity work.ToTextFile
 delayt: process(clk) is
 begin
 	if rising_edge(clk) then
+
+		bit_value<=bit_demod;
+		bit_value_ce<=bit_demod_ce;
+
+  	    demod_sample_I<=after_feedback_i_f;
+		demod_sample_Q<=after_feedback_q_f;
+		demod_sample_ce<=local_ce_f;
+
+
         reset_bysync<=not s_sync_find;
 
 		sampleI_delay_1w<=sampleI_delay;
