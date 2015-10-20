@@ -22,9 +22,27 @@ end freq_estimator_by_phase;
 
 
 architecture freq_estimator_by_phase of freq_estimator_by_phase is
+--# for +-pi/2 conversion
+--# s=[1+1i -1+1i -1-1i 1-1i]
+--# lut_i=[2 1 3 0];
+--# lut_sum=[0 pi pi 2*pi];
+--# ph_p_v=bi2de([((sign(real(s))+1)/2)' ((sign(imag(s))+1)/2)'],'left-msb');
+--# ph_p2_ok=ph_p+lut_sum(lut_i(ph_p_v+1)+1);
+
+--# (0,32767)=205893=pi/2
+--# (0,-32768)=205894=-pi/2
+--# (-32768,0)=411973=pi
+
+constant CORDIC_LATEN:integer:=26;
+
+type Tsigns is array(CORDIC_LATEN-1 downto 0) of std_logic;--_vector(1 downto 0);
+signal signs:Tsigns;
 
 signal to_c_i,to_c_q:std_logic_vector(15 downto 0);
-signal ph_angle,ph_angle_1w,ph_angle_delta,ph_angle_d_filt:std_logic_vector(19 downto 0);
+signal samplesI_reg,samplesQ_reg:std_logic_vector(i_samplesI'Length-1 downto 0);
+signal ph_angle,ph_angle_1w,ph_angle_delta:std_logic_vector(19 downto 0);
+signal ph_angle_2pi,ph_angle_2pi_1w,ph_angle_2pi_delta,ph_angle_2pi_delta_ii,ph_angle_d_filt:std_logic_vector(20 downto 0);
+
 signal s_freq_1p: std_logic_vector(31 downto 0);
 
 begin
@@ -46,32 +64,61 @@ cordic_wrapper_i: entity work.cordic_wrapper
 process (clk) is
 begin
 	if rising_edge(clk) then
+
+		if signs(CORDIC_LATEN-1)='1' then
+			ph_angle_2pi<=SXT(ph_angle,ph_angle_2pi'Length)+411973*2;
+		else
+			ph_angle_2pi<=SXT(ph_angle,ph_angle_2pi'Length);
+		end if;
+
 		if i_ce='1' then
-			ph_angle_1w<=ph_angle;
-			ph_angle_delta<=ph_angle-ph_angle_1w;
-	    	s_freq_1p<=signed(ph_angle_delta(ph_angle_delta'Length-1-4 downto 0)&"0000")*unsigned(conv_std_logic_vector(integer(real(2**9)/3.14159265358979324),11)); --FREQ_FD
-			o_freq<=s_freq_1p;
+			signs(0)<=i_samplesQ(i_samplesQ'Length-1);	
+		else
+			signs(0)<=samplesQ_reg(i_samplesQ'Length-1);	
+		end if;
+
+		for i in CORDIC_LATEN-2 downto 0 loop
+			signs(i+1)<=signs(i);
+		end loop;
+
+		if i_ce='1' then
+
+			samplesI_reg<=i_samplesI;
+			samplesQ_reg<=i_samplesQ;	
+
+			ph_angle_2pi_1w<=ph_angle_2pi;
+			ph_angle_2pi_delta<=ph_angle_2pi-ph_angle_2pi_1w;
+			if signed(ph_angle_2pi_delta)<-411973*3/2 then
+				ph_angle_2pi_delta_ii<=0-(411973*2+ph_angle_2pi_delta);
+			elsif signed(ph_angle_2pi_delta)>411973*3/2 then
+				ph_angle_2pi_delta_ii<=411973*2-ph_angle_2pi_delta;
+			else
+				ph_angle_2pi_delta_ii<=ph_angle_2pi_delta;
+			end if;
+	    	s_freq_1p<=signed(ph_angle_d_filt(ph_angle_d_filt'Length-1 downto 1+3))*unsigned(conv_std_logic_vector(integer(0.72176*real(2**9)/3.14159265358979324),14)); --FREQ_FD
+			o_freq<=s_freq_1p(s_freq_1p'Length-1-2 downto 0)&"00";
 		end if;
         freq_ce<=i_ce;
 
 	end if;
 end process;
 
-bih_filter_freq_i: entity work.bih_filter_integrator_sign
-	generic map(
-		ALPHA_NUM=>9,  --# коэффициент интегрирования, чем он больше тем большую историю храним
-		SCALE_FACTOR=>6,  --# маштаб - чем он больше тем меньше значение на выходе
-		WIDTH=>ph_angle_delta'Length
-	)
-	port map(
-		clk =>clk,
-		reset=>reset,
-		ce =>i_ce,
-		sample =>ph_angle_delta,
 
-		filtered =>ph_angle_d_filt,
-		ce_out =>open
-	);
+IIFoneAdd_i: entity work.IIFoneAdd
+	generic map(	
+		LEN=>ph_angle_2pi_delta_ii'Length,
+		Q=>35+9,	  -- Разрядность сумматора, но помни что при первом вычитании разрядность увеличиться до (Q-K+1)
+		K=>23	  -- Количество сдвигов вправо
+			)	
+	 port map(
+		 clk =>clk,
+		 ce =>i_ce,
+		 reset =>reset,
+		 DataIn =>rats(ph_angle_2pi_delta_ii),
+		 DataFromSubstract =>open,
+		 DataOut =>ph_angle_d_filt
+	     );
+
 
 
 end freq_estimator_by_phase;

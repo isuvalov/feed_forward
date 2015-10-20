@@ -79,6 +79,8 @@ architecture dds_synthesizer_arch of dds_synthesizer_pipe is
   signal quadrant_3_or_4_2delay,quadrant_3_or_4_2delay_w1,quadrant_3_or_4_2delay_w2 : std_logic;
   signal ram_value				: std_logic_vector(AMPL_WIDTH-1 downto 0);
 
+
+  signal s_ampl_o  : std_logic_vector(AMPL_WIDTH-1 downto 0);
 begin
 
   phase_o         <= phase_w2;
@@ -97,9 +99,9 @@ begin
 	  end if;
 
 	  if quadrant_3_or_4_2delay_w2 = '0' then
-		ampl_o <= lut_out_delay;
+		s_ampl_o <= lut_out_delay;
 	  else
-		ampl_o <= lut_out_inv_delay;
+		s_ampl_o <= lut_out_inv_delay;
 	  end if;
 	  quadrant_2_or_4_w1<=quadrant_2_or_4;
 	  quadrant_2_or_4_w2<=quadrant_2_or_4_w1;
@@ -147,4 +149,7 @@ begin
     end if;
   end process;
 
+
+
+	ampl_o<=s_ampl_o;
 end dds_synthesizer_arch;

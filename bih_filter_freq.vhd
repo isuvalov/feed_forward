@@ -73,16 +73,16 @@ begin
 				acum_w1<=acum;
 				sample_w1<=sample;
 			end if;
-			if ce_w2='1' then
+			if ce_w1='1' then
 				acum_p<=signed(acum_w1)-signed(acum0);
 				sample_w2<=sample_w1;
 			end if;
-			if ce_w4='1' then
+			if ce_w2='1' then --# was ce_w4
 				acum<=signed(acum_p)+signed(sample_w2);
 			end if;
 
 			filtered<=acum(filtered'Length-1+SCALE_FACTOR+log2roundup(ALPHA_NUM)-1 downto SCALE_FACTOR+log2roundup(ALPHA_NUM)-1);
-			ce_out<=ce_w5;
+			ce_out<=ce_w3; --# was ce_w5
 		end if; --# reset
 	end if;
 end process;

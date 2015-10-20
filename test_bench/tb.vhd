@@ -156,7 +156,7 @@ dds_I_inst:entity work.dds_synthesizer_pipe
     clk_i   =>clkq,
     rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
 	--#  =  ((2**32)*3e6)/100e6 = 128849019 i.e +3MHz generation  - I test it and it equal for generation start_sin_gen.vhd 
-    ftw_i   =>conv_std_logic_vector(42949673,32), --# +1 
+    ftw_i   =>conv_std_logic_vector(500000,32), --# +1 
     phase_i =>x"4000",
     phase_o =>open,
     ampl_o  =>dds_cos
@@ -169,7 +169,7 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
   port map(
     clk_i   =>clkq,
     rst_i   =>reset,
-    ftw_i   =>conv_std_logic_vector(42949673,32), --#  =  ((2**32)*3e6)/100e6 = 128849019
+    ftw_i   =>conv_std_logic_vector(8000,32), --#  =  ((2**32)*3e6)/100e6 = 128849019
 
     phase_i =>x"0000",
     phase_o =>open,
@@ -179,7 +179,7 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
 moveB: entity work.complex_mult
 	generic map(
 		SHIFT_MUL=>1,
-		NOT_USE_IT=>1,--GLOBAL_DEBUG,
+		NOT_USE_IT=>0,--GLOBAL_DEBUG,
 		CONJUGATION=>'0' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(
@@ -215,10 +215,11 @@ modem_rx_top_i: entity work.modem_rx_top
 	)
     Port map(clk=>clkq,
 		  reset=>reset,
-		  sampleI=>sampleI_tx(15 downto 4),--  sampleI_moveback(15 downto 4),
-		  sampleQ=>sampleQ_tx(15 downto 4),-- sampleQ_moveback(15 downto 4),
+		  sampleI=>  sampleI_moveback(15 downto 4), --sampleI_tx(15 downto 4),--
+		  sampleQ=> sampleQ_moveback(15 downto 4),  --sampleQ_tx(15 downto 4),--
 		  pilot_ce_test=>pilot_ce_test,
 
+          use_second_order_freq_correction=>'1',
 
 		  demod_sample_I=>open,
 		  demod_sample_Q=>open,

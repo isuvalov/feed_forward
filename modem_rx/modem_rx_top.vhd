@@ -19,6 +19,8 @@ entity modem_rx_top is
 		  sampleQ: in std_logic_vector(11 downto 0);
 		  pilot_ce_test: in std_logic; --# only for test purpose
 
+		  use_second_order_freq_correction: std_logic;
+
 		  demod_sample_I: out std_logic_vector(15 downto 0);
 		  demod_sample_Q: out std_logic_vector(15 downto 0);
 		  demod_sample_ce: out std_logic;
@@ -46,6 +48,8 @@ constant DDS_LATENCY:natural:=8;
 constant DELAY_AFTER_FREQESTIM:natural:=25413+DDS_LATENCY+1; --# ¬ысчитываетс€ по симул€ции сигналом time_for_freqcalc_cnt_reg 
 constant PILOTUP_START_DELAY:natural:=9+3; --# ¬рем€ которое надо дл€ того чтоб генератор интерполированного пилота начал выдавать отсчеты
 constant DELAY_COMPLEX_NORMALIZER:natural:=51+2; 
+
+constant FREQ_ACUM_SPEED:natural:=8;
 
 signal sampleI_delay_div2,sampleQ_delay_div2:std_logic_vector(sampleIfilt'Length-1 downto 0);
 
@@ -145,6 +149,11 @@ signal bit_demod:std_logic_vector(1 downto 0);
 signal bit_demod_ce:std_logic;
 
 signal iterat_ph_error_i,iterat_ph_error_q:std_logic_vector(7 downto 0);
+signal for_freq_word,freq_word_1p,freq_word,freq_word_acum:std_logic_vector(31 downto 0):=x"00000000";
+signal freq_ready_cnt:std_logic_vector(log2roundup(PERIOD_OF_PILOT*InterpolateRate) downto 0):=(others=>'1');
+signal freq_ready,freq_mux,use_second_order_freq_correction_reg:std_logic;
+
+signal freq_mux_cnt:std_logic_vector(log2roundup(FREQ_ACUM_SPEED)-1 downto 0):=(others=>'0');
 
 begin
 
@@ -227,7 +236,8 @@ dds_I_inst:entity work.dds_synthesizer_pipe
     clk_i   =>clk,
     rst_i   =>reset, --# потом поставить сигнал найденного конца пилота
 --    ftw_i   =>ftw_correction,
---    ftw_i   =>x"00001000",
+--    ftw_i   =>freq_word,--x"00010000",
+--	ftw_i   =>x"FFFF8000",
     ftw_i   =>x"00000000",
     phase_i =>x"4000",
     phase_o =>open,
@@ -242,9 +252,11 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
     clk_i   =>clk,
     rst_i   =>reset,
 --    ftw_i   =>ftw_correction,
---    ftw_i   =>x"00001000",
+--    ftw_i   =>freq_word,--x"00010000",
+--	ftw_i   =>x"FFFF8000",
     ftw_i   =>x"00000000",
-    phase_i =>x"0000",
+    phase_i =>x"0000", --ok!
+--    phase_i =>x"8000", --# for minus
     phase_o =>open,
     ampl_o  =>dds_sin
     );
@@ -467,11 +479,11 @@ freq_estimator_by_phase_i: entity work.freq_estimator_by_phase
 	port map(
 		clk =>clk,
 		reset =>reset,
-		i_ce => local_ce,
+		i_ce => local_ce_f,
 		i_samplesI=>iterat_ph_error_i,
 		i_samplesQ=>iterat_ph_error_q,
 		freq_ce=>open,
-		o_freq=>open
+		o_freq=>for_freq_word
 		);
 
 
@@ -560,6 +572,43 @@ ToTextFile_q: entity work.ToTextFile
 delayt: process(clk) is
 begin
 	if rising_edge(clk) then
+
+		use_second_order_freq_correction_reg<=use_second_order_freq_correction;
+		freq_mux<=use_second_order_freq_correction_reg and freq_ready;
+	
+		if reset='1' or freq_mux='0' then
+			freq_word_acum<=(others=>'0');		
+			freq_mux_cnt<=(others=>'0');
+		elsif start_pilotU_4w='1' then
+			if unsigned(freq_mux_cnt)<FREQ_ACUM_SPEED-1 then
+				freq_mux_cnt<=freq_mux_cnt+1;
+			else
+				freq_word_acum<=rats(freq_word_acum)+rats(for_freq_word);
+				freq_mux_cnt<=(others=>'0');
+			end if;
+		end if;
+
+
+		if freq_mux='1' then
+			freq_word_1p<=freq_word_acum;
+		else
+			freq_word_1p<=(others=>'0');
+		end if;
+
+		freq_word<=freq_word_1p;
+
+		if s_sync_find='0' then
+			freq_ready_cnt<=(others=>'1');
+			freq_ready<='0';
+		else
+			if unsigned(freq_ready_cnt)>0 then
+				freq_ready_cnt<=freq_ready_cnt-1;
+				freq_ready<='0';
+			else
+				freq_ready<='1';
+			end if;
+		end if;
+
 
 		bit_value<=bit_demod;
 		bit_value_ce<=bit_demod_ce;

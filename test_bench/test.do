@@ -68,12 +68,24 @@ vcom ../pam_demodulation/complex_mult_qr.vhd
 vcom ../pam_demodulation/table_demod.vhd 
 vcom ../pam_demodulation/average_itertive_demod.vhd
 
-
 vcom ../pilot_upper.vhd 
 vcom ../scalar_mult.vhd
 
+vcom ../adaptive_lms/16bit/saturation.vhd
+vcom ../adaptive_lms/16bit/add32.vhd
+vcom ../adaptive_lms/16bit/mul16.vhd
+vcom ../adaptive_lms/16bit/shift_1d_32.vhd 
+vcom ../adaptive_lms/16bit/shift_N_d2.vhd
+vcom ../adaptive_lms/16bit/shift_N_d.vhd
+vcom ../adaptive_lms/16bit/truncation_16.vhd
+vcom ../adaptive_lms/16bit/unit_calc_16bit.vhd
+vcom ../adaptive_lms/16bit/core_filt_16.vhd
+vcom ../adaptive_lms/16bit/tf_lms_16.vhd 
+
 vcom ../agc_digital.vhd
 vcom ../bits_ce_manager.vhd
+vcom ../IIFoneAdd.vhd 
+vcom ../freq_estimator_by_phase.vhd
 vcom ../modem_rx/modem_rx_top.vhd
 
 vcom tb.vhd

@@ -16,17 +16,10 @@ entity cordic_wrapper is
 		);
 end cordic_wrapper;
 
---# pi/2=25748
---# -pi/2=-28563
---# pi/4=12857
---# -pi/4=2826
---# (pi/2+n)=13368 error!
+--# (0,32767)=205893=pi/2
+--# (0,-32768)=205894=-pi/2
+--# (-32768,0)=411973=pi
 
-
---# -3/4pi=-19308
---# 3/4pi=12938
---# pi/4=6428
---# -pi/4=12803
 
 
 architecture cordic_wrapper of cordic_wrapper is
@@ -66,6 +59,8 @@ signal theta:signed(16 downto 0):=(others=>'0');
 signal sign_a:std_logic_vector(24 downto 0);
 signal plus_half_pi:std_logic_vector(sign_a'Length-1 downto 0);
 
+signal samplesI_reg,samplesQ_reg:std_logic_vector(i_samplesQ'Length-1 downto 0);
+
 begin
 
 --xx<=signed(SXT(i_samplesI&'0',xx'Length));
@@ -80,17 +75,26 @@ yy2<=signed(SXT(std_logic_vector(yy(yy'Length-1 downto 1)),xx2'Length));
 process(clk) is
 begin
 	if rising_edge(clk) then
-		sign_a<=sign_a(sign_a'Length-2 downto 0)&i_samplesQ(i_samplesQ'Length-1);
-		plus_half_pi<=plus_half_pi(plus_half_pi'Length-2 downto 0)&i_samplesI(i_samplesI'Length-1);
-		if i_samplesI(i_samplesI'Length-1)='1' then
-			xx<=0-signed(SXT(i_samplesI,xx'Length));
+		if i_ce='1' then		
+			sign_a<=sign_a(sign_a'Length-2 downto 0)&i_samplesQ(i_samplesQ'Length-1);
+			plus_half_pi<=plus_half_pi(plus_half_pi'Length-2 downto 0)&i_samplesI(i_samplesI'Length-1);
 		else
-			xx<=signed(SXT(i_samplesI,xx'Length));
+			sign_a<=sign_a(sign_a'Length-2 downto 0)&samplesQ_reg(i_samplesQ'Length-1);
+			plus_half_pi<=plus_half_pi(plus_half_pi'Length-2 downto 0)&samplesI_reg(i_samplesI'Length-1);
 		end if;
-		if i_samplesQ(i_samplesQ'Length-1)='1' then
-			yy<=0-signed(SXT(i_samplesQ,yy'Length));
-		else
-			yy<=signed(SXT(i_samplesQ,yy'Length));
+		if i_ce='1' then
+			samplesQ_reg<=i_samplesQ;
+			samplesI_reg<=i_samplesI;
+			if i_samplesI(i_samplesI'Length-1)='1' then
+				xx<=0-signed(SXT(i_samplesI,xx'Length));
+			else
+				xx<=signed(SXT(i_samplesI,xx'Length));
+			end if;
+			if i_samplesQ(i_samplesQ'Length-1)='1' then
+				yy<=0-signed(SXT(i_samplesQ,yy'Length));
+			else
+				yy<=signed(SXT(i_samplesQ,yy'Length));
+			end if;
 		end if;
 		
 --		if sign_a(sign_a'Length-2)='1' then

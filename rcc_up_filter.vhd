@@ -121,8 +121,8 @@ begin
 		sumsQ_5(1)<=SXT(sumsQ_4(2)(15-SH4 downto 1-SH4),16);
 
 
-		s_o_sampleI<=SXT(sumsI_5(0)(15-SH5 downto 1-SH5),16)+SXT(sumsI_5(1)(15 downto 1-SH5),16);
-		s_o_sampleQ<=SXT(sumsQ_5(0)(15-SH5 downto 1-SH5),16)+SXT(sumsQ_5(1)(15 downto 1-SH5),16);
+		s_o_sampleI<=SXT(sumsI_5(0)(15-SH5 downto 1-SH5),16)+SXT(sumsI_5(1)(15-SH5 downto 1-SH5),16);
+		s_o_sampleQ<=SXT(sumsQ_5(0)(15-SH5 downto 1-SH5),16)+SXT(sumsQ_5(1)(15-SH5 downto 1-SH5),16);
         if GLOBAL_DEBUG=1 then
 			o_sampleI<=SXT(s_o_sampleI(s_o_sampleI'Length-1-4 downto 0),o_sampleI'Length);
 			o_sampleQ<=SXT(s_o_sampleQ(s_o_sampleI'Length-1-4 downto 0),o_sampleI'Length);
