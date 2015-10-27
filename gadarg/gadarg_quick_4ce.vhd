@@ -10,7 +10,7 @@ use work.feedf_consts_pack.all;
 entity gadarg is
 	generic(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
 		RM:integer:=5856428;     --# RM=1.34*PS/(4*KKK) , like target maximum of signal
-		STEP:integer:=471; --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
+		STEP:integer:=471; --# step=(2^(AcumLen-1)) * ((2^(BitsInADC*2)+RM)/(PS^2))
 		KKK:integer:=5   --# ceil(log2(STEP)/2) , must be more or equal than 2
 	);
 	port(
@@ -275,8 +275,12 @@ begin
 					step_cnt<=conv_std_logic_vector(COPY_STEP-1,step_cnt'Length);
 				end if;
 			
-				  o_sampleI<=sumed_muls_i(FILTER_WORK_WIDTH-1 downto 0);
-				  o_sampleQ<=sumed_muls_q(FILTER_WORK_WIDTH-1 downto 0);
+--				  o_sampleI<=sumed_muls_i(FILTER_WORK_WIDTH-1 downto 0);
+--				  o_sampleQ<=sumed_muls_q(FILTER_WORK_WIDTH-1 downto 0);
+
+				  o_sampleI<=sumed_muls_i(FILTER_WORK_WIDTH-1-1 downto 0)&"0";
+				  o_sampleQ<=sumed_muls_q(FILTER_WORK_WIDTH-1-1 downto 0)&"0";
+
 
 --                o_sampleI<=sumed_muls_i(FILTER_WORK_WIDTH-1 downto FILTER_WORK_WIDTH-o_sampleI'Length);
 --                o_sampleQ<=sumed_muls_q(FILTER_WORK_WIDTH-1 downto FILTER_WORK_WIDTH-o_sampleI'Length);

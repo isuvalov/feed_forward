@@ -395,8 +395,8 @@ add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/reset
 add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/after_pilot_start
 add wave -noupdate -group feed_back /tb/modem_rx_top_i/feed_back/i_ce
 add wave -noupdate -group feed_back /tb/modem_rx_top_i/ce_cnt
-add wave -noupdate -group feed_back -format Analog-Step -height 60 -max 30000.0 -min -30000.0 -radix decimal -childformat {{/tb/modem_rx_top_i/feed_back/i_samplesI(15) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(14) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(13) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(12) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(11) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(10) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(9) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(8) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(7) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(6) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(5) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(4) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(3) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(2) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(1) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/feed_back/i_samplesI(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(0) {-height 15 -radix decimal}} /tb/modem_rx_top_i/feed_back/i_samplesI
-add wave -noupdate -group feed_back -format Analog-Step -height 60 -max 30000.0 -min -30000.0 -radix decimal /tb/modem_rx_top_i/feed_back/i_samplesQ
+add wave -noupdate -group feed_back -format Analog-Step -height 60 -max 2999.9999999999995 -min -3000.0 -radix decimal -childformat {{/tb/modem_rx_top_i/feed_back/i_samplesI(15) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(14) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(13) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(12) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(11) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(10) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(9) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(8) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(7) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(6) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(5) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(4) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(3) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(2) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(1) -radix decimal} {/tb/modem_rx_top_i/feed_back/i_samplesI(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/feed_back/i_samplesI(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/feed_back/i_samplesI(0) {-height 15 -radix decimal}} /tb/modem_rx_top_i/feed_back/i_samplesI
+add wave -noupdate -group feed_back -format Analog-Step -height 60 -max 2999.9999999999995 -min -3000.0 -radix decimal /tb/modem_rx_top_i/feed_back/i_samplesQ
 add wave -noupdate -group feed_back -radix decimal /tb/modem_rx_top_i/feed_back/i_samplesI
 add wave -noupdate -group feed_back -radix decimal /tb/modem_rx_top_i/feed_back/i_samplesQ
 add wave -noupdate -group feed_back -radix decimal /tb/modem_rx_top_i/feed_back/i_init_phaseI
@@ -563,36 +563,36 @@ add wave -noupdate -group bits_ce_manager /tb/modem_rx_top_i/bits_ce_manager_i/i
 add wave -noupdate -group bits_ce_manager /tb/modem_rx_top_i/bits_ce_manager_i/o_sample_ce
 add wave -noupdate -group bits_ce_manager -radix unsigned /tb/modem_rx_top_i/bits_ce_manager_i/cnt
 add wave -noupdate -group bits_ce_manager -expand /tb/modem_rx_top_i/bits_ce_manager_i/cnt_to
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/clk
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/reset
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/i_ce
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/i_samplesI
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/i_samplesQ
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/freq_ce
-add wave -noupdate -expand -group freq_by_phase -radix decimal -childformat {{/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(31) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(30) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(29) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(28) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(27) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(26) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(25) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(24) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(23) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(22) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(21) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(20) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(19) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(18) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(17) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(16) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(15) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(14) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(13) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(12) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(11) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(10) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(9) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(8) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(7) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(6) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(5) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(4) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(3) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(2) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(1) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(31) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(30) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(29) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(28) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(27) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(26) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(25) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(24) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(23) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(22) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(21) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(20) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(19) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(18) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(17) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(16) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(0) {-height 15 -radix decimal}} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/to_c_i
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/to_c_q
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/samplesI_reg
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/samplesQ_reg
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_2pi
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_2pi_1w
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_2pi_delta
-add wave -noupdate -expand -group freq_by_phase -radix decimal /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_2pi_delta_ii
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/signs
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_1w
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_delta
-add wave -noupdate -expand -group freq_by_phase -radix decimal /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_d_filt
-add wave -noupdate -expand -group freq_by_phase -radix decimal /tb/modem_rx_top_i/freq_estimator_by_phase_i/s_freq_1p
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_mux
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_value
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_ready
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/start_pilotU_4w
-add wave -noupdate -expand -group freq_by_phase /tb/modem_rx_top_i/freq_ready_cnt
-add wave -noupdate -expand -group freq_by_phase -radix decimal /tb/modem_rx_top_i/freq_word
-add wave -noupdate -expand -group freq_by_phase -radix decimal /tb/modem_rx_top_i/freq_word_1p
-add wave -noupdate -expand -group freq_by_phase -radix decimal /tb/modem_rx_top_i/freq_word_acum
-add wave -noupdate -expand -group freq_by_phase -radix decimal /tb/modem_rx_top_i/for_freq_word
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/clk
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/reset
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/i_ce
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/i_samplesI
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/i_samplesQ
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/freq_ce
+add wave -noupdate -group freq_by_phase -radix decimal -childformat {{/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(31) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(30) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(29) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(28) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(27) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(26) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(25) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(24) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(23) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(22) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(21) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(20) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(19) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(18) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(17) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(16) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(15) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(14) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(13) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(12) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(11) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(10) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(9) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(8) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(7) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(6) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(5) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(4) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(3) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(2) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(1) -radix decimal} {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(0) -radix decimal}} -subitemconfig {/tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(31) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(30) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(29) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(28) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(27) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(26) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(25) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(24) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(23) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(22) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(21) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(20) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(19) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(18) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(17) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(16) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(15) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(14) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(13) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(12) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(11) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(10) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(9) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(8) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(7) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(6) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(5) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(4) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(3) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(2) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(1) {-height 15 -radix decimal} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq(0) {-height 15 -radix decimal}} /tb/modem_rx_top_i/freq_estimator_by_phase_i/o_freq
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/to_c_i
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/to_c_q
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/samplesI_reg
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/samplesQ_reg
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_2pi
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_2pi_1w
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_2pi_delta
+add wave -noupdate -group freq_by_phase -radix decimal /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_2pi_delta_ii
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/signs
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_1w
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_delta
+add wave -noupdate -group freq_by_phase -radix decimal /tb/modem_rx_top_i/freq_estimator_by_phase_i/ph_angle_d_filt
+add wave -noupdate -group freq_by_phase -radix decimal /tb/modem_rx_top_i/freq_estimator_by_phase_i/s_freq_1p
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_mux
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_value
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_ready
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/start_pilotU_4w
+add wave -noupdate -group freq_by_phase /tb/modem_rx_top_i/freq_ready_cnt
+add wave -noupdate -group freq_by_phase -radix decimal /tb/modem_rx_top_i/freq_word
+add wave -noupdate -group freq_by_phase -radix decimal /tb/modem_rx_top_i/freq_word_1p
+add wave -noupdate -group freq_by_phase -radix decimal /tb/modem_rx_top_i/freq_word_acum
+add wave -noupdate -group freq_by_phase -radix decimal /tb/modem_rx_top_i/for_freq_word
 add wave -noupdate -group freq_iif /tb/modem_rx_top_i/freq_estimator_by_phase_i/IIFoneAdd_i/clk
 add wave -noupdate -group freq_iif /tb/modem_rx_top_i/freq_estimator_by_phase_i/IIFoneAdd_i/ce
 add wave -noupdate -group freq_iif /tb/modem_rx_top_i/freq_estimator_by_phase_i/IIFoneAdd_i/reset
@@ -651,8 +651,75 @@ add wave -noupdate -group modem_mult_dds /tb/modem_rx_top_i/moveB/ACpBD
 add wave -noupdate -group modem_mult_dds /tb/modem_rx_top_i/moveB/BCmAD
 add wave -noupdate -group modem_mult_dds /tb/modem_rx_top_i/moveB/ce_1w
 add wave -noupdate -group modem_mult_dds /tb/modem_rx_top_i/moveB/ce_2w
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/clk
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/reset
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/i_sampleI
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/i_sampleQ
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/i_ce
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/o_sampleI
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/o_sampleQ
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/latency_delay_re
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/latency_delay_im
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_i_1w
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_q_1w
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_i
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_q
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_i_copy
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_with_step_q_copy
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_I
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_Q
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_I_copy
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/delay_line_Q_copy
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_work
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_qq
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_iq
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_qi
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/coefs_ii
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_i
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_q
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/step_cnt
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_sum_i
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/c_mul_sum_q
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_i_1w
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_i
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_q
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_i_copy
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sumed_muls_q_copy
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sq_sumed_muls_i
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sq_sumed_muls_q
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr3r
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2r
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2r
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2i
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr3i
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi3r
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2i
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi3i
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/short_array
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/short_array0
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0r_div
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0i_div
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0r_div
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0i_div
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0r_div_1w
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WR0i_div_1w
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0r_div_1w
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WI0i_div_1w
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WRr
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WRi
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WIr
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/WIi
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2r_mul
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2r_mul
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vr2i_mul
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/vi2i_mul
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/stm
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/sampl_cnt
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/work_cnt
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/reset_local
+add wave -noupdate -expand -group gadarg /tb/modem_rx_top_i/gadarg_i/reset_reg
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {43461538462 ps} 0}
+WaveRestoreCursors {{Cursor 1} {5510628000 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 233
 configure wave -valuecolwidth 100
@@ -668,4 +735,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {52500 us}
+WaveRestoreZoom {5409103518 ps} {5611493086 ps}

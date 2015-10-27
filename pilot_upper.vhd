@@ -80,7 +80,7 @@ begin
 --			if unsigned(cnt)<PILOT_LEN then
 				test_val<=PILOT((PILOT_LEN-1)-conv_integer(cnt(log2roundup(PILOT_LEN)-1 downto 0)));
 --				test_val<=cnt(0);--tPILOT(conv_integer(cnt));
-				if PILOT((PILOT_LEN-1)-conv_integer(cnt(log2roundup(PILOT_LEN)-1 downto 0)))='1' then --# set or 0 or 2
+				if PILOT((PILOT_LEN-1)-conv_integer(cnt(log2roundup(PILOT_LEN)-1 downto 0)))='0' then --# set or 0 or 2
 --				if PILOT(conv_integer(cnt(log2roundup(PILOT_LEN)-1 downto 0)))='1' then --# set or 0 or 2
 					bits<="00";
 				else

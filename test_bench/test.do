@@ -59,7 +59,7 @@ vcom ../farrow/to_zero_fraction.vhd
 
 vcom ../sync_system/pilot_sync_every_time_ver4.vhd 
 
-vcom ../gadarg/gadarg_quick_complex_4ce.vhd 
+vcom ../gadarg/gadarg_quick_4ce.vhd 
 
 vcom ../pam_demodulation/assert_pack.vhd
 vcom ../pam_demodulation/save_complexdata.vhd 
@@ -70,17 +70,6 @@ vcom ../pam_demodulation/average_itertive_demod.vhd
 
 vcom ../pilot_upper.vhd 
 vcom ../scalar_mult.vhd
-
-vcom ../adaptive_lms/16bit/saturation.vhd
-vcom ../adaptive_lms/16bit/add32.vhd
-vcom ../adaptive_lms/16bit/mul16.vhd
-vcom ../adaptive_lms/16bit/shift_1d_32.vhd 
-vcom ../adaptive_lms/16bit/shift_N_d2.vhd
-vcom ../adaptive_lms/16bit/shift_N_d.vhd
-vcom ../adaptive_lms/16bit/truncation_16.vhd
-vcom ../adaptive_lms/16bit/unit_calc_16bit.vhd
-vcom ../adaptive_lms/16bit/core_filt_16.vhd
-vcom ../adaptive_lms/16bit/tf_lms_16.vhd 
 
 vcom ../agc_digital.vhd
 vcom ../bits_ce_manager.vhd

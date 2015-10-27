@@ -179,7 +179,7 @@ dds_Q_inst:entity work.dds_synthesizer_pipe
 moveB: entity work.complex_mult
 	generic map(
 		SHIFT_MUL=>1,
-		NOT_USE_IT=>0,--GLOBAL_DEBUG,
+		NOT_USE_IT=>1,--GLOBAL_DEBUG,
 		CONJUGATION=>'0' --# умножение на сопряженное число, если '1' - то сопрягать
 	)
 	port map(

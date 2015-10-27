@@ -53,7 +53,8 @@ constant FREQ_ACUM_SPEED:natural:=8;
 
 signal sampleI_delay_div2,sampleQ_delay_div2:std_logic_vector(sampleIfilt'Length-1 downto 0);
 
-signal sampleI_delay,sampleQ_delay,sampleI_delay_1w,sampleQ_delay_1w:std_logic_vector(sampleIfilt'Length-1 downto 0);
+signal sampleI_delay,sampleQ_delay:std_logic_vector(sampleIfilt'Length-1 downto 0);
+signal sampleI_delay_2w,sampleQ_delay_2w,sampleI_delay_1w,sampleQ_delay_1w:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal sampleI_delay_fe,sampleQ_delay_fe:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal sampleI_delay_fe_reg,sampleQ_delay_fe_reg:std_logic_vector(sampleIfilt'Length-1 downto 0);
 signal s_pilot_start:std_logic;
@@ -92,6 +93,7 @@ signal start_delayer_cnt:std_logic_vector(log2roundup(DELAY_AFTER_FREQESTIM)-1 d
 
 signal scalar_sumI,scalar_sumQ:std_logic_vector(31 downto 0);
 signal scalar_sum_ce,pilot_valid,pilot_valid_1w,pilot_valid_2w,pilot_valid_3w:std_logic;
+signal scalar_sum_ce_W:std_logic_vector(23 downto 0);
 signal pilot_valid_W:std_logic_vector(15 downto 0);
 
 signal start_rotate_I,start_rotate_Q:std_logic_vector(15 downto 0);
@@ -140,13 +142,15 @@ signal pilot_ce_test_after_delayer,pilot_ce_test_after_cmul:std_logic;
 
 signal after_farrow_i_r,after_farrow_q_r,after_farrow_i,after_farrow_q,after_feedback_i,after_feedback_q:std_logic_vector(15 downto 0);
 signal after_feedback_i_f,after_feedback_q_f:std_logic_vector(15 downto 0);
-signal local_ce,after_farrow_ce,reset_bysync,start_pilotU_1w,start_pilotU_2w,start_pilotU_3w,start_pilotU_4w:std_logic;
+signal local_ce_1w,local_ce,after_farrow_ce,reset_bysync,start_pilotU_1w,start_pilotU_2w,start_pilotU_3w,start_pilotU_4w:std_logic;
 signal ce_cnt:std_logic_vector(log2roundup(InterpolateRate)-1 downto 0);
 
 signal pilot_valid_byupper,local_ce_f:std_logic;
 
 signal bit_demod:std_logic_vector(1 downto 0);
 signal bit_demod_ce:std_logic;
+
+signal sampleI_delay_lms,sampleQ_delay_lms:std_logic_vector(15 downto 0);
 
 signal iterat_ph_error_i,iterat_ph_error_q:std_logic_vector(7 downto 0);
 signal for_freq_word,freq_word_1p,freq_word,freq_word_acum:std_logic_vector(31 downto 0):=x"00000000";
@@ -446,6 +450,30 @@ scalar_mult_inst: entity work.scalar_mult
 		);
 
 
+
+gadarg_i: entity work.gadarg
+	generic map(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
+		RM=>7909835,     --# RM=1.34*PS/(4*KKK) , like target maximum of signal
+		STEP=>460, --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
+		KKK=>5   --# ceil(log2(STEP)/2) , must be more or equal than 2
+	)
+	port map(
+		clk =>clk,
+		reset =>reset_bysync,
+
+		i_sampleI=>sampleI_delay,
+		i_sampleQ=>sampleQ_delay,
+		i_ce =>local_ce,
+
+		o_sampleI =>sampleI_delay_lms,
+		o_sampleQ =>sampleQ_delay_lms
+		);
+
+
+
+
+
+
 sampleI_delay_div2<=SXT(sampleI_delay(sampleI_delay'Length-1 downto 1),sampleI_delay_div2'Length);
 sampleQ_delay_div2<=SXT(sampleQ_delay(sampleI_delay'Length-1 downto 1),sampleI_delay_div2'Length);
 
@@ -456,10 +484,10 @@ feed_back: entity work.average_itertive_demod
 	port map(
 		clk =>clk,
 		reset =>reset,
-		after_pilot_start =>scalar_sum_ce,--start_pilotU_1w, --# он должен быть над первым i_ce
+		after_pilot_start =>scalar_sum_ce_W(5),--scalar_sum_ce,--scalar_sum_ce_W(scalar_sum_ce_W'Length-1),--scalar_sum_ce, --# он должен быть над первым i_ce
 		i_ce =>local_ce,
-		i_samplesI =>sampleI_delay,
-		i_samplesQ =>sampleQ_delay,
+		i_samplesI =>sampleI_delay_lms, --,--
+		i_samplesQ =>sampleQ_delay_lms, --,--
 
 		i_init_phaseI =>scalar_sumI(scalar_sumI'Length-1 downto scalar_sumI'Length-16),--x"0FFF",
 		i_init_phaseQ =>scalar_sumQ(scalar_sumI'Length-1 downto scalar_sumI'Length-16),--x"0000",
@@ -525,35 +553,16 @@ testLFSR_i:entity work.testLFSR
 	     );
 
 
---
---gadarg_i: entity work.gadarg
---	generic map(               --# PS=5.5942e+008 by signal star in input! =sum(abs(<input signal>).^2)/NS
---		RM=>5856428,     --# RM=1.34*PS/(4*KKK) , like target maximum of signal
---		STEP=>471, --# (2^(AcumLen-1)) * (2^(BitsInADC*2+RM)/(PS^2))
---		KKK=>3   --# ceil(log2(STEP)/2) , must be more or equal than 2
---	)
---	port map(
---		clk =>clk,
---		reset =>reset_bysync,
---
---		i_sampleI=>sampleI_delay,
---		i_sampleQ=>sampleQ_delay,
---		i_ce =>local_ce,
---
---		o_sampleI =>after_farrow_i,
---		o_sampleQ =>after_farrow_q
---		);
---
---
+
 ToTextFile_i: entity work.ToTextFile
 	generic map(BitLen =>16,
 			WriteHex=>0,  -- if need write file in hex format or std_logic_vector too long(>=64)
 			NameOfFile=>"after_farrow_i.txt")
 	 port map(
 		 clk =>clk,
-		 CE =>local_ce_f, 
+		 CE =>local_ce, 
 		 block_marker=>'0',
-		 DataToSave=>after_feedback_i_f
+		 DataToSave=>sampleI_delay --after_feedback_i_f
 	     );
 
 ToTextFile_q: entity work.ToTextFile
@@ -562,9 +571,9 @@ ToTextFile_q: entity work.ToTextFile
 			NameOfFile=>"after_farrow_q.txt")
 	 port map(
 		 clk =>clk,
-		 CE =>local_ce_f, 
+		 CE =>local_ce, 
 		 block_marker=>'0',
-		 DataToSave=>after_feedback_q_f
+		 DataToSave=>sampleQ_delay --after_feedback_q_f
 	     );
 
 
@@ -572,6 +581,11 @@ ToTextFile_q: entity work.ToTextFile
 delayt: process(clk) is
 begin
 	if rising_edge(clk) then
+
+		sampleI_delay_1w<=sampleI_delay;
+		sampleI_delay_2w<=sampleI_delay_1w;
+		sampleQ_delay_1w<=sampleQ_delay;
+		sampleQ_delay_2w<=sampleQ_delay_1w;
 
 		use_second_order_freq_correction_reg<=use_second_order_freq_correction;
 		freq_mux<=use_second_order_freq_correction_reg and freq_ready;
@@ -620,13 +634,14 @@ begin
 
         reset_bysync<=not s_sync_find;
 
-		sampleI_delay_1w<=sampleI_delay;
-		sampleQ_delay_1w<=sampleQ_delay;
-
 		start_pilotU_1w<=start_pilotU;
 		start_pilotU_2w<=start_pilotU_1w;
 		start_pilotU_3w<=start_pilotU_2w;
 		start_pilotU_4w<=start_pilotU_3w;
+
+
+		local_ce_1w<=local_ce;
+		scalar_sum_ce_W<=scalar_sum_ce_W(scalar_sum_ce_W'Length-2 downto 0)&scalar_sum_ce;
 
 		if scalar_sum_ce='1' then
 --			if ce_cnt=3 then
